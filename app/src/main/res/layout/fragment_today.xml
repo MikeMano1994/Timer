@@ -26,16 +26,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/event_content"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/hint"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:gravity="center"
-                android:text="请点击右下角按钮添加事件"
-                android:textSize="35sp"
+                android:layout_height="450dp"
                 android:visibility="visible" />
 
             <!--  FloatingActionButton 必须设置border  -->
@@ -43,7 +34,7 @@
                 android:id="@+id/actionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|end"
+                android:layout_gravity="right"
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
@@ -53,8 +44,6 @@
                 app:elevation="5dp"
                 app:fabSize="normal"
                 app:pressedTranslationZ="10dp" />
-
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
 </LinearLayout>

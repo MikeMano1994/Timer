@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.tryking.timer.R;
 import com.tryking.timer.bean.TodayEventData;
+import com.tryking.timer.utils.CommonUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -25,8 +26,7 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<TodayEventData> mData;
     private WeakReference<Context> mContext;
     private LayoutInflater mInflater;
-    private static int HAVE_EVENT = 1;
-    private static int NO_EVENT = 0;
+    private RecyclerView mRecyclerView;
 
     public TodayEventAdapter(WeakReference<Context> context, List<TodayEventData> data) {
         mContext = context;
@@ -37,19 +37,17 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = null;
-        if (viewType == HAVE_EVENT) {
-            view = mInflater.inflate(R.layout.item_today_event_have_event, parent, false);
-            return new HaveEventViewHolder(view);
-        } else if (viewType == NO_EVENT) {
+        if (viewType == TodayEventData.TYPE_NO_EVENT) {
             view = mInflater.inflate(R.layout.item_today_event_no_event, parent, false);
             return new NoEventViewHolder(view);
+        } else {
+            view = mInflater.inflate(R.layout.item_today_event_have_event, parent, false);
+            return new HaveEventViewHolder(view);
         }
-        return null;
     }
 
-
     public interface onNoEventItemClickListener {
-        public void onNoEventItemClick(int position, String hint);
+         void onNoEventItemClick(int position, String hint);
     }
 
     private onNoEventItemClickListener mNoEventListener;
@@ -59,7 +57,7 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public interface onHaveEventItemClickListener {
-        public void onHaveEventItemClick(int position, String hint);
+         void onHaveEventItemClick(int position, String hint);
     }
 
     private onHaveEventItemClickListener mHaveEventListener;
@@ -68,12 +66,38 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mHaveEventListener = listener;
     }
 
+    public interface onHaveEventItemLongClickListener {
+        void onHaveEventItemLongClick(int position, String startTime, String endTime);
+    }
+
+    private onHaveEventItemLongClickListener mHaveEventItemLongClickListener;
+
+    public void setOnHaveEventItemLongClickListener(onHaveEventItemLongClickListener listener) {
+        mHaveEventItemLongClickListener = listener;
+    }
+
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof HaveEventViewHolder) {
-            ((HaveEventViewHolder) holder).startTime.setText(mData.get(position).getStartTime());
-            ((HaveEventViewHolder) holder).endTime.setText(mData.get(position).getEndTime());
+            switch (mData.get(position).getDataType()) {
+                case TodayEventData.TYPE_WORK:
+                    ((HaveEventViewHolder) holder).llParent.setBackgroundColor(mContext.get().getResources().getColor(R.color.work));
+                    break;
+                case TodayEventData.TYPE_AMUSE:
+                    ((HaveEventViewHolder) holder).llParent.setBackgroundColor(mContext.get().getResources().getColor(R.color.amuse));
+                    break;
+                case TodayEventData.TYPE_LIFE:
+                    ((HaveEventViewHolder) holder).llParent.setBackgroundColor(mContext.get().getResources().getColor(R.color.life));
+                    break;
+                case TodayEventData.TYPE_STUDY:
+                    ((HaveEventViewHolder) holder).llParent.setBackgroundColor(mContext.get().getResources().getColor(R.color.study));
+                    break;
+                default:
+                    break;
+            }
+            ((HaveEventViewHolder) holder).startTime.setText(CommonUtils.addSignToStr(mData.get(position).getStartTime()));
+            ((HaveEventViewHolder) holder).endTime.setText(CommonUtils.addSignToStr(mData.get(position).getEndTime()));
             ((HaveEventViewHolder) holder).specificEvent.setText(mData.get(position).getSpecificEvent());
             ((HaveEventViewHolder) holder).llParent.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -83,8 +107,17 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             });
+            ((HaveEventViewHolder) holder).llParent.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mHaveEventItemLongClickListener != null) {
+                        mHaveEventItemLongClickListener.onHaveEventItemLongClick(position, mData.get(position).getStartTime(), mData.get(position).getEndTime());
+                    }
+                    return true;
+                }
+            });
         } else if (holder instanceof NoEventViewHolder) {
-            ((NoEventViewHolder) holder).hint.setText(mData.get(position).getStartTime() + "-" + mData.get(position).getEndTime() + "::" + mData.get(position).getSpecificEvent());
+            ((NoEventViewHolder) holder).hint.setText(CommonUtils.addSignToStr(mData.get(position).getStartTime()) + "-" + CommonUtils.addSignToStr(mData.get(position).getEndTime()) + "::" + mData.get(position).getSpecificEvent());
             ((NoEventViewHolder) holder).hint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -137,4 +170,5 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mData = data;
         notifyDataSetChanged();
     }
+
 }

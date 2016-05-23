@@ -96,4 +96,14 @@ public class CommonUtils {
         }
         return s;
     }
+
+    public static String deleteStr(String oldStr, String str) {
+        int i = oldStr.indexOf(str);
+        String s;
+        if (i != -1) {
+            s = oldStr.substring(0, i) + oldStr.substring(i + str.length());
+            return s;
+        }
+        return oldStr;
+    }
 }

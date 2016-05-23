@@ -6,6 +6,11 @@ import java.io.Serializable;
  * Created by Tryking on 2016/5/16.
  */
 public class TodayEventData implements Serializable {
+    public static final int TYPE_NO_EVENT = 0;
+    public static final int TYPE_WORK = 1;
+    public static final int TYPE_AMUSE = 2;
+    public static final int TYPE_LIFE = 3;
+    public static final int TYPE_STUDY = 4;
     private int dataType;
     private String startTime;
     private String endTime;
@@ -15,6 +20,12 @@ public class TodayEventData implements Serializable {
         this.dataType = dataType;
     }
 
+    /**
+     * @param dataType      0：无事件   1：工作    2：娱乐    3：生活    4：学习
+     * @param startTime
+     * @param endTime
+     * @param specificEvent
+     */
     public TodayEventData(int dataType, String startTime, String endTime, String specificEvent) {
         this.dataType = dataType;
         this.startTime = startTime;

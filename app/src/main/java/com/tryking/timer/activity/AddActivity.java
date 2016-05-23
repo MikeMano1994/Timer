@@ -7,8 +7,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
@@ -27,25 +27,26 @@ import butterknife.OnClick;
 
 public class AddActivity extends AppCompatActivity implements NumberPickerPopupWindow.FinishChooseListener, PopupWindow.OnDismissListener {
 
+
+    private static int START_CLICK = 0;
+    private static int STOP_CLICK = 1;
     @Bind(R.id.showTime)
     TextView showTime;
+    @Bind(R.id.tv_hint)
+    TextView tvHint;
     @Bind(R.id.tv_startTime)
     TextView tvStartTime;
     @Bind(R.id.ll_startTime)
-    LinearLayout llStartTime;
+    RelativeLayout llStartTime;
     @Bind(R.id.tv_endTime)
     TextView tvEndTime;
     @Bind(R.id.ll_endTime)
-    LinearLayout llEndTime;
+    RelativeLayout llEndTime;
     @Bind(R.id.et_print)
     EditText etPrint;
     @Bind(R.id.bt_complete)
     Button btComplete;
-    @Bind(R.id.tv_hint)
-    TextView tvHint;
 
-    private static int START_CLICK = 0;
-    private static int STOP_CLICK = 1;
     private int clickSign = START_CLICK;
     private NumberPickerPopupWindow mPicker;
     private int startChooseHour;
@@ -67,8 +68,6 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
     }
 
     private void initView() {
-//        SPUtils.put(AddActivity.this, "startTimes", "0500,0700");
-//        SPUtils.put(AddActivity.this, "endTimes", "0600,0800");
         startTimes = (String) SPUtils.get(AddActivity.this, "startTimes", "");
         endTimes = (String) SPUtils.get(AddActivity.this, "endTimes", "");
         Logger.e(startTimes + ":::" + endTimes);
@@ -217,7 +216,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                         }
                     }
                 }
-                TT.showShort(AddActivity.this,"您似乎选择的不合理哦！");
+                TT.showShort(AddActivity.this, "您似乎选择的不合理哦！");
             }
         }
     }

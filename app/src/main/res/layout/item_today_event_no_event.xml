@@ -4,12 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="30dp"
     android:layout_gravity="center"
-    android:layout_margin="5dp"
-    android:orientation="vertical"
-    android:padding="5dp"
-    app:cardBackgroundColor="@color/color1"
-    app:cardCornerRadius="5dp"
-    app:cardElevation="5dp">
+    android:orientation="horizontal"
+    app:cardBackgroundColor="@color/noEvent"
+    app:cardCornerRadius="5dp">
 
     <TextView
         android:id="@+id/hint"

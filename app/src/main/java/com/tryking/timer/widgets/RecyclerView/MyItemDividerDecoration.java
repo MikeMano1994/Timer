@@ -1,4 +1,4 @@
-package com.tryking.timer;
+package com.tryking.timer.widgets.RecyclerView;
 
 import android.content.Context;
 import android.content.res.TypedArray;

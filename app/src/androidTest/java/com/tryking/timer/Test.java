@@ -10,8 +10,8 @@ import com.tryking.timer.utils.CommonUtils;
  */
 public class Test extends AndroidTestCase {
     public void testString() {
-        int i = 5;
-        String s = CommonUtils.intToStr(i);
+        String s1= "12";
+        String s = CommonUtils.deleteStr(s1, "12");
         Logger.e(s);
     }
 }
