@@ -47,7 +47,7 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public interface onNoEventItemClickListener {
-         void onNoEventItemClick(int position, String hint);
+        void onNoEventItemClick(int position, String hint);
     }
 
     private onNoEventItemClickListener mNoEventListener;
@@ -57,7 +57,7 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public interface onHaveEventItemClickListener {
-         void onHaveEventItemClick(int position, String hint);
+        void onHaveEventItemClick(int position, String hint);
     }
 
     private onHaveEventItemClickListener mHaveEventListener;
@@ -82,16 +82,16 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof HaveEventViewHolder) {
             switch (mData.get(position).getDataType()) {
                 case TodayEventData.TYPE_WORK:
-                    ((HaveEventViewHolder) holder).llParent.setBackgroundColor(mContext.get().getResources().getColor(R.color.work));
+                    ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_work);
                     break;
                 case TodayEventData.TYPE_AMUSE:
-                    ((HaveEventViewHolder) holder).llParent.setBackgroundColor(mContext.get().getResources().getColor(R.color.amuse));
+                    ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_amuse);
                     break;
                 case TodayEventData.TYPE_LIFE:
-                    ((HaveEventViewHolder) holder).llParent.setBackgroundColor(mContext.get().getResources().getColor(R.color.life));
+                    ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_life);
                     break;
                 case TodayEventData.TYPE_STUDY:
-                    ((HaveEventViewHolder) holder).llParent.setBackgroundColor(mContext.get().getResources().getColor(R.color.study));
+                    ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_study);
                     break;
                 default:
                     break;

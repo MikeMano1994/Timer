@@ -6,11 +6,16 @@
     <color name="color1">#FF6666</color>
     <color name="black">#000000</color>
     <color name="float_transparent">#00000000</color>
+    <color name="white">#FFFFFF</color>
 
     <!--四个事件类型-->
     <color name="work">#99CCFF</color>
+    <color name="work_dark">#6699CC</color>
     <color name="amuse">#FF3399</color>
+    <color name="amuse_dark">#CC3399</color>
     <color name="life">#FF9966</color>
+    <color name="life_dark">#FFCC99</color>
     <color name="study">#99CC00</color>
+    <color name="study_dark">#669966</color>
     <color name="noEvent">#767676</color>
 </resources>

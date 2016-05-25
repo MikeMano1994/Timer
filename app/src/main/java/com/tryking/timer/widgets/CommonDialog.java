@@ -56,7 +56,7 @@ public class CommonDialog extends Dialog {
     public void show() {
         super.show();
         setCancelable(true);
-        setCanceledOnTouchOutside(false);
+        setCanceledOnTouchOutside(true);
         setContentView(mDialogView);
     }
 

@@ -97,6 +97,12 @@ public class CommonUtils {
         return s;
     }
 
+    /**
+     * 删除字符串中的字符串
+     * @param oldStr
+     * @param str
+     * @return
+     */
     public static String deleteStr(String oldStr, String str) {
         int i = oldStr.indexOf(str);
         String s;
