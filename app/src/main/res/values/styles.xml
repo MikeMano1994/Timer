@@ -13,6 +13,16 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.Float" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:clipToPadding">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!-- 如果背景设置成纯白色，Toast就会出现一片空白没有文字 -->
+        <item name="android:background">@color/float_transparent</item>
+    </style>
+
+
     <!-- 仿SweetAlertDialog样式 -->
     <style name="custom_alert_dialog" parent="android:Theme.Dialog">
         <item name="android:windowIsFloating">true</item>

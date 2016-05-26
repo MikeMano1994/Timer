@@ -17,11 +17,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <com.tryking.timer.widgets.CountDownTextView
+                android:id="@+id/tv_awoke"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center"
-                android:text="今天还可以享受5h49s的时光" />
+                android:text="今天还可以享受5h49s的时光"
+                android:textColor="@color/colorAccent"
+                android:textSize="15sp" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/event_content"

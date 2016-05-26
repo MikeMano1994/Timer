@@ -27,12 +27,12 @@ import com.tryking.timer.bean.TodayEventData;
 import com.tryking.timer.utils.CommonUtils;
 import com.tryking.timer.utils.SPUtils;
 import com.tryking.timer.widgets.CommonDialog;
+import com.tryking.timer.widgets.CountDownTextView;
 import com.tryking.timer.widgets.RecyclerView.MyItemDividerDecoration;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,8 +51,11 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
 
     private static final int REQUEST_ADD_CODE = 0;//添加事项请求吗
     List<TodayEventData> todayEventDatas = new ArrayList<>();
+    @Bind(R.id.tv_awoke)
+    CountDownTextView tvAwoke;
     private TodayEventAdapter todayEventAdapter;
     private RequestQueue mQueue;
+    private String currentDate;
 
     @OnClick({R.id.actionButton})
     void click(View view) {
@@ -103,39 +106,46 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     }
 
     private void initDatas() {
-        SPUtils.put(getActivity(), "startTimes", "");
-        SPUtils.put(getActivity(), "endTimes", "");
-        SPUtils.put(getActivity(), "eventType", "");
+//        SPUtils.put(getActivity(), "startTimes", "");
+//        SPUtils.put(getActivity(), "endTimes", "");
+//        SPUtils.put(getActivity(), "eventType", "");
+        long intervalTime = getIntervalTime();
+        tvAwoke.setTextPreTime("今天还可以和时间做朋友：");
+        tvAwoke.setIntervalTime(intervalTime, true);
+
         String startTimes = (String) SPUtils.get(getActivity(), "startTimes", "");
         String endTimes = (String) SPUtils.get(getActivity(), "endTimes", "");
         String eventType = (String) SPUtils.get(getActivity(), "eventType", "");
 
         refreshRecyclerViewDataByString(startTimes, endTimes, eventType);
-
-        String currentTime = getCurrentTime();
     }
 
     /*
-    获取网络时间
+    获取倒计时总时长
      */
-    private String getCurrentTime() {
+    private long getIntervalTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-        Date date = new Date(System.currentTimeMillis());
-        Logger.e(dateFormat.format(date));
+        Date nowDate = new Date(System.currentTimeMillis());
+        String nowDateStr = dateFormat.format(nowDate);
+        currentDate = nowDateStr.substring(0, 4) + nowDateStr.substring(5, 7) + nowDateStr.substring(8, 10);
+        String saveDate = (String) SPUtils.get(getActivity(), "currentDate", "");
+//        Logger.e(currentDate + "cur:::save:" + saveDate);
+        //如果不是同一天的话就要把所有的数据清除
+        if (!saveDate.equals(currentDate)) {
+            SPUtils.put(getActivity(), "startTimes", "");
+            SPUtils.put(getActivity(), "endTimes", "");
+            SPUtils.put(getActivity(), "eventType", "");
+            SPUtils.put(getActivity(), "currentDate", currentDate);
+        }
         long time = 0;
         try {
-            Date date1 = dateFormat.parse("2016-5-25 23:00:00");
-            time = date1.getTime();
-        } catch (ParseException e) {
+            Date deadLineTime = dateFormat.parse(nowDateStr.substring(0, 10) + "-24-00-00");
+            time = deadLineTime.getTime();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        Logger.e(time + "::::current:" + System.currentTimeMillis());
-
-//        Calendar galendar = GregorianCalendar.getInstance();
-//        galendar.set(2016,05,25,23,00);
-//        galendar.get();
-
-        return dateFormat.format(date);
+        long interval = (time - System.currentTimeMillis()) / 1000;
+        return interval;
     }
 
     /*
@@ -150,9 +160,8 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年-MM月dd日-HH时mm分ss秒");
             Date date1 = new Date(date);
             Logger.e(simpleDateFormat.format(date1));
-//            Logger.e("我来啦" + date1.getYear() + "年" + date1.getMonth() + "月" + date1.getDay() + "月" + date1.getHours() + "时" + date1.getMinutes() + "分" + date1.getSeconds() + "秒");
             Date date2 = new Date(System.currentTimeMillis());
-            Logger.e("手机当前时间：：" + date2.getYear() + "年" + date2.getMonth() + "月" + date2.getDay() + "月" + date2.getHours() + "时" + date2.getMinutes() + "分" + date2.getSeconds() + "秒");
+//            Logger.e("手机当前时间：：" + date2.getYear() + "年" + date2.getMonth() + "月" + date2.getDay() + "月" + date2.getHours() + "时" + date2.getMinutes() + "分" + date2.getSeconds() + "秒");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,7 +187,7 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
                 TodayEventData data1 = new TodayEventData(0, "0000", "2400", "未添加事件");
                 todayEventDatas.add(data1);
             } else {
-                Logger.e(starts[0] + "starts{0}");
+//                Logger.e(starts[0] + "starts{0}");
                 if (i == 0 && Integer.parseInt(starts[0]) > 0) {
                     TodayEventData data2 = new TodayEventData(0, "0000", starts[0], "未添加事件");
                     todayEventDatas.add(data2);
@@ -246,8 +255,8 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
                 String startTimes = (String) SPUtils.get(getActivity(), "startTimes", "");
                 String endTimes = (String) SPUtils.get(getActivity(), "endTimes", "");
                 String eventType = (String) SPUtils.get(getActivity(), "eventType", "");
-                Logger.e("old::" + startTimes + "::" + endTimes + "::type::" + eventType);
-                Logger.e(startTime + "start::end::" + endTime);
+//                Logger.e("old::" + startTimes + "::" + endTimes + "::type::" + eventType);
+//                Logger.e(startTime + "start::end::" + endTime);
 
                 //替换字符串的一种方式
 //                Pattern compileStart = Pattern.compile(startTimes);

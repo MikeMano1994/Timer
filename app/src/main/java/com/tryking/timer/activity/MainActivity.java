@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         initDatas();
         initViews();
+//        startActivity(new Intent(MainActivity.this, TestActivity.class));
     }
 
     private void initDatas() {

@@ -93,7 +93,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
         startTimes = (String) SPUtils.get(AddActivity.this, "startTimes", "");
         endTimes = (String) SPUtils.get(AddActivity.this, "endTimes", "");
         eventType = (String) SPUtils.get(AddActivity.this, "eventType", "");
-        Logger.e(startTimes + "start:::" + endTimes + "end::::type" + eventType);
+//        Logger.e(startTimes + "start:::" + endTimes + "end::::type" + eventType);
         String[] starts = CommonUtils.convertStrToArray(startTimes);
         String[] ends = CommonUtils.convertStrToArray(endTimes);
         String[] type = CommonUtils.convertStrToArray(eventType);
@@ -130,7 +130,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
         }
         String s = "";
         if (starts.length == 1 && starts[0] == "") {
-            s = "0000-2400";
+            s = "00:00-24:00";
         } else {
             for (int i = 0; i < starts.length; i++) {
                 int startI = Integer.parseInt(starts[i]);
@@ -144,7 +144,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                 }
                 if (startInt > endInt) {
                     if (s == "") {
-                        s = s + ";\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr(starts[i + 1]);
+                        s = s + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr(starts[i + 1]);
                     } else {
                         s = s + ";\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr(starts[i + 1]);
                     }
@@ -163,7 +163,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
         tvHint.setText(s);
     }
 
-    @OnClick({R.id.ll_startTime, R.id.ll_endTime, R.id.bt_complete})
+    @OnClick({R.id.ll_startTime, R.id.ll_endTime, R.id.bt_complete, R.id.bt_cancel})
     void click(View v) {
         switch (v.getId()) {
             case R.id.ll_startTime:
@@ -183,6 +183,8 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
             case R.id.bt_complete:
                 judgeDataIsLegal();
                 break;
+            case R.id.bt_cancel:
+                this.finish();
             default:
                 break;
         }
@@ -233,9 +235,9 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                                 startTimes = CommonUtils.listToString(newHaveThingStartInts);
                                 endTimes = CommonUtils.listToString(newHaveThingEndInts);
                                 eventType = CommonUtils.listToString(newHaveThingType);
-                                Logger.e(startTimes + "::start");
-                                Logger.e(endTimes + "::ends");
-                                Logger.e(eventType + "::type");
+//                                Logger.e(startTimes + "::start");
+//                                Logger.e(endTimes + "::ends");
+//                                Logger.e(eventType + "::type");
                                 SPUtils.put(AddActivity.this, "startTimes", startTimes);
                                 SPUtils.put(AddActivity.this, "endTimes", endTimes);
                                 SPUtils.put(AddActivity.this, "eventType", eventType);
@@ -252,14 +254,14 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                                 startTimes = CommonUtils.listToString(haveThingStartInts);
                                 endTimes = CommonUtils.listToString(haveThingEndInts);
                                 eventType = CommonUtils.listToString(haveThingType);
-                                Logger.e(startTimes + ":::start");
-                                Logger.e(endTimes + ":::ends");
-                                Logger.e(eventType + ":::type");
+//                                Logger.e(startTimes + ":::start");
+//                                Logger.e(endTimes + ":::ends");
+//                                Logger.e(eventType + ":::type");
                                 SPUtils.put(AddActivity.this, "startTimes", startTimes);
                                 SPUtils.put(AddActivity.this, "endTimes", endTimes);
                                 SPUtils.put(AddActivity.this, "eventType", eventType);
                                 //以开始时间作为名字存储事件
-                                Logger.e(String.valueOf(start) + "qqqqqqqqqq");
+//                                Logger.e(String.valueOf(start) + "qqqqqqqqqq");
                                 SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
                                 setResult(RESULT_OK);
                                 finish();
