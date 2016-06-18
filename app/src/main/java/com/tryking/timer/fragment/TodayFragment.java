@@ -24,6 +24,9 @@ import com.tryking.timer.R;
 import com.tryking.timer.activity.AddActivity;
 import com.tryking.timer.adapter.TodayEventAdapter;
 import com.tryking.timer.bean.TodayEventData;
+import com.tryking.timer.db.dao.EverydayEventSourceDao;
+import com.tryking.timer.db.dao.SpecificEventSourceDao;
+import com.tryking.timer.db.table.EverydayEventSource;
 import com.tryking.timer.utils.CommonUtils;
 import com.tryking.timer.utils.SPUtils;
 import com.tryking.timer.widgets.CommonDialog;
@@ -33,10 +36,13 @@ import com.tryking.timer.widgets.RecyclerView.MyItemDividerDecoration;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -93,9 +99,9 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     private void handlerData(Intent data) {
         String startTimes = (String) SPUtils.get(getActivity(), "startTimes", "");
         String endTimes = (String) SPUtils.get(getActivity(), "endTimes", "");
-        String eventType = (String) SPUtils.get(getActivity(), "eventType", "");
+        String eventTypes = (String) SPUtils.get(getActivity(), "eventTypes", "");
 
-        refreshRecyclerViewDataByString(startTimes, endTimes, eventType);
+        refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
     }
 
     @Override
@@ -108,16 +114,16 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     private void initDatas() {
 //        SPUtils.put(getActivity(), "startTimes", "");
 //        SPUtils.put(getActivity(), "endTimes", "");
-//        SPUtils.put(getActivity(), "eventType", "");
+//        SPUtils.put(getActivity(), "eventTypes", "");
         long intervalTime = getIntervalTime();
         tvAwoke.setTextPreTime("今天还可以和时间做朋友：");
         tvAwoke.setIntervalTime(intervalTime, true);
 
         String startTimes = (String) SPUtils.get(getActivity(), "startTimes", "");
         String endTimes = (String) SPUtils.get(getActivity(), "endTimes", "");
-        String eventType = (String) SPUtils.get(getActivity(), "eventType", "");
+        String eventTypes = (String) SPUtils.get(getActivity(), "eventTypes", "");
 
-        refreshRecyclerViewDataByString(startTimes, endTimes, eventType);
+        refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
     }
 
     /*
@@ -134,7 +140,7 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
         if (!saveDate.equals(currentDate)) {
             SPUtils.put(getActivity(), "startTimes", "");
             SPUtils.put(getActivity(), "endTimes", "");
-            SPUtils.put(getActivity(), "eventType", "");
+            SPUtils.put(getActivity(), "eventTypes", "");
             SPUtils.put(getActivity(), "currentDate", currentDate);
         }
         long time = 0;
@@ -171,10 +177,10 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     /*
     根据起止时间更新RecyclerView的内容
      */
-    private void refreshRecyclerViewDataByString(String startTimes, String endTimes, String eventType) {
+    private void refreshRecyclerViewDataByString(String startTimes, String endTimes, String eventTypes) {
         String[] starts = CommonUtils.convertStrToArray(startTimes);
         String[] ends = CommonUtils.convertStrToArray(endTimes);
-        String[] type = CommonUtils.convertStrToArray(eventType);
+        String[] type = CommonUtils.convertStrToArray(eventTypes);
         String[] event = new String[starts.length];
         //拿到具体的事件
         for (int i = 0; i < starts.length; i++) {
@@ -254,8 +260,8 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
 //                TT.showShort(getActivity(), "删除啦");
                 String startTimes = (String) SPUtils.get(getActivity(), "startTimes", "");
                 String endTimes = (String) SPUtils.get(getActivity(), "endTimes", "");
-                String eventType = (String) SPUtils.get(getActivity(), "eventType", "");
-//                Logger.e("old::" + startTimes + "::" + endTimes + "::type::" + eventType);
+                String eventTypes = (String) SPUtils.get(getActivity(), "eventTypes", "");
+//                Logger.e("old::" + startTimes + "::" + endTimes + "::type::" + eventTypes);
 //                Logger.e(startTime + "start::end::" + endTime);
 
                 //替换字符串的一种方式
@@ -271,14 +277,14 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
                     newEnds = CommonUtils.deleteStr(endTimes, "," + endTime);
                     int i = startTimes.indexOf("," + startTime);
                     if (i != -1) {
-                        newTypes = eventType.substring(0, i) + eventType.substring(i + 5);
+                        newTypes = eventTypes.substring(0, i) + eventTypes.substring(i + 5);
                     }
                 } else {
                     newStarts = CommonUtils.deleteStr(startTimes, startTime);
                     newEnds = CommonUtils.deleteStr(endTimes, endTime);
                     int i = startTimes.indexOf(startTime);
                     if (i != -1) {
-                        newTypes = eventType.substring(0, i) + eventType.substring(i + 4);
+                        newTypes = eventTypes.substring(0, i) + eventTypes.substring(i + 4);
                     }
                     if (newStarts.startsWith(",") && newEnds.startsWith(",") && newTypes.startsWith(",")) {
                         newStarts = newStarts.replaceFirst(",", "");
@@ -286,18 +292,75 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
                         newTypes = newTypes.replaceFirst(",", "");
                     }
                 }
-//                Logger.e("之前存在吗？？？？" + SPUtils.contains(getActivity(), startTime));
-                Logger.e("news::" + newStarts + "::" + newEnds + ":::" + newTypes);
+//                Logger.e("news::" + newStarts + "::" + newEnds + ":::" + newTypes);
                 SPUtils.put(getActivity(), "startTimes", newStarts);
                 SPUtils.put(getActivity(), "endTimes", newEnds);
-                SPUtils.put(getActivity(), "eventType", newTypes);
+                SPUtils.put(getActivity(), "eventTypes", newTypes);
+                saveToDataBase(newStarts, newEnds, newTypes);
+
                 //把存储的事件的key删除
                 SPUtils.remove(getActivity(), startTime);
-                refreshRecyclerViewDataByString(newStarts, newEnds, eventType);
+                deleteFromDataBase(startTime);
+                refreshRecyclerViewDataByString(newStarts, newEnds, eventTypes);
                 commonDialog.dismiss();
-//                Logger.e("存在吗？？？？" + SPUtils.contains(getActivity(), startTime));
             }
         }, null);
         commonDialog.show();
+    }
+
+    /*
+    将删除的事件从数据库中删除
+     */
+    private void deleteFromDataBase(String startTime) {
+        SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(getActivity());
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", "");
+            String currentDate = (String) SPUtils.get(getActivity(), "currentDate", "");
+            map.put("eventDate", currentDate);
+            map.put("startTime", startTime);
+            specificEventDao.delete(specificEventDao.query(map));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+//        try {
+//            ArrayList<SpecificEventSource> specificEventSources = (ArrayList<SpecificEventSource>)specificEventDao.queryAll();
+//            Logger.e("删除后保存的数据" + specificEventSources.toString());
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    /*
+    将每日事件保存到数据库
+     */
+    private void saveToDataBase(String startTimes, String endTimes, String eventTypes) {
+        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(getActivity());
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", "");
+            String currentDate = (String) SPUtils.get(getActivity(), "currentDate", "");
+            map.put("eventDate", currentDate);
+            ArrayList<EverydayEventSource> todayEventList = (ArrayList<EverydayEventSource>) everydayEventDao.query(map);
+            if (todayEventList == null || todayEventList.size() <= 0) {
+                //今日未添加过事项
+                everydayEventDao.save(new EverydayEventSource("", currentDate, startTimes, endTimes, eventTypes));
+            } else {
+                todayEventList.get(0).setStartTimes(startTimes);
+                todayEventList.get(0).setEndTimes(endTimes);
+                todayEventList.get(0).setEventTypes(eventTypes);
+                everydayEventDao.update(todayEventList.get(0));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+//        try {
+//            ArrayList<EverydayEventSource> specificEventSources = (ArrayList<EverydayEventSource>)everydayEventDao.queryAll();
+//            Logger.e("删除后保存后的数据" + specificEventSources.toString());
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 }

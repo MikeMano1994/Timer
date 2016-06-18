@@ -1,23 +1,20 @@
 package com.tryking.timer.test;
 
-import android.graphics.Color;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
+import android.widget.CalendarView;
 
 import com.tryking.timer.R;
-import com.tryking.timer.widgets.CountDownTextView;
+import com.tryking.timer.utils.TT;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class TestActivity extends AppCompatActivity {
-
-    @Bind(R.id.text)
-    CountDownTextView text;
-    @Bind(R.id.button)
-    Button button;
+    @Bind(R.id.calendar)
+    CalendarView calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +25,15 @@ public class TestActivity extends AppCompatActivity {
         initData();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void initData() {
-        button.setOnClickListener(new View.OnClickListener() {
+        calendar.setShownWeekCount(4);
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onClick(View v) {
-                text.setTextColor(Color.RED);
-                text.setTextPreTime("还剩余：");
-                text.setIntervalTime(60 * 2, true);
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                TT.showShort(TestActivity.this, "我被选择了" + month);
             }
         });
+
     }
 }

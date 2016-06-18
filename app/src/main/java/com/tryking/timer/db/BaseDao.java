@@ -2,7 +2,6 @@ package com.tryking.timer.db;
 
 import android.content.Context;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedDelete;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -29,8 +28,8 @@ public abstract class BaseDao<T, Integer> {
 
     protected DatabaseHelper getHelper() {
         if (mDatabaseHelper == null) {
-//            mDatabaseHelper = DatabaseHelper.getHelper(mContext);
-            mDatabaseHelper = OpenHelperManager.getHelper(mContext, DatabaseHelper.class);
+            mDatabaseHelper = DatabaseHelper.getHelper(mContext);
+//            mDatabaseHelper = OpenHelperManager.getHelper(mContext, DatabaseHelper.class);
         }
         return mDatabaseHelper;
     }

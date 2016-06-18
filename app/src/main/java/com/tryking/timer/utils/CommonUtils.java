@@ -48,6 +48,18 @@ public class CommonUtils {
     }
 
     /**
+     * 将带年月日的日期转化为不带汉字的
+     * @param oldStr
+     * @return
+     */
+    public static String clearHanZiFromStr(String oldStr) {
+        String newStr = oldStr.replace("年", "")
+                .replace("月", "")
+                .replace("日", "");
+        return newStr;
+    }
+
+    /**
      * 往List中添加一个数据
      *
      * @param list
@@ -99,6 +111,7 @@ public class CommonUtils {
 
     /**
      * 删除字符串中的字符串
+     *
      * @param oldStr
      * @param str
      * @return

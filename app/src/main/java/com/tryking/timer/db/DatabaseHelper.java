@@ -7,7 +7,8 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import com.tryking.timer.db.table.EventItemSource;
+import com.tryking.timer.db.table.EverydayEventSource;
+import com.tryking.timer.db.table.SpecificEventSource;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -38,7 +39,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, EventItemSource.class);
+            TableUtils.createTable(connectionSource, EverydayEventSource.class);
+            TableUtils.createTable(connectionSource, SpecificEventSource.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,7 +49,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            TableUtils.dropTable(connectionSource, EventItemSource.class, true);
+            TableUtils.dropTable(connectionSource, EverydayEventSource.class, true);
+            TableUtils.dropTable(connectionSource, SpecificEventSource.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();

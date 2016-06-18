@@ -22,7 +22,8 @@
             android:name=".activity.AddActivity"
             android:theme="@style/AppTheme.Float"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".test.TestActivity"></activity>
+        <activity android:name=".test.TestActivity" />
+        <activity android:name=".activity.ShowDataActivity"></activity>
     </application>
 
 </manifest>

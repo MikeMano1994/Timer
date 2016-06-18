@@ -18,13 +18,20 @@ import android.widget.TextView;
 import com.orhanobut.logger.Logger;
 import com.tryking.timer.R;
 import com.tryking.timer.bean.TodayEventData;
+import com.tryking.timer.db.dao.EverydayEventSourceDao;
+import com.tryking.timer.db.dao.SpecificEventSourceDao;
+import com.tryking.timer.db.table.EverydayEventSource;
+import com.tryking.timer.db.table.SpecificEventSource;
 import com.tryking.timer.utils.CommonUtils;
 import com.tryking.timer.utils.SPUtils;
 import com.tryking.timer.utils.TT;
 import com.tryking.timer.widgets.NumberPickerPopupWindow;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -75,7 +82,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
 
     private String startTimes;//从SharedPreference中取出的开始时间汇总
     private String endTimes;//从SharedPreference中取出的结束时间汇总
-    private String eventType;//从SharedPreference中取出的事件类型汇总
+    private String eventTypes;//从SharedPreference中取出的事件类型汇总
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,11 +99,11 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
 
         startTimes = (String) SPUtils.get(AddActivity.this, "startTimes", "");
         endTimes = (String) SPUtils.get(AddActivity.this, "endTimes", "");
-        eventType = (String) SPUtils.get(AddActivity.this, "eventType", "");
-//        Logger.e(startTimes + "start:::" + endTimes + "end::::type" + eventType);
+        eventTypes = (String) SPUtils.get(AddActivity.this, "eventTypes", "");
+//        Logger.e(startTimes + "start:::" + endTimes + "end::::type" + eventTypes);
         String[] starts = CommonUtils.convertStrToArray(startTimes);
         String[] ends = CommonUtils.convertStrToArray(endTimes);
-        String[] type = CommonUtils.convertStrToArray(eventType);
+        String[] type = CommonUtils.convertStrToArray(eventTypes);
 
         haveThingStartInts = new ArrayList<>();
         haveThingEndInts = new ArrayList<>();
@@ -150,7 +157,10 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                     }
                 }
                 if (i == ends.length - 1 && endInt < 2400) {
-                    s = s + ";\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
+                    if (ends.length == 1) {
+                        s = CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
+                    } else
+                        s = s + ";\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
                 }
             }
 //            Logger.e("haveThingStartInts:" + haveThingStartInts.toString());
@@ -209,16 +219,19 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                 haveThingType.add(dataType);
                 startTimes = CommonUtils.listToString(haveThingStartInts);
                 endTimes = CommonUtils.listToString(haveThingEndInts);
-                eventType = CommonUtils.listToString(haveThingType);
+                eventTypes = CommonUtils.listToString(haveThingType);
 
 //                Logger.e(startTimes + ":start");
 //                Logger.e(endTimes + ":ends");
-//                Logger.e(eventType + ":type");
+//                Logger.e(eventTypes + ":type");
 
                 SPUtils.put(AddActivity.this, "startTimes", startTimes);
                 SPUtils.put(AddActivity.this, "endTimes", endTimes);
-                SPUtils.put(AddActivity.this, "eventType", eventType);
+                SPUtils.put(AddActivity.this, "eventTypes", eventTypes);
                 SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
+                Logger.e("在这儿");
+                saveToDataBase(startTimes, endTimes, eventTypes);
+                saveToDataBase(CommonUtils.intToStr(start), specificEvent);
                 setResult(RESULT_OK);
                 finish();
             } else {
@@ -234,16 +247,19 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                                 List newHaveThingType = CommonUtils.addIntToList(haveThingType, j, dataType);
                                 startTimes = CommonUtils.listToString(newHaveThingStartInts);
                                 endTimes = CommonUtils.listToString(newHaveThingEndInts);
-                                eventType = CommonUtils.listToString(newHaveThingType);
+                                eventTypes = CommonUtils.listToString(newHaveThingType);
 //                                Logger.e(startTimes + "::start");
 //                                Logger.e(endTimes + "::ends");
-//                                Logger.e(eventType + "::type");
+//                                Logger.e(eventTypes + "::type");
                                 SPUtils.put(AddActivity.this, "startTimes", startTimes);
                                 SPUtils.put(AddActivity.this, "endTimes", endTimes);
-                                SPUtils.put(AddActivity.this, "eventType", eventType);
+                                SPUtils.put(AddActivity.this, "eventTypes", eventTypes);
+                                saveToDataBase(startTimes, endTimes, eventTypes);
+
                                 //以开始时间作为名字存储事件
-                                Logger.e(String.valueOf(start) + "HEREdddddddddddddd");
                                 SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
+                                saveToDataBase(CommonUtils.intToStr(start), specificEvent);
+
                                 setResult(RESULT_OK);
                                 finish();
                                 return;
@@ -253,16 +269,22 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                                 haveThingType.add(dataType);
                                 startTimes = CommonUtils.listToString(haveThingStartInts);
                                 endTimes = CommonUtils.listToString(haveThingEndInts);
-                                eventType = CommonUtils.listToString(haveThingType);
+                                eventTypes = CommonUtils.listToString(haveThingType);
 //                                Logger.e(startTimes + ":::start");
 //                                Logger.e(endTimes + ":::ends");
-//                                Logger.e(eventType + ":::type");
+//                                Logger.e(eventTypes + ":::type");
+
                                 SPUtils.put(AddActivity.this, "startTimes", startTimes);
                                 SPUtils.put(AddActivity.this, "endTimes", endTimes);
-                                SPUtils.put(AddActivity.this, "eventType", eventType);
-                                //以开始时间作为名字存储事件
+                                SPUtils.put(AddActivity.this, "eventTypes", eventTypes);
+                                saveToDataBase(startTimes, endTimes, eventTypes);
+
 //                                Logger.e(String.valueOf(start) + "qqqqqqqqqq");
+
+                                //以开始时间作为名字存储事件
                                 SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
+                                saveToDataBase(CommonUtils.intToStr(start), specificEvent);
+
                                 setResult(RESULT_OK);
                                 finish();
                                 return;
@@ -273,6 +295,73 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                 TT.showShort(AddActivity.this, "您似乎选择的不合理哦！");
             }
         }
+    }
+
+    /*
+    保存具体的事项到数据库
+     */
+    private void saveToDataBase(String startTime, String specificEvent) {
+        Logger.e("保存具体事项");
+        SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(AddActivity.this);
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", "");
+            String currentDate = (String) SPUtils.get(AddActivity.this, "currentDate", "");
+            map.put("eventDate", currentDate);
+            map.put("startTime", startTime);
+            ArrayList<SpecificEventSource> specificEventList = (ArrayList<SpecificEventSource>) specificEventDao.query(map);
+            if (specificEventList == null || specificEventList.size() <= 0) {
+                //本时段未添加过事项
+                specificEventDao.save(new SpecificEventSource("", currentDate, startTime, specificEvent));
+            } else {
+                specificEventList.get(0).setSpecificEvent(specificEvent);
+                specificEventDao.update(specificEventList.get(0));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        try {
+//            ArrayList<SpecificEventSource> specificEventSources = (ArrayList<SpecificEventSource>) specificEventDao.queryAll();
+//            for (int i = 0; i < specificEventSources.size(); i++) {
+//                Logger.e("Add保存后的数据" + specificEventSources.get(i).toString());
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    /*
+    将每日事件保存到数据库
+     */
+    private void saveToDataBase(String startTimes, String endTimes, String eventTypes) {
+        Logger.e("保存每日事件");
+        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(AddActivity.this);
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", "");
+            String currentDate = (String) SPUtils.get(AddActivity.this, "currentDate", "");
+            map.put("eventDate", currentDate);
+            ArrayList<EverydayEventSource> todayEventList = (ArrayList<EverydayEventSource>) everydayEventDao.query(map);
+            if (todayEventList == null || todayEventList.size() <= 0) {
+                //今日未添加过事项
+                everydayEventDao.save(new EverydayEventSource("", currentDate, startTimes, endTimes, eventTypes));
+            } else {
+                todayEventList.get(0).setStartTimes(startTimes);
+                todayEventList.get(0).setEndTimes(endTimes);
+                todayEventList.get(0).setEventTypes(eventTypes);
+                everydayEventDao.update(todayEventList.get(0));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        try {
+//            ArrayList<EverydayEventSource> specificEventSources = (ArrayList<EverydayEventSource>) everydayEventDao.queryAll();
+//            for (int i = 0; i < specificEventSources.size(); i++) {
+//                Logger.e("Add保存后的数据" + specificEventSources.get(i).toString());
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /*
@@ -301,7 +390,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
      */
     @Override
     public void onFinished(int currentHour, int currentMinute) {
-        Logger.e(currentHour + "::" + currentMinute);
+//        Logger.e(currentHour + "::" + currentMinute);
         if (currentHour == 24) {
             currentHour = 0;
         }

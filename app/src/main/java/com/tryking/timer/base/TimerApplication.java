@@ -10,7 +10,12 @@ public class TimerApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        init();
         initThird();
+    }
+
+    private void init() {
+
     }
 
     /*
