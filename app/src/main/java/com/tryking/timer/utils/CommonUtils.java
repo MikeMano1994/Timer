@@ -49,6 +49,7 @@ public class CommonUtils {
 
     /**
      * 将带年月日的日期转化为不带汉字的
+     *
      * @param oldStr
      * @return
      */
@@ -124,5 +125,41 @@ public class CommonUtils {
             return s;
         }
         return oldStr;
+    }
+
+    /**
+     * 根据给定的开始时间和结束时间计算出持续时间
+     *
+     * @param startTime 开始时间的4位String类型
+     * @param endTime   结束时间的4位String类型
+     * @return 持续时间
+     */
+    public static String durationTime(String startTime, String endTime) {
+//        int endMinutes = Integer.parseInt(endTime.substring(0, 2)) * 60 + Integer.parseInt(endTime.substring(2, 4));
+//        int startMinutes = Integer.parseInt(startTime.substring(0, 2)) * 60 + Integer.parseInt(startTime.substring(2, 4));
+//        int duration = endMinutes - startMinutes;
+        int duration = durationMinutes(startTime, endTime);
+        if (duration < 0) {
+            throw new IllegalArgumentException("endTime need bigger than startTime");
+        } else {
+            int hours = duration / 60;
+            int minutes = duration % 60;
+            String str = hours + "小时" + minutes + "分钟";
+            return str;
+        }
+    }
+
+    /**
+     * 根据给定的开始时间和结束时间计算出持续时间分钟数
+     *
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 持续时间的分钟数
+     */
+    public static int durationMinutes(String startTime, String endTime) {
+        int endMinutes = Integer.parseInt(endTime.substring(0, 2)) * 60 + Integer.parseInt(endTime.substring(2, 4));
+        int startMinutes = Integer.parseInt(startTime.substring(0, 2)) * 60 + Integer.parseInt(startTime.substring(2, 4));
+        int duration = endMinutes - startMinutes;
+        return duration;
     }
 }

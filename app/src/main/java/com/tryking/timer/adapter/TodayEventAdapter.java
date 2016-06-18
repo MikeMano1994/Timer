@@ -26,7 +26,6 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<TodayEventData> mData;
     private WeakReference<Context> mContext;
     private LayoutInflater mInflater;
-    private RecyclerView mRecyclerView;
 
     public TodayEventAdapter(WeakReference<Context> context, List<TodayEventData> data) {
         mContext = context;
@@ -96,9 +95,12 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 default:
                     break;
             }
+            String durationTime = CommonUtils.durationTime(mData.get(position).getStartTime(), mData.get(position).getEndTime());
+            int durationMinutes = CommonUtils.durationMinutes(mData.get(position).getStartTime(), mData.get(position).getEndTime());
             ((HaveEventViewHolder) holder).startTime.setText(CommonUtils.addSignToStr(mData.get(position).getStartTime()));
             ((HaveEventViewHolder) holder).endTime.setText(CommonUtils.addSignToStr(mData.get(position).getEndTime()));
             ((HaveEventViewHolder) holder).specificEvent.setText(mData.get(position).getSpecificEvent());
+            ((HaveEventViewHolder) holder).durationTime.setText(durationTime);
             ((HaveEventViewHolder) holder).llParent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -107,6 +109,16 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 }
             });
+            ViewGroup.LayoutParams layoutParams = ((HaveEventViewHolder) holder).llParent.getLayoutParams();
+            if (durationMinutes <= 60) {
+                layoutParams.height = 150;
+            } else if (durationMinutes <= 360) {
+                layoutParams.height = 150 + (durationMinutes - 60) * 250 / 300;
+            } else {
+                layoutParams.height = 400;
+            }
+
+            ((HaveEventViewHolder) holder).llParent.setLayoutParams(layoutParams);
             ((HaveEventViewHolder) holder).llParent.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -149,6 +161,8 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView endTime;
         @Bind(R.id.specific_event)
         TextView specificEvent;
+        @Bind(R.id.tv_duration)
+        TextView durationTime;
 
         public HaveEventViewHolder(View itemView) {
             super(itemView);

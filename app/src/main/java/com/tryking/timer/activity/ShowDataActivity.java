@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 
 import com.orhanobut.logger.Logger;
 import com.tryking.timer.R;
@@ -28,9 +29,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ShowDataActivity extends AppCompatActivity {
-
     @Bind(R.id.rv_showData)
     RecyclerView rvShowData;
+    @Bind(R.id.toolBar)
+    Toolbar toolBar;
 
     List<TodayEventData> eventDatas = new ArrayList<>();
     private TodayEventAdapter adapter;
@@ -44,6 +46,7 @@ public class ShowDataActivity extends AppCompatActivity {
 
         initData();
     }
+
 
     private void initData() {
         Intent intent = getIntent();
@@ -110,7 +113,7 @@ public class ShowDataActivity extends AppCompatActivity {
                 } else {
                     String specificEvent = specificEventList.get(0).getSpecificEvent();
                     Logger.e(specificEvent.toString());
-                    event[i]=specificEvent;
+                    event[i] = specificEvent;
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
