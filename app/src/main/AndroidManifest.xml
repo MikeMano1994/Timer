@@ -24,7 +24,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".test.TestActivity" />
         <activity
-            android:name=".activity.ShowDataActivity"
+            android:name=".activity.ViewHistoryActivity"
             android:theme="@style/AppTheme.Float" />
     </application>
 

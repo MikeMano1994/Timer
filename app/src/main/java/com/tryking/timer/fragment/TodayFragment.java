@@ -22,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 import com.orhanobut.logger.Logger;
 import com.tryking.timer.R;
 import com.tryking.timer.activity.AddActivity;
+import com.tryking.timer.activity.MainActivity;
 import com.tryking.timer.adapter.TodayEventAdapter;
 import com.tryking.timer.bean.TodayEventData;
 import com.tryking.timer.db.dao.EverydayEventSourceDao;
@@ -134,15 +135,15 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
         Date nowDate = new Date(System.currentTimeMillis());
         String nowDateStr = dateFormat.format(nowDate);
         currentDate = nowDateStr.substring(0, 4) + nowDateStr.substring(5, 7) + nowDateStr.substring(8, 10);
-        String saveDate = (String) SPUtils.get(getActivity(), "currentDate", "");
-//        Logger.e(currentDate + "cur:::save:" + saveDate);
-        //如果不是同一天的话就要把所有的数据清除
-        if (!saveDate.equals(currentDate)) {
-            SPUtils.put(getActivity(), "startTimes", "");
-            SPUtils.put(getActivity(), "endTimes", "");
-            SPUtils.put(getActivity(), "eventTypes", "");
-            SPUtils.put(getActivity(), "currentDate", currentDate);
-        }
+//        String saveDate = (String) SPUtils.get(getActivity(), "currentDate", "");
+////        Logger.e(currentDate + "cur:::save:" + saveDate);
+//        //如果不是同一天的话就要把所有的数据清除
+//        if (!saveDate.equals(currentDate)) {
+//            SPUtils.put(getActivity(), "startTimes", "");
+//            SPUtils.put(getActivity(), "endTimes", "");
+//            SPUtils.put(getActivity(), "eventTypes", "");
+//            SPUtils.put(getActivity(), "currentDate", currentDate);
+//        }
         long time = 0;
         try {
             Date deadLineTime = dateFormat.parse(nowDateStr.substring(0, 10) + "-24-00-00");
@@ -211,6 +212,9 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
             }
         }
         todayEventAdapter.refresh(todayEventDatas);
+        //跟新WeekFragment中的内容
+        WeekFragment weekFragment = (WeekFragment) ((MainActivity) getActivity()).getFragment("WeekFragment");
+        weekFragment.refresh();
     }
 
 

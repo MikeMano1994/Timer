@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -49,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
     private void initDatas() {
         fragmentList = new ArrayList<>();
         fragmentList.add(new TodayFragment());
-        fragmentList.add(new WeekFragment());
-        fragmentList.add(new IcFragment());
+        WeekFragment weekFragment = new WeekFragment();
+        IcFragment icFragment = new IcFragment();
+        fragmentList.add(weekFragment);
+        fragmentList.add(icFragment);
         titles = new ArrayList<>();
         titles.add(new String("今日"));
         titles.add(new String("本周"));
@@ -73,5 +76,24 @@ public class MainActivity extends AppCompatActivity {
             tabLayout.getTabAt(i).setContentDescription(titles.get(i));
             tabLayout.getTabAt(i).setIcon(iCons.get(i));
         }
+    }
+
+    public Fragment getFragment(String fragmentName) {
+        PagerAdapter adapter = mainContent.getAdapter();
+        Fragment fragment = null;
+        switch (fragmentName) {
+            case "TodayFragment":
+                fragment = (TodayFragment) adapter.instantiateItem(mainContent, 0);
+                break;
+            case "WeekFragment":
+                fragment = (WeekFragment) adapter.instantiateItem(mainContent, 1);
+                break;
+            case "IcFragment":
+                fragment = (IcFragment) adapter.instantiateItem(mainContent, 2);
+                break;
+            default:
+                throw new IllegalArgumentException("fragmentName Error!");
+        }
+        return fragment;
     }
 }

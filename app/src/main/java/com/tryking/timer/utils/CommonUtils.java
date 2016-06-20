@@ -162,4 +162,33 @@ public class CommonUtils {
         int duration = endMinutes - startMinutes;
         return duration;
     }
+
+    public static String getApproximation(float original) {
+        String s = String.valueOf(original);
+        String newStr = "";
+        if (s.contains(".")) {
+            String[] split = s.split("\\.");
+//            for (int i = 0; i < split.length; i++) {
+//                Logger.e(split[i]);
+//            }
+            int i = Integer.parseInt(split[1]);
+            if (i == 0) {
+                newStr = split[0];
+            } else if (i < 10) {
+                newStr = split[0] + i;
+            } else {
+                String sub1 = split[1].substring(0, 1);
+                String sub2 = split[1].substring(1, 2);
+                int s1 = Integer.parseInt(sub1);
+                int s2 = Integer.parseInt(sub2);
+                if (s2 >= 55) {
+                    s1 += 1;
+                }
+                newStr = split[0] + "." + s1;
+            }
+        } else {
+            newStr = s;
+        }
+        return newStr;
+    }
 }

@@ -4,9 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--<android.support.v4.widget.NestedScrollView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,11 +19,28 @@
                 android:gravity="center"
                 android:text="我是彩蛋" />
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:padding="10dp"
-                android:id="@+id/showPieChart"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></com.github.mikephil.charting.charts.PieChart>
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="今日事项统计" />
+
+
+            <Button
+                android:layout_marginLeft="10dp"
+                android:id="@+id/bt_viewHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:text="查看历史" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/showPieChart"
+                android:layout_width="300dp"
+                android:layout_height="450dp"
+                android:layout_gravity="center"
+                android:padding="10dp"></com.github.mikephil.charting.charts.PieChart>
 
             <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                 android:id="@+id/calendarView"
@@ -37,9 +54,7 @@
                 android:layout_gravity="center_horizontal"
                 android:text="未选择" />
 
-
         </LinearLayout>
-
-    <!--</android.support.v4.widget.NestedScrollView>-->
+    </android.support.v4.widget.NestedScrollView>
 
 </LinearLayout>

@@ -3,10 +3,13 @@ package com.tryking.timer.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.FrameLayout;
 
 import com.orhanobut.logger.Logger;
 import com.tryking.timer.R;
@@ -16,6 +19,7 @@ import com.tryking.timer.db.dao.EverydayEventSourceDao;
 import com.tryking.timer.db.dao.SpecificEventSourceDao;
 import com.tryking.timer.db.table.EverydayEventSource;
 import com.tryking.timer.db.table.SpecificEventSource;
+import com.tryking.timer.fragment.ViewHistoryCalendarFragment;
 import com.tryking.timer.utils.CommonUtils;
 
 import java.lang.ref.WeakReference;
@@ -28,11 +32,14 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ShowDataActivity extends AppCompatActivity {
+public class ViewHistoryActivity extends AppCompatActivity {
     @Bind(R.id.rv_showData)
     RecyclerView rvShowData;
     @Bind(R.id.toolBar)
     Toolbar toolBar;
+    @Bind(R.id.rl_content)
+    FrameLayout rlContent;
+
 
     List<TodayEventData> eventDatas = new ArrayList<>();
     private TodayEventAdapter adapter;
@@ -44,7 +51,15 @@ public class ShowDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_data);
         ButterKnife.bind(this);
 
-        initData();
+//        initData();
+        initDatas();
+    }
+
+    private void initDatas() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.rl_content, new ViewHistoryCalendarFragment());
+        transaction.commit();
     }
 
 
@@ -52,8 +67,8 @@ public class ShowDataActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String getDate = intent.getStringExtra("date");
         date = CommonUtils.clearHanZiFromStr(getDate);
-        rvShowData.setLayoutManager(new LinearLayoutManager(ShowDataActivity.this));
-        adapter = new TodayEventAdapter(new WeakReference<Context>(ShowDataActivity.this), eventDatas);
+        rvShowData.setLayoutManager(new LinearLayoutManager(ViewHistoryActivity.this));
+        adapter = new TodayEventAdapter(new WeakReference<Context>(ViewHistoryActivity.this), eventDatas);
         rvShowData.setAdapter(adapter);
         getDataFromDatabase(date);
     }
@@ -62,10 +77,7 @@ public class ShowDataActivity extends AppCompatActivity {
     从数据库中获取数据
      */
     private void getDataFromDatabase(String date) {
-//        String currentDate = (String) SPUtils.get(ShowDataActivity.this, "currentDate", "");
-//        Logger.e("currentDate:" + currentDate + currentDate.length());
-//        Logger.e("GotDate:" + date + date.length());
-        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(ShowDataActivity.this);
+        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(ViewHistoryActivity.this);
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("userId", "");
@@ -101,7 +113,7 @@ public class ShowDataActivity extends AppCompatActivity {
         String[] event = new String[starts.length];
         //拿到具体的事件
         for (int i = 0; i < starts.length; i++) {
-            SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(ShowDataActivity.this);
+            SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(ViewHistoryActivity.this);
             try {
                 Map<String, Object> map = new HashMap<>();
                 map.put("userId", "");
