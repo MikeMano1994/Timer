@@ -95,6 +95,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
     }
 
     private void initView() {
+        setSupportActionBar(toolBar);
         rbWork.setChecked(true);
 
         startTimes = (String) SPUtils.get(AddActivity.this, "startTimes", "");

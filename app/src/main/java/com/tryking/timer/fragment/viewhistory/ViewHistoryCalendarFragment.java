@@ -1,24 +1,29 @@
-package com.tryking.timer.fragment;
+package com.tryking.timer.fragment.viewhistory;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 import com.tryking.timer.R;
-import com.tryking.timer.activity.ViewHistoryActivity;
+import com.tryking.timer.db.dao.EverydayEventSourceDao;
+import com.tryking.timer.db.table.EverydayEventSource;
+import com.tryking.timer.utils.CommonUtils;
+import com.tryking.timer.utils.TT;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,8 +34,6 @@ import butterknife.ButterKnife;
 public class ViewHistoryCalendarFragment extends Fragment implements OnDateSelectedListener, OnMonthChangedListener {
     @Bind(R.id.calendarView)
     MaterialCalendarView calendarView;
-    @Bind(R.id.show_choose)
-    TextView showChoose;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +50,6 @@ public class ViewHistoryCalendarFragment extends Fragment implements OnDateSelec
     private void init() {
         calendarView.setOnDateChangedListener(this);
         calendarView.setOnMonthChangedListener(this);
-        showChoose.setText(getSelectedDatesString());
     }
 
     @Nullable
@@ -61,10 +63,9 @@ public class ViewHistoryCalendarFragment extends Fragment implements OnDateSelec
     @Override
     public void onResume() {
         super.onResume();
-        Logger.e("onResume ");
     }
 
-    private String getSelectedDatesString() {
+    private String getSelectedDateString() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
         CalendarDay date = calendarView.getSelectedDate();
         if (date != null) {
@@ -76,12 +77,38 @@ public class ViewHistoryCalendarFragment extends Fragment implements OnDateSelec
 
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-        showChoose.setText(getSelectedDatesString());
+        String selectedDate = CommonUtils.clearHanZiFromStr(getSelectedDateString());
+        if (!judgeIsDatabaseHaveEvent(selectedDate)) {
+            TT.showShort(getActivity(), "此日未添加过数据");
+        } else {
+            ViewHistoryDetailFragment viewHistoryDetailFragment = ViewHistoryDetailFragment.getInstance(selectedDate);
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.rl_content, viewHistoryDetailFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+    }
 
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), ViewHistoryActivity.class);
-        intent.putExtra("date", getSelectedDatesString());
-        startActivity(intent);
+    /*
+    判断数据库中是否有存的数据
+     */
+    private boolean judgeIsDatabaseHaveEvent(String selectedDate) {
+        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(getActivity());
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", "");
+            map.put("eventDate", selectedDate);
+            List<EverydayEventSource> eventList = everydayEventDao.query(map);
+
+            if (eventList == null || eventList.size() <= 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

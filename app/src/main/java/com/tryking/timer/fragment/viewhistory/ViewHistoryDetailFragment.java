@@ -1,15 +1,15 @@
-package com.tryking.timer.fragment;
+package com.tryking.timer.fragment.viewhistory;
 
-import android.content.Intent;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -22,17 +22,16 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.orhanobut.logger.Logger;
 import com.tryking.timer.R;
-import com.tryking.timer.activity.ViewHistoryActivity;
+import com.tryking.timer.adapter.TodayEventAdapter;
 import com.tryking.timer.bean.TodayEventData;
 import com.tryking.timer.db.dao.EverydayEventSourceDao;
+import com.tryking.timer.db.dao.SpecificEventSourceDao;
 import com.tryking.timer.db.table.EverydayEventSource;
+import com.tryking.timer.db.table.SpecificEventSource;
 import com.tryking.timer.utils.CommonUtils;
-import com.tryking.timer.utils.SPUtils;
-import com.tryking.timer.utils.TT;
 
+import java.lang.ref.WeakReference;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,112 +39,77 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
- * Created by Tryking on 2016/5/13.
+ * Created by Tryking on 2016/6/20.
  */
-public class WeekFragment extends Fragment implements OnChartValueSelectedListener {
+public class ViewHistoryDetailFragment extends Fragment implements OnChartValueSelectedListener {
+    @Bind(R.id.rv_showData)
+    RecyclerView rvShowData;
     @Bind(R.id.showPieChart)
     PieChart showPieChart;
-    @Bind(R.id.bt_viewHistory)
-    Button btViewHistory;
-    @Bind(R.id.bt_viewYesterday)
-    Button btViewYesterday;
-    @Bind(R.id.tv_title)
-    TextView tvTitle;
 
 
-    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
+    List<TodayEventData> eventDatas = new ArrayList<>();
+    String date = "";
+
+    private TodayEventAdapter adapter;
     String[] mParties = new String[]{
             "未添加事件", "工作", "娱乐", "生活", "学习"
     };
 
+    public static ViewHistoryDetailFragment getInstance(String date) {
+        ViewHistoryDetailFragment viewHistoryDetailFragment = new ViewHistoryDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("date", date);
+        viewHistoryDetailFragment.setArguments(bundle);
+        return viewHistoryDetailFragment;
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.fragment_weekly, container, false);
-        ButterKnife.bind(this, inflate);
-        return inflate;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_view_history_detail, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //直接resume的时候跟新
-//        init();
+        init();
     }
 
-    @OnClick({R.id.bt_viewHistory, R.id.bt_viewYesterday})
-    void click(View v) {
-        switch (v.getId()) {
-            case R.id.bt_viewHistory:
-                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
-                break;
-            case R.id.bt_viewYesterday:
-                if (btViewYesterday.getText().toString() == "查看昨日") {
-                    refreshYesterdayData();
-                    btViewYesterday.setText("查看今日");
-                    tvTitle.setText("昨日事项统计");
-                } else {
-                    refresh();
-                    btViewYesterday.setText("查看昨日");
-                    tvTitle.setText("今日事项统计");
-                }
-                break;
-            default:
-                break;
+    private void init() {
+
+        Bundle arguments = getArguments();
+        String getDate = arguments.getString("date");
+        if (getDate != null) {
+            date = CommonUtils.clearHanZiFromStr(getDate);
+        }
+
+        rvShowData.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new TodayEventAdapter(new WeakReference<Context>(getActivity()), eventDatas);
+        rvShowData.setAdapter(adapter);
+        String[] dataFromDatabase = getDataFromDatabase(date);
+        if (dataFromDatabase.length != 0) {
+            refreshRecyclerViewDataByString(dataFromDatabase[0], dataFromDatabase[1], dataFromDatabase[2]);
+
+            float[] eventData = getEventData(dataFromDatabase);
+            initChart(eventData);
         }
     }
 
-    /*
-    数据更新为昨日的数据
-     */
-    private void refreshYesterdayData() {
-        String currentDate = (String) SPUtils.get(getActivity(), "currentDate", "");
-        String previousDay = CommonUtils.getPreviousDay(currentDate, -1);
-        String[] dataFromDatabase = getDataFromDatabase(previousDay);
-        if (null != dataFromDatabase) {
-            initChart(getEventData(dataFromDatabase));
-            showPieChart.setDescription("昨日事项统计");
-            showPieChart.setCenterText("昨日事项统计");
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        refresh();
-    }
-
-    /*
-        刷新Fragment的数据
-         */
-    public void refresh() {
-        initChart(getEventData(getEventStrings()));
-        btViewYesterday.setText("查看昨日");
-        tvTitle.setText("今日事项统计");
-//        Logger.e("超时空刷新");
-    }
-
-    private String[] getEventStrings() {
-        String startTimes = (String) SPUtils.get(getActivity(), "startTimes", "");
-        String endTimes = (String) SPUtils.get(getActivity(), "endTimes", "");
-        String eventTypes = (String) SPUtils.get(getActivity(), "eventTypes", "");
-        return new String[]{startTimes, endTimes, eventTypes};
-    }
-
-    /*
-     拿到每日的统计数据，直接将统计好的比例数据传回去
-    */
-    private float[] getEventData(String[] eventStrings) {
-        String startTimes = eventStrings[0];
-        String endTimes = eventStrings[1];
-        String eventTypes = eventStrings[2];
-
-        String[] starts = CommonUtils.convertStrToArray(startTimes);
-        String[] ends = CommonUtils.convertStrToArray(endTimes);
-        String[] type = CommonUtils.convertStrToArray(eventTypes);
+    private float[] getEventData(String[] dataFromDatabase) {
+        String[] starts = CommonUtils.convertStrToArray(dataFromDatabase[0]);
+        String[] ends = CommonUtils.convertStrToArray(dataFromDatabase[1]);
+        String[] type = CommonUtils.convertStrToArray(dataFromDatabase[2]);
 
         float noEvent = 0;
         float work = 0;
@@ -199,9 +163,9 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
             List<EverydayEventSource> eventList = everydayEventDao.query(map);
 
             if (eventList == null || eventList.size() <= 0) {
-                TT.showShort(getActivity(), "昨日未添加数据");
+                Logger.e("未添加过事件");
             } else {
-//                Logger.e("有事件");
+                Logger.e("有事件");
                 for (int i = 0; i < eventList.size(); i++) {
                     Logger.e(eventList.get(i).toString());
                     String startTimes = eventList.get(i).getStartTimes();
@@ -215,7 +179,61 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new String[0];
+    }
+
+
+    /*
+    根据起止时间更新RecyclerView的内容
+     */
+    private void refreshRecyclerViewDataByString(String startTimes, String endTimes, String eventTypes) {
+        String[] starts = CommonUtils.convertStrToArray(startTimes);
+        String[] ends = CommonUtils.convertStrToArray(endTimes);
+        String[] type = CommonUtils.convertStrToArray(eventTypes);
+        String[] event = new String[starts.length];
+        //拿到具体的事件
+        for (int i = 0; i < starts.length; i++) {
+            SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(getActivity());
+            try {
+                Map<String, Object> map = new HashMap<>();
+                map.put("userId", "");
+                map.put("eventDate", date);
+                map.put("startTime", starts[i]);
+                ArrayList<SpecificEventSource> specificEventList = (ArrayList<SpecificEventSource>) specificEventDao.query(map);
+                if (specificEventList == null || specificEventList.size() <= 0) {
+                    //本时段未添加过事项
+                } else {
+                    String specificEvent = specificEventList.get(0).getSpecificEvent();
+                    Logger.e(specificEvent.toString());
+                    event[i] = specificEvent;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        eventDatas.clear();
+        for (int i = 0; i < starts.length; i++) {
+            if (starts[0] == "" && ends[0] == "") {
+                TodayEventData data1 = new TodayEventData(0, "0000", "2400", "未添加事件");
+                eventDatas.add(data1);
+            } else {
+                if (i == 0 && Integer.parseInt(starts[0]) > 0) {
+                    TodayEventData data2 = new TodayEventData(0, "0000", starts[0], "未添加事件");
+                    eventDatas.add(data2);
+                }
+                TodayEventData data3 = new TodayEventData(Integer.parseInt(type[i]), starts[i], ends[i], event[i]);
+                eventDatas.add(data3);
+                if (i != starts.length - 1 && (!ends[i].equals(starts[i + 1]))) {
+                    TodayEventData data1 = new TodayEventData(0, ends[i], starts[i + 1], "未添加事件");
+                    eventDatas.add(data1);
+                }
+                if (i == starts.length - 1 && Integer.parseInt(ends[ends.length - 1]) < 2400) {
+                    TodayEventData data2 = new TodayEventData(0, ends[ends.length - 1], "2400", "未添加事件");
+                    eventDatas.add(data2);
+                }
+            }
+        }
+        adapter.refresh(eventDatas);
     }
 
     private void initChart(float[] eventData) {

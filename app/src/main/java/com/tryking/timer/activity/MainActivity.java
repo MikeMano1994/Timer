@@ -69,13 +69,33 @@ public class MainActivity extends AppCompatActivity {
         manager = getSupportFragmentManager();
         setSupportActionBar(toolBar);
         mainContent.setAdapter(new MainContentPagerAdapter(manager, fragmentList, titles));
-//        mainContent.setOffscreenPageLimit(4);
+        mainContent.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(mainContent);
         for (int i = 0; i < titles.size(); i++) {
             tabLayout.getTabAt(i).setText("");
             tabLayout.getTabAt(i).setContentDescription(titles.get(i));
             tabLayout.getTabAt(i).setIcon(iCons.get(i));
         }
+        mainContent.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //如果是显示第二页，刷新第二页的数据
+                if (position == 1) {
+                    WeekFragment weekFragment = (WeekFragment) getFragment("WeekFragment");
+                    weekFragment.refresh();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     public Fragment getFragment(String fragmentName) {

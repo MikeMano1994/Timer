@@ -22,7 +22,6 @@ import com.android.volley.toolbox.Volley;
 import com.orhanobut.logger.Logger;
 import com.tryking.timer.R;
 import com.tryking.timer.activity.AddActivity;
-import com.tryking.timer.activity.MainActivity;
 import com.tryking.timer.adapter.TodayEventAdapter;
 import com.tryking.timer.bean.TodayEventData;
 import com.tryking.timer.db.dao.EverydayEventSourceDao;
@@ -109,6 +108,11 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initViews();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         initDatas();
     }
 
@@ -212,9 +216,10 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
             }
         }
         todayEventAdapter.refresh(todayEventDatas);
-        //跟新WeekFragment中的内容
-        WeekFragment weekFragment = (WeekFragment) ((MainActivity) getActivity()).getFragment("WeekFragment");
-        weekFragment.refresh();
+        //直接在MainActivity中更新了
+//        //跟新WeekFragment中的内容
+//        WeekFragment weekFragment = (WeekFragment) ((MainActivity) getActivity()).getFragment("WeekFragment");
+//        weekFragment.refresh();
     }
 
 
@@ -305,7 +310,7 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
                 //把存储的事件的key删除
                 SPUtils.remove(getActivity(), startTime);
                 deleteFromDataBase(startTime);
-                refreshRecyclerViewDataByString(newStarts, newEnds, eventTypes);
+                refreshRecyclerViewDataByString(newStarts, newEnds, newTypes);
                 commonDialog.dismiss();
             }
         }, null);

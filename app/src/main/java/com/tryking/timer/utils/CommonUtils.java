@@ -1,7 +1,11 @@
 package com.tryking.timer.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -163,19 +167,22 @@ public class CommonUtils {
         return duration;
     }
 
+    /**
+     * 得到一个浮点型数的小数点后一位四舍五入值
+     *
+     * @param original
+     * @return
+     */
     public static String getApproximation(float original) {
         String s = String.valueOf(original);
         String newStr = "";
         if (s.contains(".")) {
             String[] split = s.split("\\.");
-//            for (int i = 0; i < split.length; i++) {
-//                Logger.e(split[i]);
-//            }
             int i = Integer.parseInt(split[1]);
             if (i == 0) {
                 newStr = split[0];
             } else if (i < 10) {
-                newStr = split[0] + i;
+                newStr = split[0] + "." + i;
             } else {
                 String sub1 = split[1].substring(0, 1);
                 String sub2 = split[1].substring(1, 2);
@@ -190,5 +197,25 @@ public class CommonUtils {
             newStr = s;
         }
         return newStr;
+    }
+
+    /**
+     * 得到当前日期的day天后的值，day为负则向前
+     *
+     * @param day
+     * @return
+     */
+    public static String getPreviousDay(String currentDate, int day) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        try {
+            Date current = dateFormat.parse(currentDate);
+            Calendar c = Calendar.getInstance();
+            c.setTime(current);
+            c.add(Calendar.DAY_OF_YEAR, day);
+            return dateFormat.format(c.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
