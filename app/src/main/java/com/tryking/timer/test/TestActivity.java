@@ -1,20 +1,24 @@
 package com.tryking.timer.test;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.CalendarView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.tryking.timer.R;
-import com.tryking.timer.utils.TT;
+import com.tryking.timer.widgets.BackgroundScrollViewPager;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class TestActivity extends AppCompatActivity {
-    @Bind(R.id.calendar)
-    CalendarView calendar;
+    @Bind(R.id.test)
+    BackgroundScrollViewPager test;
+    private ArrayList<View> objects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +29,38 @@ public class TestActivity extends AppCompatActivity {
         initData();
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void initData() {
-        calendar.setShownWeekCount(4);
-        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                TT.showShort(TestActivity.this, "我被选择了" + month);
-            }
-        });
+        objects = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            ImageView imageView = new ImageView(TestActivity.this);
+            imageView.setImageResource(R.drawable.ic_add);
+            objects.add(imageView);
+        }
+        test.setAdapter(new MyAdapter());
+    }
 
+    class MyAdapter extends PagerAdapter {
+
+        @Override
+        public int getCount() {
+            return objects.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+
+            container.addView(objects.get(position));
+            return objects.get(position);
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return  view == object;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView(objects.get(position));
+        }
     }
 }

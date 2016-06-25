@@ -2,6 +2,7 @@ package com.tryking.timer.base;
 
 import android.app.Application;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.orhanobut.logger.Logger;
 import com.tryking.timer.utils.SPUtils;
 
@@ -47,6 +48,6 @@ public class TimerApplication extends Application {
     初始化第三方
      */
     private void initThird() {
-
+        Fresco.initialize(getApplicationContext());
     }
 }

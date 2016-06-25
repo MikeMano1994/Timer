@@ -9,6 +9,7 @@
     <color name="float_transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
     <color name="blue">#003399</color>
+    <color name="gray">#666666</color>
 
     <!--四个事件类型-->
     <color name="work">#99CCFF</color>

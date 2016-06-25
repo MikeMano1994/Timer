@@ -1,4 +1,4 @@
-package com.tryking.timer.fragment;
+package com.tryking.timer.fragment.main;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
@@ -263,7 +263,7 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     @Override
     public void onHaveEventItemLongClick(int position, final String startTime, final String endTime) {
         final CommonDialog commonDialog = new CommonDialog(getActivity());
-        commonDialog.setDialogContent(null, "删除" + CommonUtils.addSignToStr(startTime) + " - " + CommonUtils.addSignToStr(endTime) + ("这条记录").replaceAll(".{1}(?!$)", "$0 "), null, null, new View.OnClickListener() {
+        commonDialog.setDialogContent(null, "删除\t\t" + CommonUtils.addSignToStr(startTime) + " - " + CommonUtils.addSignToStr(endTime) + ("\t\t这条记录").replaceAll(".{1}(?!$)", "$0 "), null, null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                TT.showShort(getActivity(), "删除啦");

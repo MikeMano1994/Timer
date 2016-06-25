@@ -3,4 +3,8 @@
     <!-- 倒计时 -->
     <declare-styleable name="CountDownTextView">
     </declare-styleable>
+
+    <declare-styleable name="BackgroundScrollViewPager">
+        <attr name="scrollBackground" format="reference"/>
+    </declare-styleable>
 </resources>

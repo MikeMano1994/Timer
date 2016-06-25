@@ -1,4 +1,4 @@
-package com.tryking.timer.fragment;
+package com.tryking.timer.fragment.main;
 
 import android.content.Intent;
 import android.graphics.Color;

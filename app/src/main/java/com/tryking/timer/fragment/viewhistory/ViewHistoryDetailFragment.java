@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -48,7 +49,8 @@ public class ViewHistoryDetailFragment extends Fragment implements OnChartValueS
     RecyclerView rvShowData;
     @Bind(R.id.showPieChart)
     PieChart showPieChart;
-
+    @Bind(R.id.tv_title)
+    TextView tvTitle;
 
     List<TodayEventData> eventDatas = new ArrayList<>();
     String date = "";
@@ -104,6 +106,9 @@ public class ViewHistoryDetailFragment extends Fragment implements OnChartValueS
             float[] eventData = getEventData(dataFromDatabase);
             initChart(eventData);
         }
+        tvTitle.setText(getDate + "事项统计");
+        showPieChart.setCenterText("点击边缘，\n查看比例");
+        showPieChart.setDescription(getDate + "事项统计");
     }
 
     private float[] getEventData(String[] dataFromDatabase) {
@@ -163,9 +168,9 @@ public class ViewHistoryDetailFragment extends Fragment implements OnChartValueS
             List<EverydayEventSource> eventList = everydayEventDao.query(map);
 
             if (eventList == null || eventList.size() <= 0) {
-                Logger.e("未添加过事件");
+//                Logger.e("未添加过事件");
             } else {
-                Logger.e("有事件");
+//                Logger.e("有事件");
                 for (int i = 0; i < eventList.size(); i++) {
                     Logger.e(eventList.get(i).toString());
                     String startTimes = eventList.get(i).getStartTimes();
@@ -238,14 +243,14 @@ public class ViewHistoryDetailFragment extends Fragment implements OnChartValueS
 
     private void initChart(float[] eventData) {
         showPieChart.setUsePercentValues(true);
-        showPieChart.setDescription("今日事项统计");
+//        showPieChart.setDescription("今日事项统计");
         showPieChart.setExtraOffsets(5, 10, 5, 5);
         showPieChart.setDragDecelerationFrictionCoef(0.95f);
 
         showPieChart.setDrawHoleEnabled(true);
 //        showPieChart.setHoleColor(Color.WHITE);
         showPieChart.setHoleColorTransparent(true);
-        showPieChart.setCenterText("今日事项统计");
+//        showPieChart.setCenterText("今日事项统计");
         showPieChart.setCenterTextSize(25);
 
         showPieChart.setTransparentCircleColor(Color.BLACK);
@@ -361,6 +366,6 @@ public class ViewHistoryDetailFragment extends Fragment implements OnChartValueS
 
     @Override
     public void onNothingSelected() {
-        showPieChart.setCenterText("今日事项统计");
+        showPieChart.setCenterText("点击边缘，\n查看比例");
     }
 }

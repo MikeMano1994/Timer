@@ -12,9 +12,9 @@ import android.support.v7.widget.Toolbar;
 
 import com.tryking.timer.R;
 import com.tryking.timer.adapter.MainContentPagerAdapter;
-import com.tryking.timer.fragment.IcFragment;
-import com.tryking.timer.fragment.TodayFragment;
-import com.tryking.timer.fragment.WeekFragment;
+import com.tryking.timer.fragment.main.IcFragment;
+import com.tryking.timer.fragment.main.TodayFragment;
+import com.tryking.timer.fragment.main.WeekFragment;
 
 import java.util.ArrayList;
 import java.util.List;

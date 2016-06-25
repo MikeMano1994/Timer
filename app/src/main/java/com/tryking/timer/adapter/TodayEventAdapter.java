@@ -129,7 +129,7 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         } else if (holder instanceof NoEventViewHolder) {
-            ((NoEventViewHolder) holder).hint.setText(CommonUtils.addSignToStr(mData.get(position).getStartTime()) + "-" + CommonUtils.addSignToStr(mData.get(position).getEndTime()) + "::" + mData.get(position).getSpecificEvent());
+            ((NoEventViewHolder) holder).hint.setText(CommonUtils.addSignToStr(mData.get(position).getStartTime()) + "\t\t-\t\t" + CommonUtils.addSignToStr(mData.get(position).getEndTime()) + "\t\t\t\t" + mData.get(position).getSpecificEvent());
             ((NoEventViewHolder) holder).hint.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

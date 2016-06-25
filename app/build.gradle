@@ -36,6 +36,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.facebook.fresco:fresco:0.11.0'
     /* 日历选择器 */
     compile 'com.prolificinteractive:material-calendarview:1.4.0'
 

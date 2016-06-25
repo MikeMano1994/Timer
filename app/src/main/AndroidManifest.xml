@@ -26,6 +26,8 @@
         <activity
             android:name=".activity.ViewHistoryActivity"
             android:theme="@style/AppTheme.Float" />
+        <activity android:name=".activity.LauncherActivity" />
+        <activity android:name=".activity.GuidenceActivity"></activity>
     </application>
 
 </manifest>
