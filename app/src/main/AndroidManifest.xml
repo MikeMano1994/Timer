@@ -33,7 +33,9 @@
             android:theme="@style/AppTheme.Float" />
         <activity
             android:name=".activity.LoginAndRegisterActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".umeng.ShareActivity"></activity>
+
     </application>
 
 </manifest>
