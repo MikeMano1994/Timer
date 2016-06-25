@@ -8,10 +8,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.tryking.timer.R;
+import com.tryking.timer.activity.PIMSActivity;
 import com.tryking.timer.test.TestActivity;
 
 import butterknife.Bind;
@@ -28,6 +30,8 @@ public class IcFragment extends Fragment {
     SimpleDraweeView headPortrait;
     @Bind(R.id.tv_aboutUs)
     TextView tvAboutUs;
+    @Bind(R.id.ll_PIM)
+    LinearLayout llPIM;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,11 +40,14 @@ public class IcFragment extends Fragment {
         return inflate;
     }
 
-    @OnClick(R.id.tv_aboutUs)
+    @OnClick({R.id.tv_aboutUs, R.id.ll_PIM})
     void click(View v) {
         switch (v.getId()) {
             case R.id.tv_aboutUs:
                 startActivity(new Intent(getActivity(), TestActivity.class));
+                break;
+            case R.id.ll_PIM:
+                startActivity(new Intent(getActivity(), PIMSActivity.class));
                 break;
             default:
                 break;

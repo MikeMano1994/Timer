@@ -3,13 +3,14 @@
     <color name="colorPrimary">#FF99CC</color>
     <!--状态栏颜色-->
     <color name="colorPrimaryDark">#FF4081</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="color1">#FF6666</color>
+    <color name="colorAccent">#FF6666</color>
     <color name="black">#000000</color>
     <color name="float_transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
     <color name="blue">#003399</color>
     <color name="gray">#666666</color>
+    <color name="gray_">#707070</color>
+    <color name="thin_gray">#CCCCCC</color>
 
     <!--四个事件类型-->
     <color name="work">#99CCFF</color>

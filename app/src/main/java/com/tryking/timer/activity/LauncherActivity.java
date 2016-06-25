@@ -21,10 +21,10 @@ public class LauncherActivity extends AppCompatActivity {
     private void init() {
         boolean isFirst = (boolean) SPUtils.get(LauncherActivity.this, Constants.SHARED_PREFERENCE_IS_FIRST_LAUNCHER, true);
         if (isFirst) {
-            startActivity(new Intent(LauncherActivity.this, GuidenceActivity.class));
+            startActivity(new Intent(LauncherActivity.this, GuidanceActivity.class));
             SPUtils.put(LauncherActivity.this, Constants.SHARED_PREFERENCE_IS_FIRST_LAUNCHER, false);
         } else {
-            startActivity(new Intent(LauncherActivity.this, MainActivity.class));
+            startActivity(new Intent(LauncherActivity.this, LoginAndRegisterActivity.class));
         }
         finish();
     }

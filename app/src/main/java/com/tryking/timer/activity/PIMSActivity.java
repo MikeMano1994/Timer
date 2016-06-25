@@ -1,13 +1,15 @@
 package com.tryking.timer.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-public class GuidenceActivity extends AppCompatActivity {
+import com.tryking.timer.R;
+
+public class PIMSActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guidence);
+        setContentView(R.layout.activity_pims);
     }
 }
