@@ -22,7 +22,6 @@ android {
             url "https://jitpack.io"
         }
     }
-
 }
 
 dependencies {
@@ -42,5 +41,4 @@ dependencies {
     /*  图表  */
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.0'
     //    compile 'com.android.support:multidex:1.0.1'
-    compile files('libs/umeng_social_sdk.jar')
 }
