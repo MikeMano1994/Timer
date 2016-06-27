@@ -1,11 +1,11 @@
 package com.tryking.timer.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.tryking.timer.R;
+import com.tryking.timer.base.BaseActivity;
 
-public class PIMSActivity extends AppCompatActivity {
+public class PIMSActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

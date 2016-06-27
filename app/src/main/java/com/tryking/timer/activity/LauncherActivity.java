@@ -2,13 +2,13 @@ package com.tryking.timer.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.tryking.timer.R;
+import com.tryking.timer.base.BaseActivity;
 import com.tryking.timer.global.Constants;
 import com.tryking.timer.utils.SPUtils;
 
-public class LauncherActivity extends AppCompatActivity {
+public class LauncherActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

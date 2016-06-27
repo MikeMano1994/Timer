@@ -1,7 +1,6 @@
 package com.tryking.timer.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -15,8 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
 import com.tryking.timer.R;
+import com.tryking.timer.base.BaseActivity;
 import com.tryking.timer.bean.TodayEventData;
 import com.tryking.timer.db.dao.EverydayEventSourceDao;
 import com.tryking.timer.db.dao.SpecificEventSourceDao;
@@ -37,7 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddActivity extends AppCompatActivity implements NumberPickerPopupWindow.FinishChooseListener, PopupWindow.OnDismissListener {
+public class AddActivity extends BaseActivity implements NumberPickerPopupWindow.FinishChooseListener, PopupWindow.OnDismissListener {
     @Bind(R.id.show_choose)
     TextView showChoose;
     @Bind(R.id.tv_hint)
@@ -230,7 +229,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
                 SPUtils.put(AddActivity.this, "endTimes", endTimes);
                 SPUtils.put(AddActivity.this, "eventTypes", eventTypes);
                 SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
-                Logger.e("在这儿");
+//                Logger.e("在这儿");
                 saveToDataBase(startTimes, endTimes, eventTypes);
                 saveToDataBase(CommonUtils.intToStr(start), specificEvent);
                 setResult(RESULT_OK);
@@ -302,7 +301,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
     保存具体的事项到数据库
      */
     private void saveToDataBase(String startTime, String specificEvent) {
-        Logger.e("保存具体事项");
+//        Logger.e("保存具体事项");
         SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(AddActivity.this);
         try {
             Map<String, Object> map = new HashMap<>();
@@ -335,7 +334,7 @@ public class AddActivity extends AppCompatActivity implements NumberPickerPopupW
     将每日事件保存到数据库
      */
     private void saveToDataBase(String startTimes, String endTimes, String eventTypes) {
-        Logger.e("保存每日事件");
+//        Logger.e("保存每日事件");
         EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(AddActivity.this);
         try {
             Map<String, Object> map = new HashMap<>();

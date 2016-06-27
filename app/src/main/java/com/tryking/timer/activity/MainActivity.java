@@ -7,11 +7,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.tryking.timer.R;
 import com.tryking.timer.adapter.MainContentPagerAdapter;
+import com.tryking.timer.base.BaseActivity;
 import com.tryking.timer.fragment.main.IcFragment;
 import com.tryking.timer.fragment.main.TodayFragment;
 import com.tryking.timer.fragment.main.WeekFragment;
@@ -22,7 +22,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     @Bind(R.id.toolBar)
     Toolbar toolBar;
     @Bind(R.id.tabLayout)
