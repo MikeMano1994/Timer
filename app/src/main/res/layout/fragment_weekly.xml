@@ -50,7 +50,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
-            android:text="查看昨日" />
+            android:background="@drawable/button_common"
+            android:text="查看昨日"
+            android:textColor="@color/white" />
 
         <Button
             android:id="@+id/bt_viewHistory"
@@ -58,6 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
-            android:text="查看更早" />
+            android:background="@drawable/button_common"
+            android:text="查看更早"
+            android:textColor="@color/white" />
     </RelativeLayout>
 </LinearLayout>

@@ -94,7 +94,8 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
     }
 
     private void initView() {
-        setSupportActionBar(toolBar);
+        initToolBar();
+//        setSupportActionBar(toolBar);
         rbWork.setChecked(true);
 
         startTimes = (String) SPUtils.get(AddActivity.this, "startTimes", "");
@@ -171,6 +172,23 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
         }
         showChoose.setText(s == "" ? "您没有可选择的时间段" : "您可以选择的时间段有:\n");
         tvHint.setText(s);
+    }
+
+    /*
+    初始化ToolBar
+     */
+    private void initToolBar() {
+        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+//        toolBar.setLogo(R.mipmap.ic_launcher);
+        toolBar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolBar.setTitle(R.string.add_event);
+//        toolBar.setSubtitle("今日");
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddActivity.this.finish();
+            }
+        });
     }
 
     @OnClick({R.id.ll_startTime, R.id.ll_endTime, R.id.bt_complete, R.id.bt_cancel})

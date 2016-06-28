@@ -42,19 +42,27 @@
         <activity android:name=".base.BaseActivity" />
         <activity
             android:name=".activity.AddActivity"
+            android:label="@string/add_event"
             android:theme="@style/AppTheme.Float"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".test.TestActivity" />
         <activity
             android:name=".activity.ViewHistoryActivity"
+            android:label="@string/view_history"
             android:theme="@style/AppTheme.Float" />
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.GuidanceActivity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".activity.GuidanceActivity"
+            android:label="@string/guide" />
         <activity
             android:name=".activity.PIMSActivity"
+            android:label="@string/individual_center"
             android:theme="@style/AppTheme.Float" />
         <activity
             android:name=".activity.LoginAndRegisterActivity"
+            android:label="@string/login_and_register"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".umeng.ShareActivity" />
         /************************************友盟相关****开始*********************************/

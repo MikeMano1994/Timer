@@ -119,8 +119,8 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
     }
 
     /*
-        刷新Fragment的数据
-         */
+     刷新Fragment的数据
+    */
     public void refresh() {
         initChart(getEventData(getEventStrings()));
         btViewYesterday.setText("查看昨日");

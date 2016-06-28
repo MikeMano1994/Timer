@@ -53,12 +53,12 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     RecyclerView eventContent;
     @Bind(R.id.actionButton)
     FloatingActionButton actionButton;
+    @Bind(R.id.tv_awoke)
+    CountDownTextView tvAwoke;
 
 
     private static final int REQUEST_ADD_CODE = 0;//添加事项请求吗
     List<TodayEventData> todayEventDatas = new ArrayList<>();
-    @Bind(R.id.tv_awoke)
-    CountDownTextView tvAwoke;
     private TodayEventAdapter todayEventAdapter;
     private RequestQueue mQueue;
     private String currentDate;
@@ -67,9 +67,10 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     void click(View view) {
         switch (view.getId()) {
             case R.id.actionButton:
-
                 Animator animator = createAnimator(view);
-                animator.start();
+                if (animator != null) {
+                    animator.start();
+                }
                 startActivityForResult(new Intent(getActivity(), AddActivity.class), REQUEST_ADD_CODE);
                 break;
         }
@@ -242,10 +243,13 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private Animator createAnimator(View v) {
-        Animator animator = ViewAnimationUtils.createCircularReveal(v, v.getWidth() / 2, v.getHeight() / 2, 0, v.getWidth());
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator.setDuration(2000);
-        return animator;
+        if (Build.VERSION.SDK_INT >= 21) {
+            Animator animator = ViewAnimationUtils.createCircularReveal(v, v.getWidth() / 2, v.getHeight() / 2, 0, v.getWidth());
+            animator.setInterpolator(new AccelerateDecelerateInterpolator());
+            animator.setDuration(2000);
+            return animator;
+        }
+        return null;
     }
 
     @Override

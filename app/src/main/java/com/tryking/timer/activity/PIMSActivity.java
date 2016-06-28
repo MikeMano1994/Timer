@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -48,6 +49,8 @@ public class PIMSActivity extends BaseActivity {
     RelativeLayout rlSignature;
     @Bind(R.id.bt_logout)
     Button btLogout;
+    @Bind(R.id.toolBarLayout)
+    CollapsingToolbarLayout toolBarLayout;
 
 
     @OnClick({R.id.bt_logout})
@@ -87,10 +90,29 @@ public class PIMSActivity extends BaseActivity {
     }
 
     private void init() {
+//        setSupportActionBar(toolBar);
+        initToolBar();
         Uri uri = Uri.parse(SystemInfo.getInstance(getApplicationContext()).getPortraitUrl());
         headPortrait.setImageURI(uri);
         tvNickName.setText(SystemInfo.getInstance(getApplicationContext()).getAccount());
         tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName());
         tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName());
+    }
+
+    /*
+    初始化ToolBar
+     */
+    private void initToolBar() {
+        toolBarLayout.setTitle(getResources().getString(R.string.individual_center));
+        toolBarLayout.setExpandedTitleColor(getResources().getColor(R.color.float_transparent));
+        toolBarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
+        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+//        toolBar.setLogo(R.mipmap.ic_launcher);
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PIMSActivity.this.finish();
+            }
+        });
     }
 }

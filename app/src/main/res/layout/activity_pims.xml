@@ -12,6 +12,7 @@
         android:layout_height="285dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolBarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="?attr/colorAccent"
@@ -30,7 +31,8 @@
                 android:id="@+id/toolBar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin" />
+                app:layout_collapseMode="pin"
+                app:titleTextColor="@color/white" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
