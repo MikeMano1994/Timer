@@ -53,10 +53,10 @@ dependencies {
     compile files('libs/SocialSDK_WeiXin_1.jar')
     /** ***************************/
     /** ******Mob短信验证 ***************/
-    compile files('libs/MobCommons-2016.0624.1326.jar')
-    compile files('libs/MobTools-2016.0624.1326.jar')
-    compile(name: 'SMSSDK-2.1.0', ext: 'aar')
-    compile(name: 'SMSSDKGUI-2.1.0', ext: 'aar')
+//    compile files('libs/MobCommons-2016.0624.1326.jar')
+//    compile files('libs/MobTools-2016.0624.1326.jar')
+//    compile(name: 'SMSSDK-2.1.0', ext: 'aar')
+//    compile(name: 'SMSSDKGUI-2.1.0', ext: 'aar')
     /** ***************************/
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'

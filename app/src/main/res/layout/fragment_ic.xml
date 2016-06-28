@@ -87,7 +87,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/background_common_view"
                     android:text="账号设置"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -190,17 +189,17 @@
                 android:layout_height="1dp"
                 android:background="@color/white" />
 
-            <Button
-                android:id="@+id/bt_logout"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="45dp"
-                android:layout_marginRight="45dp"
-                android:layout_marginTop="45dp"
-                android:background="@drawable/background_button_logout"
-                android:text="退出登陆"
-                android:textColor="@color/gray"
-                android:textSize="14sp" />
+            <!--<Button-->
+                <!--android:id="@+id/bt_logout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_marginLeft="45dp"-->
+                <!--android:layout_marginRight="45dp"-->
+                <!--android:layout_marginTop="45dp"-->
+                <!--android:background="@drawable/background_button_logout"-->
+                <!--android:text="退出登陆"-->
+                <!--android:textColor="@color/gray"-->
+                <!--android:textSize="14sp" />-->
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

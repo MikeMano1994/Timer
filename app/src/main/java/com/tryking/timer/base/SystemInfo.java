@@ -75,6 +75,14 @@ public class SystemInfo {
         SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_QQ, qq);
     }
 
+    public String getQQName() {
+        return (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_QQ_NAME, "");
+    }
+
+    public void setQQName(String qqName) {
+        SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_QQ_NAME, qqName);
+    }
+
     public String getSina() {
         return (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_SINA, "");
     }
@@ -83,12 +91,28 @@ public class SystemInfo {
         SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_SINA, sina);
     }
 
+    public String getSinaName() {
+        return (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_SINA_NAME, "");
+    }
+
+    public void setSinaName(String sinaName) {
+        SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_SINA_NAME, sinaName);
+    }
+
     public String getPortraitUrl() {
         return (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_PORTRAIT_URL, "");
     }
 
     public void setPortraitUrl(String url) {
         SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_PORTRAIT_URL, url);
+    }
+
+    public String getSignature() {
+        return (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_SIGNATURE, "");
+    }
+
+    public void setSignature(String signature) {
+        SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_SIGNATURE, signature);
     }
 
     // TODO: 2016/6/27 先暂时用account来判断，后期换
@@ -111,5 +135,9 @@ public class SystemInfo {
         setPhone("");
         setToken("");
         setQQ("");
+        setQQName("");
+        setSina("");
+        setSinaName("");
+        setSignature("");
     }
 }

@@ -214,10 +214,12 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
     private UMAuthListener umGetInfoAuthListener = new UMAuthListener() {
         @Override
         public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+            Logger.e(map.toString());
             switch (share_media) {
                 case QQ:
                     QQUserInfo qqUserInfo = new QQUserInfo();
                     SystemInfo.getInstance(getApplicationContext()).setQQ(map.get("openid"));
+                    SystemInfo.getInstance(getApplicationContext()).setQQName(map.get("screen_name"));
                     SystemInfo.getInstance(getApplicationContext()).setAccount(map.get("screen_name"));
                     SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(map.get("profile_image_url"));
                     break;
@@ -227,8 +229,10 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
                         JSONObject sinaUserInfo = null;
                         sinaUserInfo = new JSONObject(result);
                         SystemInfo.getInstance(getApplicationContext()).setSina((String) sinaUserInfo.get("idstr"));
+                        SystemInfo.getInstance(getApplicationContext()).setSinaName((String) sinaUserInfo.get("screen_name"));
                         SystemInfo.getInstance(getApplicationContext()).setAccount((String) sinaUserInfo.get("screen_name"));
                         SystemInfo.getInstance(getApplicationContext()).setPortraitUrl((String) sinaUserInfo.get("profile_image_url"));
+                        SystemInfo.getInstance(getApplicationContext()).setSignature((String) sinaUserInfo.get("description"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

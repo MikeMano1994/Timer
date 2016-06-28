@@ -1,16 +1,13 @@
 package com.tryking.timer.fragment.main;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,8 +38,8 @@ public class IcFragment extends Fragment {
     TextView icAccount;
     @Bind(R.id.ic_signature)
     TextView icSignature;
-    @Bind(R.id.bt_logout)
-    Button btLogout;
+//    @Bind(R.id.bt_logout)
+//    Button btLogout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +48,7 @@ public class IcFragment extends Fragment {
         return inflate;
     }
 
-    @OnClick({R.id.tv_aboutUs, R.id.ll_PIM, R.id.bt_logout})
+    @OnClick({R.id.tv_aboutUs, R.id.ll_PIM})
     void click(View v) {
         switch (v.getId()) {
             case R.id.tv_aboutUs:
@@ -64,29 +61,6 @@ public class IcFragment extends Fragment {
                     startActivity(new Intent(getActivity(), LoginAndRegisterActivity.class));
                     getActivity().finish();
                 }
-                break;
-            case R.id.bt_logout:
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("退出")
-                        .setMessage("确定退出当前账号？")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                SystemInfo.getInstance(getActivity()).logout();
-                                startActivity(new Intent(getActivity(), LoginAndRegisterActivity.class));
-                                getActivity().finish();
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setIcon(getResources().getDrawable(R.drawable.umeng_socialize_x_button))
-                        .show();
-
                 break;
             default:
                 break;
@@ -105,11 +79,12 @@ public class IcFragment extends Fragment {
         if (SystemInfo.getInstance(getActivity()).isLogin()) {
             icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
             icSignature.setVisibility(View.VISIBLE);
-            btLogout.setVisibility(View.VISIBLE);
+            icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
+//            btLogout.setVisibility(View.VISIBLE);
         } else {
             icAccount.setText("未登陆");
             icSignature.setVisibility(View.GONE);
-            btLogout.setVisibility(View.GONE);
+//            btLogout.setVisibility(View.GONE);
         }
     }
 
