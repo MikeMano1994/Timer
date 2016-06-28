@@ -168,27 +168,30 @@
         android:paddingLeft="40dp"
         android:paddingRight="40dp">
 
-        <Button
+        <ImageView
             android:id="@+id/bt_qq_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="QQ登陆" />
+            android:background="@drawable/button_transparent_gray"
+            android:src="@drawable/umeng_socialize_qq_on" />
 
-        <Button
+        <ImageView
             android:id="@+id/bt_wechat_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerInParent="true"
-            android:text="微信登陆" />
+            android:background="@drawable/button_transparent_gray"
+            android:src="@drawable/umeng_socialize_wechat" />
 
-        <Button
+        <ImageView
             android:id="@+id/bt_sina_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="微博登陆" />
+            android:background="@drawable/button_transparent_gray"
+            android:src="@drawable/umeng_socialize_sina_on" />
     </RelativeLayout>
 </LinearLayout>

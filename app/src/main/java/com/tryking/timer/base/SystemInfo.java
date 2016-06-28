@@ -66,4 +66,50 @@ public class SystemInfo {
     public void setPhone(String phone) {
         SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_PHONE, phone);
     }
+
+    public String getQQ() {
+        return (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_QQ, "");
+    }
+
+    public void setQQ(String qq) {
+        SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_QQ, qq);
+    }
+
+    public String getSina() {
+        return (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_SINA, "");
+    }
+
+    public void setSina(String sina) {
+        SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_SINA, sina);
+    }
+
+    public String getPortraitUrl() {
+        return (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_PORTRAIT_URL, "");
+    }
+
+    public void setPortraitUrl(String url) {
+        SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_PORTRAIT_URL, url);
+    }
+
+    // TODO: 2016/6/27 先暂时用account来判断，后期换
+    public boolean isLogin() {
+        String account = (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_ACCOUNT, "");
+        if (account == null || account.equals("")) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 退出账户，所有的数据都设为空
+     */
+    public void logout() {
+        setAccount("");
+        setPortraitUrl("");
+        setMemberId("");
+        setPassword("");
+        setPhone("");
+        setToken("");
+        setQQ("");
+    }
 }

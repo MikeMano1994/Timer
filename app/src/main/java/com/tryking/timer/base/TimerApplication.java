@@ -51,6 +51,7 @@ public class TimerApplication extends Application {
      */
     private void initThird() {
         Fresco.initialize(getApplicationContext());
+//        SMSSDK.initSDK(this,Constants.THIRD_MOB_APP_KEY,Constants.THIRD_MOB_APP_SECRET);
         initUMeng();
     }
 

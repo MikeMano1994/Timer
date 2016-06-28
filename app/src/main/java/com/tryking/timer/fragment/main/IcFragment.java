@@ -1,19 +1,24 @@
 package com.tryking.timer.fragment.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.tryking.timer.R;
+import com.tryking.timer.activity.LoginAndRegisterActivity;
 import com.tryking.timer.activity.PIMSActivity;
+import com.tryking.timer.base.SystemInfo;
 import com.tryking.timer.test.TestActivity;
 
 import butterknife.Bind;
@@ -32,6 +37,12 @@ public class IcFragment extends Fragment {
     TextView tvAboutUs;
     @Bind(R.id.ll_PIM)
     LinearLayout llPIM;
+    @Bind(R.id.ic_account)
+    TextView icAccount;
+    @Bind(R.id.ic_signature)
+    TextView icSignature;
+    @Bind(R.id.bt_logout)
+    Button btLogout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,14 +51,42 @@ public class IcFragment extends Fragment {
         return inflate;
     }
 
-    @OnClick({R.id.tv_aboutUs, R.id.ll_PIM})
+    @OnClick({R.id.tv_aboutUs, R.id.ll_PIM, R.id.bt_logout})
     void click(View v) {
         switch (v.getId()) {
             case R.id.tv_aboutUs:
                 startActivity(new Intent(getActivity(), TestActivity.class));
                 break;
             case R.id.ll_PIM:
-                startActivity(new Intent(getActivity(), PIMSActivity.class));
+                if (SystemInfo.getInstance(getActivity()).isLogin()) {
+                    startActivity(new Intent(getActivity(), PIMSActivity.class));
+                } else {
+                    startActivity(new Intent(getActivity(), LoginAndRegisterActivity.class));
+                    getActivity().finish();
+                }
+                break;
+            case R.id.bt_logout:
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("退出")
+                        .setMessage("确定退出当前账号？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                SystemInfo.getInstance(getActivity()).logout();
+                                startActivity(new Intent(getActivity(), LoginAndRegisterActivity.class));
+                                getActivity().finish();
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(getResources().getDrawable(R.drawable.umeng_socialize_x_button))
+                        .show();
+
                 break;
             default:
                 break;
@@ -61,8 +100,17 @@ public class IcFragment extends Fragment {
     }
 
     private void init() {
-        Uri uri = Uri.parse("http://www.tryking.top/images/2.jpg");
+        Uri uri = Uri.parse(SystemInfo.getInstance(getActivity()).getPortraitUrl());
         headPortrait.setImageURI(uri);
+        if (SystemInfo.getInstance(getActivity()).isLogin()) {
+            icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
+            icSignature.setVisibility(View.VISIBLE);
+            btLogout.setVisibility(View.VISIBLE);
+        } else {
+            icAccount.setText("未登陆");
+            icSignature.setVisibility(View.GONE);
+            btLogout.setVisibility(View.GONE);
+        }
     }
 
     @Override

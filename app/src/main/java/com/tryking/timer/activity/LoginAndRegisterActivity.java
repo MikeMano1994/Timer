@@ -6,16 +6,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.tryking.timer.R;
+import com.tryking.timer.base.SystemInfo;
 import com.tryking.timer.bean.thirdInfo.QQUserInfo;
 import com.tryking.timer.utils.TT;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -50,11 +55,11 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
     @Bind(R.id.bt_establish_account)
     Button btEstablishAccount;
     @Bind(R.id.bt_qq_login)
-    Button btQqLogin;
+    ImageView btQqLogin;
     @Bind(R.id.bt_wechat_login)
-    Button btWechatLogin;
+    ImageView btWechatLogin;
     @Bind(R.id.bt_sina_login)
-    Button btSinaLogin;
+    ImageView btSinaLogin;
     private UMShareAPI mShareAPI;//友盟三方登陆授权
     private SHARE_MEDIA platform;//分享平台
 
@@ -92,16 +97,35 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
                 btForgetPassword.setVisibility(View.GONE);
                 break;
             case R.id.bt_login:
-                startActivity(new Intent(LoginAndRegisterActivity.this, MainActivity.class));
-                finish();
+                if (btLogin.getText().toString().equals("注册")) {
+//                    //打开注册页面
+//                    final RegisterPage registerPage = new RegisterPage();
+//                    registerPage.setRegisterCallback(new EventHandler() {
+//                        public void afterEvent(int event, int result, Object data) {
+//// 解析注册结果
+//                            if (result == SMSSDK.RESULT_COMPLETE) {
+//                                @SuppressWarnings("unchecked")
+//                                HashMap<String, Object> phoneMap = (HashMap<String, Object>) data;
+//                                String country = (String) phoneMap.get("country");
+//                                String phone = (String) phoneMap.get("phone");
+//                                Logger.e(country + "::" + phone);
+//// 提交用户信息
+////                                registerUser(country, phone);
+//                            }
+//                        }
+//                    });
+//                    registerPage.show(this);
+                } else {
+                    SystemInfo.getInstance(getApplicationContext()).setAccount("");
+                    SystemInfo.getInstance(getApplicationContext()).setPortraitUrl("");
+                    SystemInfo.getInstance(getApplicationContext()).setQQ("");
+                    startActivity(new Intent(LoginAndRegisterActivity.this, MainActivity.class));
+                    finish();
+                }
                 break;
             case R.id.bt_qq_login:
-//                if (mShareAPI.isAuthorize(this, SHARE_MEDIA.QQ)) {
-//                    TT.showShort(getApplicationContext(), "QQ已授权");
-//                } else {
                 platform = SHARE_MEDIA.QQ;
                 mShareAPI.doOauthVerify(this, platform, umLoginAuthListener);
-//                }
                 break;
             case R.id.bt_wechat_login:
 //                if (mShareAPI.isAuthorize(this, SHARE_MEDIA.WEIXIN)) {
@@ -114,12 +138,10 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
                 TT.showShort(getApplicationContext(), "暂时不支持微信登陆，请耐心等待...");
                 break;
             case R.id.bt_sina_login:
-                if (mShareAPI.isAuthorize(this, SHARE_MEDIA.SINA)) {
-                    TT.showShort(getApplicationContext(), "新浪已授权");
-                } else {
-                    platform = SHARE_MEDIA.SINA;
-                    mShareAPI.doOauthVerify(this, platform, umLoginAuthListener);
-                }
+                platform = SHARE_MEDIA.SINA;
+                mShareAPI.doOauthVerify(this, platform, umLoginAuthListener);
+                break;
+
             default:
                 break;
         }
@@ -134,14 +156,15 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
             Logger.e("complete" + "i:" + i + ":map:" + map.toString());
             switch (share_media) {
                 case QQ:
-                    TT.showShort(getApplicationContext(), "QQ succeed");
-                    getQQUserInfo();
+                    TT.showShort(getApplicationContext(), "QQ登陆成功");
+                    getUserInfo(share_media);
                     break;
                 case WEIXIN:
                     TT.showShort(getApplicationContext(), "WEIXIN succeed");
                     break;
                 case SINA:
-                    TT.showShort(getApplicationContext(), "SINA succeed");
+                    TT.showShort(getApplicationContext(), "新浪微博登陆成功");
+                    getUserInfo(share_media);
                     break;
             }
         }
@@ -151,29 +174,28 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
             Logger.e("error");
             switch (share_media) {
                 case QQ:
-                    TT.showShort(getApplicationContext(), "QQ error");
+                    TT.showShort(getApplicationContext(), "QQ登陆错误");
                     break;
                 case WEIXIN:
-                    TT.showShort(getApplicationContext(), "WEIXIN error");
+                    TT.showShort(getApplicationContext(), "微信登陆错误");
                     break;
                 case SINA:
-                    TT.showShort(getApplicationContext(), "SINA error");
+                    TT.showShort(getApplicationContext(), "新浪登陆错误");
                     break;
             }
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media, int i) {
-            Logger.e("cancel");
             switch (share_media) {
                 case QQ:
-                    TT.showShort(getApplicationContext(), "QQ cancel");
+                    TT.showShort(getApplicationContext(), "取消QQ授权");
                     break;
                 case WEIXIN:
-                    TT.showShort(getApplicationContext(), "WEIXIN cancel");
+                    TT.showShort(getApplicationContext(), "取消微信授权");
                     break;
                 case SINA:
-                    TT.showShort(getApplicationContext(), "SINA cancel");
+                    TT.showShort(getApplicationContext(), "取消新浪微博授权");
                     break;
             }
         }
@@ -182,8 +204,8 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
     /*
     获取QQ用户信息
      */
-    private void getQQUserInfo() {
-        mShareAPI.getPlatformInfo(LoginAndRegisterActivity.this, SHARE_MEDIA.QQ, umGetInfoAuthListener);
+    private void getUserInfo(SHARE_MEDIA share_media) {
+        mShareAPI.getPlatformInfo(LoginAndRegisterActivity.this, share_media, umGetInfoAuthListener);
     }
 
     /*
@@ -195,13 +217,25 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
             switch (share_media) {
                 case QQ:
                     QQUserInfo qqUserInfo = new QQUserInfo();
-                    qqUserInfo.setScreen_name(map.get("screen_name"));
-                    qqUserInfo.setGender(map.get("gender"));
-                    qqUserInfo.setProfile_image_url(map.get("profile_image_url"));
+                    SystemInfo.getInstance(getApplicationContext()).setQQ(map.get("openid"));
+                    SystemInfo.getInstance(getApplicationContext()).setAccount(map.get("screen_name"));
+                    SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(map.get("profile_image_url"));
                     break;
                 case SINA:
+                    try {
+                        String result = map.get("result");
+                        JSONObject sinaUserInfo = null;
+                        sinaUserInfo = new JSONObject(result);
+                        SystemInfo.getInstance(getApplicationContext()).setSina((String) sinaUserInfo.get("idstr"));
+                        SystemInfo.getInstance(getApplicationContext()).setAccount((String) sinaUserInfo.get("screen_name"));
+                        SystemInfo.getInstance(getApplicationContext()).setPortraitUrl((String) sinaUserInfo.get("profile_image_url"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
+            startActivity(new Intent(LoginAndRegisterActivity.this, MainActivity.class));
+            finish();
         }
 
         @Override

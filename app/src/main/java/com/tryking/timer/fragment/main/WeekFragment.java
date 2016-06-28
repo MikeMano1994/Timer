@@ -85,7 +85,6 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
             case R.id.bt_viewYesterday:
                 if (btViewYesterday.getText().toString() == "查看昨日") {
                     refreshYesterdayData();
-                    btViewYesterday.setText("查看今日");
                     tvTitle.setText("昨日事项统计");
                 } else {
                     refresh();
@@ -109,6 +108,7 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
             initChart(getEventData(dataFromDatabase));
             showPieChart.setDescription("昨日事项统计");
             showPieChart.setCenterText("昨日事项统计");
+            btViewYesterday.setText("查看今日");
         }
     }
 
