@@ -6,10 +6,12 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.orhanobut.logger.Logger;
 import com.tryking.timer.global.Constants;
 import com.tryking.timer.utils.SPUtils;
-import com.umeng.socialize.PlatformConfig;
+//import com.umeng.socialize.PlatformConfig;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import cn.smssdk.SMSSDK;
 
 /**
  * Created by Tryking on 2016/5/25.
@@ -59,11 +61,11 @@ public class TimerApplication extends Application {
     初始化友盟社会化分享
      */
     private void initUMeng() {
-        PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
-        //微信 appid appsecret
-        PlatformConfig.setSinaWeibo(Constants.THIRD_SINA_APP_KEY, Constants.THIRD_SINA_APP_SECRET);
-        //新浪微博 appkey appsecret
-        PlatformConfig.setQQZone(Constants.THIRD_QQ_APP_ID, Constants.THIRD_QQ_APP_KEY);
-        // QQ和Qzone appid appkey
+//        PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
+//        //微信 appid appsecret
+//        PlatformConfig.setSinaWeibo(Constants.THIRD_SINA_APP_KEY, Constants.THIRD_SINA_APP_SECRET);
+//        //新浪微博 appkey appsecret
+//        PlatformConfig.setQQZone(Constants.THIRD_QQ_APP_ID, Constants.THIRD_QQ_APP_KEY);
+//        // QQ和Qzone appid appkey
     }
 }

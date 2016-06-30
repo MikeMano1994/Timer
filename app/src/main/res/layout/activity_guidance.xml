@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".activity.GuidanceActivity">
+
+    <com.tryking.timer.widgets.BackgroundScrollViewPager
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:scrollBackground="@drawable/viewpager_background" />
+
+    <!--<TextView-->
+    <!--android:id="@+id/hint"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="我是向导页" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/jump"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="点击进入Main" />-->
+    <com.tryking.timer.widgets.circleIndicator.CircleIndicator
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp"
+        app:ci_background="@android:color/white"
+        app:ci_gravity="center"
+        app:ci_margin="5dp"
+        app:ci_mode="inside"
+        app:ci_radius="5dp"
+        app:ci_selected_background="@color/colorAccent" />
+
+    <Button
+        android:id="@+id/bt_entrance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/button_common"
+        android:text="进入"
+        android:textColor="@color/white" />
+
+</FrameLayout>
