@@ -18,15 +18,8 @@ android {
         }
     }
 
-//    sourceSets {
-//        main {
-//            manifest.srcFile 'AndroidManifest.xml'
-//            java.srcDirs = ['src']
-//            res.srcDirs = ['res']
-//        }
-//    }
-
     repositories {
+        //仓库：Flat directory,Maven,lvy(Studio支持这三种)
         flatDir {
             dirs 'libs'
         }
@@ -39,22 +32,22 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-//    /** ****友盟社会化分享 *******/
-//    compile files('libs/umeng_social_sdk.jar')
-//    //QQ
-//    compile files('libs/mta-sdk-1.6.2.jar')
-//    compile files('libs/open_sdk_r5509.jar')
-//    compile files('libs/SocialSDK_QQZone_3.jar')
-//    //新浪微博
-//    compile files('libs/SocialSDK_Sina.jar')
-//    compile files('libs/weiboSDKCore_3.1.4.jar')
-//    //微信
-//    compile files('libs/SocialSDK_WeiXin_2.jar')
-//    compile files('libs/SocialSDK_WeiXin_1.jar')
+    /** ****友盟社会化分享 *******/
+    compile files('libs/umeng_social_sdk.jar')
+    //QQ
+    compile files('libs/mta-sdk-1.6.2.jar')
+    compile files('libs/open_sdk_r5509.jar')
+    compile files('libs/SocialSDK_QQZone_3.jar')
+    //新浪微博
+    compile files('libs/SocialSDK_Sina.jar')
+    compile files('libs/weiboSDKCore_3.1.4.jar')
+    //微信
+    compile files('libs/SocialSDK_WeiXin_2.jar')
+    compile files('libs/SocialSDK_WeiXin_1.jar')
     /** ***************************/
     /** ******Mob短信验证 ***************/
-//    compile(name: 'SMSSDK-2.1.0', ext: 'aar')
-//    compile(name: 'SMSSDKGUI-2.1.0', ext: 'aar')
+    compile(name: 'SMSSDK-2.1.0', ext: 'aar')
+    compile(name: 'SMSSDKGUI-2.1.0', ext: 'aar')
     /** ***************************/
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
