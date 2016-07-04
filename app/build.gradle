@@ -21,7 +21,7 @@ android {
     repositories {
         //仓库：Flat directory,Maven,lvy(Studio支持这三种)
         flatDir {
-            dirs 'libs'
+            dirs 'libs_sms'
         }
         maven {
             url "https://jitpack.io"

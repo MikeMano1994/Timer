@@ -3,7 +3,7 @@ package com.tryking.timer;
 import android.test.AndroidTestCase;
 
 import com.orhanobut.logger.Logger;
-import com.tryking.timer.utils.CommonUtils;
+import com.tryking.EasyList.utils.CommonUtils;
 
 /**
  * Created by Tryking on 2016/5/20.

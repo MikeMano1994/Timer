@@ -8,11 +8,11 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.tryking.timer.test.TestActivity">
+    tools:context=".test.TestActivity">
 
-    <com.tryking.timer.widgets.BackgroundScrollViewPager
+    <com.tryking.EasyList.widgets.BackgroundScrollViewPager
         android:id="@+id/test"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:scrollBackground="@drawable/goddess"></com.tryking.timer.widgets.BackgroundScrollViewPager>
+        app:scrollBackground="@drawable/goddess"></com.tryking.EasyList.widgets.BackgroundScrollViewPager>
 </RelativeLayout>

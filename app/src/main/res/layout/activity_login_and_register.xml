@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.tryking.timer.activity.LoginAndRegisterActivity">
+    tools:context=".activity.LoginAndRegisterActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

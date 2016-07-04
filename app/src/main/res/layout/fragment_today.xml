@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.tryking.timer.widgets.CountDownTextView
+            <com.tryking.EasyList.widgets.CountDownTextView
                 android:id="@+id/tv_awoke"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
