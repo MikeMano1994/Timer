@@ -5,7 +5,8 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.tryking.timer.R;
+import com.tryking.EasyList.R;
+
 
 /**
  * Created by Tryking on 2016/5/26.

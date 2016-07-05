@@ -10,7 +10,8 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.PopupWindow;
 
-import com.tryking.timer.R;
+
+import com.tryking.EasyList.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

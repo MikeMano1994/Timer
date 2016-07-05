@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tryking.EasyList.R;
 import com.tryking.EasyList.bean.TodayEventData;
 import com.tryking.EasyList.utils.CommonUtils;
-import com.tryking.timer.R;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

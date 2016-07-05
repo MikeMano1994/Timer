@@ -9,7 +9,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 
-import com.tryking.timer.R;
+import com.tryking.EasyList.R;
 import com.tryking.EasyList.adapter.MainContentPagerAdapter;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.fragment.main.IcFragment;

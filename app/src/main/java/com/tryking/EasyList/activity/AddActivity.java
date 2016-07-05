@@ -14,10 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.tryking.EasyList.R;
 import com.tryking.EasyList.bean.TodayEventData;
 import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
 import com.tryking.EasyList.widgets.NumberPickerPopupWindow;
-import com.tryking.timer.R;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
 import com.tryking.EasyList.db.table.EverydayEventSource;

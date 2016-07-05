@@ -3,7 +3,7 @@ package com.tryking.EasyList.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.tryking.timer.R;
+import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.SPUtils;

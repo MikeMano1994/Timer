@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.tryking.timer.R;
+import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.widgets.BackgroundScrollViewPager;
 import com.tryking.EasyList.widgets.circleIndicator.CircleIndicator;

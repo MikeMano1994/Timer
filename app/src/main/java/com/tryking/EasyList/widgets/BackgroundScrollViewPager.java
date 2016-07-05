@@ -9,7 +9,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 
-import com.tryking.timer.R;
+import com.tryking.EasyList.R;
+
 
 /**
  * Created by Tryking on 2016/6/24.

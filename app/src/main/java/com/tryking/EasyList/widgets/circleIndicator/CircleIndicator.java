@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
-import com.tryking.timer.R;
+import com.tryking.EasyList.R;
 import com.tryking.EasyList.widgets.circleIndicator.holder.ShapeHolder;
 
 import java.util.ArrayList;

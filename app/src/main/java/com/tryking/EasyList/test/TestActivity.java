@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.tryking.timer.R;
+import com.tryking.EasyList.R;
 import com.tryking.EasyList.widgets.BackgroundScrollViewPager;
 
 import java.util.ArrayList;

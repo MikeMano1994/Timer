@@ -7,9 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.fragment.viewhistory.ViewHistoryCalendarFragment;
-import com.tryking.timer.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

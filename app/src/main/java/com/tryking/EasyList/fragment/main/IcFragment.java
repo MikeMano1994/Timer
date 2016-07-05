@@ -12,9 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.test.TestActivity;
-import com.tryking.timer.R;
 import com.tryking.EasyList.activity.LoginAndRegisterActivity;
 import com.tryking.EasyList.activity.PIMSActivity;
 

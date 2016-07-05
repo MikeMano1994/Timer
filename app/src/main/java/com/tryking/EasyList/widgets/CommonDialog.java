@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tryking.timer.R;
+
+import com.tryking.EasyList.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
