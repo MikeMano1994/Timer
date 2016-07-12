@@ -2,7 +2,6 @@ package com.tryking.EasyList.base;
 
 import android.app.Application;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.SPUtils;
@@ -51,7 +50,8 @@ public class TimerApplication extends Application {
     初始化第三方
      */
     private void initThird() {
-        Fresco.initialize(getApplicationContext());
+        //Fresco不用了
+//        Fresco.initialize(getApplicationContext());
         //SMSSDK一初始化就报错，应该是和别的三方冲突，和Fresco也冲突。（貌似只有5.1版本的手机才有错）
 //        SMSSDK.initSDK(getApplicationContext(),Constants.THIRD_MOB_APP_KEY,Constants.THIRD_MOB_APP_SECRET);
         initUMeng();

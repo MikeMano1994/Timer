@@ -2,17 +2,24 @@ package com.tryking.EasyList.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
@@ -24,7 +31,7 @@ import butterknife.OnClick;
 public class PIMSActivity extends BaseActivity {
 
     @Bind(R.id.head_portrait)
-    SimpleDraweeView headPortrait;
+    ImageView headPortrait;
     @Bind(R.id.toolBar)
     Toolbar toolBar;
     @Bind(R.id.tv_nickName)
@@ -90,10 +97,16 @@ public class PIMSActivity extends BaseActivity {
     }
 
     private void init() {
-//        setSupportActionBar(toolBar);
         initToolBar();
         Uri uri = Uri.parse(SystemInfo.getInstance(getApplicationContext()).getPortraitUrl());
-        headPortrait.setImageURI(uri);
+        Glide.with(this).load(uri).asBitmap().centerCrop().into(new BitmapImageViewTarget(headPortrait) {
+            @Override
+            protected void setResource(Bitmap resource) {
+                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
+                roundedBitmapDrawable.setCircular(true);
+                headPortrait.setImageDrawable(roundedBitmapDrawable);
+            }
+        });
         tvNickName.setText(SystemInfo.getInstance(getApplicationContext()).getAccount());
         tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName());
         tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName());
@@ -107,7 +120,6 @@ public class PIMSActivity extends BaseActivity {
         toolBarLayout.setExpandedTitleColor(getResources().getColor(R.color.float_transparent));
         toolBarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
         toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left);
-//        toolBar.setLogo(R.mipmap.ic_launcher);
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

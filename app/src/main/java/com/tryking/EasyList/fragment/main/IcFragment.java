@@ -1,17 +1,22 @@
 package com.tryking.EasyList.fragment.main;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.test.TestActivity;
@@ -29,7 +34,7 @@ public class IcFragment extends Fragment {
 
 
     @Bind(R.id.head_portrait)
-    SimpleDraweeView headPortrait;
+    ImageView headPortrait;
     @Bind(R.id.tv_aboutUs)
     TextView tvAboutUs;
     @Bind(R.id.ll_PIM)
@@ -38,8 +43,6 @@ public class IcFragment extends Fragment {
     TextView icAccount;
     @Bind(R.id.ic_signature)
     TextView icSignature;
-//    @Bind(R.id.bt_logout)
-//    Button btLogout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,16 +78,21 @@ public class IcFragment extends Fragment {
 
     private void init() {
         Uri uri = Uri.parse(SystemInfo.getInstance(getActivity()).getPortraitUrl());
-        headPortrait.setImageURI(uri);
+        Glide.with(this).load(uri).asBitmap().centerCrop().into(new BitmapImageViewTarget(headPortrait){
+            @Override
+            protected void setResource(Bitmap resource) {
+                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
+                roundedBitmapDrawable.setCircular(true);
+                headPortrait.setImageDrawable(roundedBitmapDrawable);
+            }
+        });
         if (SystemInfo.getInstance(getActivity()).isLogin()) {
             icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
             icSignature.setVisibility(View.VISIBLE);
             icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
-//            btLogout.setVisibility(View.VISIBLE);
         } else {
             icAccount.setText("未登陆");
             icSignature.setVisibility(View.GONE);
-//            btLogout.setVisibility(View.GONE);
         }
     }
 

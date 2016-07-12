@@ -70,23 +70,31 @@
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 
-                    <com.facebook.drawee.view.SimpleDraweeView
+                    <!--<com.facebook.drawee.view.SimpleDraweeView-->
+                    <!--android:id="@+id/head_portrait"-->
+                    <!--android:layout_width="80dp"-->
+                    <!--android:layout_height="80dp"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginRight="15dp"-->
+                    <!--fresco:actualImageScaleType="fitCenter"-->
+                    <!--fresco:fadeDuration="3000"-->
+                    <!--fresco:failureImage="@drawable/ic_account_circle"-->
+                    <!--fresco:failureImageScaleType="fitCenter"-->
+                    <!--fresco:placeholderImage="@drawable/ic_account_circle_black"-->
+                    <!--fresco:placeholderImageScaleType="fitCenter"-->
+                    <!--fresco:roundAsCircle="true"-->
+                    <!--fresco:roundingBorderColor="@color/colorAccent"-->
+                    <!--fresco:roundingBorderPadding="1dp"-->
+                    <!--fresco:roundingBorderWidth="1dp" />-->
+                    <ImageView
                         android:id="@+id/head_portrait"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
-                        fresco:actualImageScaleType="fitCenter"
-                        fresco:fadeDuration="3000"
-                        fresco:failureImage="@drawable/ic_account_circle"
-                        fresco:failureImageScaleType="fitCenter"
-                        fresco:placeholderImage="@drawable/ic_account_circle_black"
-                        fresco:placeholderImageScaleType="fitCenter"
-                        fresco:roundAsCircle="true"
-                        fresco:roundingBorderColor="@color/colorAccent"
-                        fresco:roundingBorderPadding="1dp"
-                        fresco:roundingBorderWidth="1dp" />
+                        android:scaleType="fitCenter" />
                 </RelativeLayout>
 
                 <View

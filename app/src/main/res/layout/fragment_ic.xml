@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -28,20 +27,25 @@
                 android:background="@drawable/ic_background"
                 android:padding="10dp">
 
-                <com.facebook.drawee.view.SimpleDraweeView
+                <!--<com.facebook.drawee.view.SimpleDraweeView-->
+                <!--android:id="@+id/head_portrait"-->
+                <!--android:layout_width="80dp"-->
+                <!--android:layout_height="80dp"-->
+                <!--fresco:actualImageScaleType="fitCenter"-->
+                <!--fresco:fadeDuration="3000"-->
+                <!--fresco:failureImage="@drawable/ic_account_circle"-->
+                <!--fresco:failureImageScaleType="fitCenter"-->
+                <!--fresco:placeholderImage="@drawable/ic_account_circle_black"-->
+                <!--fresco:placeholderImageScaleType="fitCenter"-->
+                <!--fresco:roundAsCircle="true"-->
+                <!--fresco:roundingBorderColor="@color/colorAccent"-->
+                <!--fresco:roundingBorderPadding="1dp"-->
+                <!--fresco:roundingBorderWidth="1dp" />-->
+                <ImageView
                     android:id="@+id/head_portrait"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    fresco:actualImageScaleType="fitCenter"
-                    fresco:fadeDuration="3000"
-                    fresco:failureImage="@drawable/ic_account_circle"
-                    fresco:failureImageScaleType="fitCenter"
-                    fresco:placeholderImage="@drawable/ic_account_circle_black"
-                    fresco:placeholderImageScaleType="fitCenter"
-                    fresco:roundAsCircle="true"
-                    fresco:roundingBorderColor="@color/colorAccent"
-                    fresco:roundingBorderPadding="1dp"
-                    fresco:roundingBorderWidth="1dp" />
+                    android:scaleType="fitCenter" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -190,16 +194,16 @@
                 android:background="@color/white" />
 
             <!--<Button-->
-                <!--android:id="@+id/bt_logout"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:layout_marginLeft="45dp"-->
-                <!--android:layout_marginRight="45dp"-->
-                <!--android:layout_marginTop="45dp"-->
-                <!--android:background="@drawable/background_button_logout"-->
-                <!--android:text="退出登陆"-->
-                <!--android:textColor="@color/gray"-->
-                <!--android:textSize="14sp" />-->
+            <!--android:id="@+id/bt_logout"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_marginLeft="45dp"-->
+            <!--android:layout_marginRight="45dp"-->
+            <!--android:layout_marginTop="45dp"-->
+            <!--android:background="@drawable/background_button_logout"-->
+            <!--android:text="退出登陆"-->
+            <!--android:textColor="@color/gray"-->
+            <!--android:textSize="14sp" />-->
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>
