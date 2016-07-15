@@ -113,22 +113,17 @@ public class IcFragment extends Fragment {
                 }
             });
         }
-        if (SystemInfo.getInstance(getActivity()).isLogin()) {
-            icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
-            icSignature.setVisibility(View.VISIBLE);
-            icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
-        } else {
-            icAccount.setText("试用账号");
-            icSignature.setVisibility(View.GONE);
-        }
+        icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount() == "" ? "试用账号" : SystemInfo.getInstance(getActivity()).getAccount());
+        icSignature.setVisibility(View.VISIBLE);
+        icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
 
         List<String> info = new ArrayList<>();
-        info.add("和时间做朋友_1");
-        info.add("和时间做朋友_2");
-        info.add("和时间做朋友_3");
-        info.add("和时间做朋友_4");
-        info.add("和时间做朋友_5");
-        info.add("和时间做朋友_6");
+        info.add("重复言说多半是一种时间上的损失。 \n—— 培根");
+        info.add("最聪明的人是最不愿浪费时间的人。 \n—— 但丁");
+        info.add("对时间的慷慨，就等于慢性自杀。 \n—— 奥斯特洛夫斯基");
+        info.add("在无限的时间的河流里，人生仅仅是微小又微小的波浪。 \n—— 郭小川");
+        info.add("节省时间；也就是使一个人的有限生命，更加有效而也即等于延长了人的生命。 \n—— 鲁迅");
+        info.add("忍耐和时间，往往比力量和愤怒更有效。 \n—— 拉封丹");
         mvNotice.startWithList(info);
     }
 

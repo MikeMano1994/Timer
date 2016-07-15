@@ -11,7 +11,7 @@
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         app:mvGravity="center"
-        app:mvSingleLine="true"
+        app:mvSingleLine="false"
         app:mvTextColor="@color/colorAccent" />
 
     <android.support.v4.widget.NestedScrollView

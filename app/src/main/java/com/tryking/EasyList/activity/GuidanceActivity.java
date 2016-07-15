@@ -51,8 +51,8 @@ public class GuidanceActivity extends BaseActivity {
     private void init() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view1 = inflater.inflate(R.layout.guidance_page_1, null);
-        View view2 = inflater.inflate(R.layout.guidance_page_1, null);
-        View view3 = inflater.inflate(R.layout.guidance_page_1, null);
+        View view2 = inflater.inflate(R.layout.guidance_page_2, null);
+        View view3 = inflater.inflate(R.layout.guidance_page_3, null);
 
         views = new ArrayList<>();
         views.add(view1);

@@ -80,12 +80,12 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
 
     private void init() {
         List<String> info = new ArrayList<>();
-        info.add("和时间做朋友_1");
-        info.add("和时间做朋友_2");
-        info.add("和时间做朋友_3");
-        info.add("和时间做朋友_4");
-        info.add("和时间做朋友_5");
-        info.add("和时间做朋友_6");
+        info.add("时间是一切财富中最宝贵的财富。 \n—— 德奥弗拉斯多");
+        info.add("没有人不爱惜他的生命，但很少人珍视他的时间。 \n—— 梁实秋");
+        info.add("从不浪费时间的人，没有工夫抱怨时间不够。 \n—— 杰弗逊");
+        info.add("时间是真理的挚友。 \n—— 科尔顿");
+        info.add("时间像奔腾澎湃的急湍，它一去无还，毫不留恋。 \n—— 塞万提斯");
+        info.add("睡眠和休息丧失了时间，却取得了明天工作的精力。 \n—— 毛泽东");
         mvNotice.startWithList(info);
     }
 

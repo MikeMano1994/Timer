@@ -6,9 +6,9 @@
     <TextView
         android:textSize="20sp"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="生活不只有苟且，还有诗和远方"
+        android:text="他们做事，\n\n甚至做很多事，\n\n他们并非“不努力”，\n\n他们花很长时间去做事---\n\n只不过花费很多时间\n\n做很多非常容易的事情。"
         android:textColor="@color/white" />
 </RelativeLayout>
