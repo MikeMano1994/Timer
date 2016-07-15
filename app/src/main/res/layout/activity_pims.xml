@@ -95,7 +95,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/ic_account_circle" />
+                        android:src="@drawable/ic_account_circle_black" />
                 </RelativeLayout>
 
                 <View
@@ -129,7 +129,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
-                        android:text="末日没有进行曲"
+                        android:text="试用账号"
                         android:textColor="@color/gray"
                         android:textSize="16sp" />
                 </RelativeLayout>

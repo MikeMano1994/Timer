@@ -18,10 +18,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tryking.EasyList.R;
-import com.tryking.EasyList.base.SystemInfo;
-import com.tryking.EasyList.test.TestActivity;
 import com.tryking.EasyList.activity.LoginAndRegisterActivity;
 import com.tryking.EasyList.activity.PIMSActivity;
+import com.tryking.EasyList.base.SystemInfo;
+import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.marqueeView.MarqueeView;
 
 import java.util.ArrayList;
@@ -41,8 +41,8 @@ public class IcFragment extends Fragment {
 
     @Bind(R.id.head_portrait)
     ImageView headPortrait;
-    @Bind(R.id.tv_aboutUs)
-    TextView tvAboutUs;
+    @Bind(R.id.aboutUs)
+    LinearLayout aboutUs;
     @Bind(R.id.ll_PIM)
     LinearLayout llPIM;
     @Bind(R.id.ic_account)
@@ -51,6 +51,12 @@ public class IcFragment extends Fragment {
     TextView icSignature;
     @Bind(R.id.mv_notice)
     MarqueeView mvNotice;
+    @Bind(R.id.account_setting)
+    LinearLayout accountSetting;
+    @Bind(R.id.common_setting)
+    LinearLayout commonSetting;
+    @Bind(R.id.recommend)
+    LinearLayout recommend;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,11 +65,11 @@ public class IcFragment extends Fragment {
         return inflate;
     }
 
-    @OnClick({R.id.tv_aboutUs, R.id.ll_PIM})
+    @OnClick({R.id.aboutUs, R.id.ll_PIM, R.id.account_setting, R.id.common_setting, R.id.recommend})
     void click(View v) {
         switch (v.getId()) {
-            case R.id.tv_aboutUs:
-                startActivity(new Intent(getActivity(), TestActivity.class));
+            case R.id.aboutUs:
+                TT.showShort(getActivity(), "关于我们，正在开发...");
                 break;
             case R.id.ll_PIM:
                 if (SystemInfo.getInstance(getActivity()).isLogin()) {
@@ -72,6 +78,15 @@ public class IcFragment extends Fragment {
                     startActivityForResult(new Intent(getActivity(), LoginAndRegisterActivity.class), REQUEST_PIM);
                     getActivity().finish();
                 }
+                break;
+            case R.id.account_setting:
+                TT.showShort(getActivity(), "账号设置，正在开发...");
+                break;
+            case R.id.common_setting:
+                TT.showShort(getActivity(), "通用设置，正在开发...");
+                break;
+            case R.id.recommend:
+                TT.showShort(getActivity(), "推荐给好友，正在开发...");
                 break;
             default:
                 break;
@@ -85,15 +100,19 @@ public class IcFragment extends Fragment {
     }
 
     private void init() {
-        Uri uri = Uri.parse(SystemInfo.getInstance(getActivity()).getPortraitUrl());
-        Glide.with(this).load(uri).asBitmap().centerCrop().into(new BitmapImageViewTarget(headPortrait) {
-            @Override
-            protected void setResource(Bitmap resource) {
-                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
-                roundedBitmapDrawable.setCircular(true);
-                headPortrait.setImageDrawable(roundedBitmapDrawable);
-            }
-        });
+        if (SystemInfo.getInstance(getActivity()).getPortraitUrl() == "") {
+            headPortrait.setImageDrawable(getResources().getDrawable(R.drawable.ic_account_circle_black));
+        } else {
+            Uri uri = Uri.parse(SystemInfo.getInstance(getActivity()).getPortraitUrl());
+            Glide.with(this).load(uri).asBitmap().centerCrop().into(new BitmapImageViewTarget(headPortrait) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
+                    roundedBitmapDrawable.setCircular(true);
+                    headPortrait.setImageDrawable(roundedBitmapDrawable);
+                }
+            });
+        }
         if (SystemInfo.getInstance(getActivity()).isLogin()) {
             icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
             icSignature.setVisibility(View.VISIBLE);
@@ -118,6 +137,6 @@ public class IcFragment extends Fragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
-    
+
 }
 

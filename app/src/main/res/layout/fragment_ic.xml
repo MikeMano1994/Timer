@@ -46,11 +46,11 @@
                 <!--fresco:roundingBorderPadding="1dp"-->
                 <!--fresco:roundingBorderWidth="1dp" />-->
                 <ImageView
-                    android:src="@drawable/ic_account_circle"
                     android:id="@+id/head_portrait"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:scaleType="fitCenter" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_account_circle_black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -86,6 +86,7 @@
                 android:background="@color/white" />
 
             <LinearLayout
+                android:id="@+id/account_setting"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
@@ -114,6 +115,7 @@
                 android:background="@color/white" />
 
             <LinearLayout
+                android:id="@+id/common_setting"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
@@ -142,6 +144,7 @@
                 android:background="@color/white" />
 
             <LinearLayout
+                android:id="@+id/recommend"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
@@ -170,6 +173,7 @@
                 android:background="@color/white" />
 
             <LinearLayout
+                android:id="@+id/aboutUs"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
@@ -177,7 +181,6 @@
                 android:padding="10dp">
 
                 <TextView
-                    android:id="@+id/tv_aboutUs"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

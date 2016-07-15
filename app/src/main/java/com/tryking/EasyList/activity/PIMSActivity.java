@@ -3,6 +3,7 @@ package com.tryking.EasyList.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -99,24 +100,22 @@ public class PIMSActivity extends BaseActivity {
 
     private void init() {
         initToolBar();
-        Uri uri = Uri.parse(SystemInfo.getInstance(getApplicationContext()).getPortraitUrl());
-        Glide.with(this).load(uri).asBitmap().centerCrop().into(new BitmapImageViewTarget(headPortrait) {
-            @Override
-            protected void setResource(Bitmap resource) {
-                RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
-                roundedBitmapDrawable.setCircular(true);
-                headPortrait.setImageDrawable(roundedBitmapDrawable);
-            }
-        });
-        if (SystemInfo.getInstance(getApplicationContext()).getMemberId() == "try") {
-            tvNickName.setText("试用账号");
-            tvQQ.setText("未绑定");
-            tvSina.setText("未绑定");
+        if (SystemInfo.getInstance(getApplicationContext()).getPortraitUrl() == "") {
+            headPortrait.setImageDrawable(getResources().getDrawable(R.drawable.ic_account_circle_black));
         } else {
-            tvNickName.setText(SystemInfo.getInstance(getApplicationContext()).getAccount());
-            tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getQQName());
-            tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getSinaName());
+            Uri uri = Uri.parse(SystemInfo.getInstance(getApplicationContext()).getPortraitUrl());
+            Glide.with(this).load(uri).asBitmap().centerCrop().into(new BitmapImageViewTarget(headPortrait) {
+                @Override
+                protected void setResource(Bitmap resource) {
+                    RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
+                    roundedBitmapDrawable.setCircular(true);
+                    headPortrait.setImageDrawable(roundedBitmapDrawable);
+                }
+            });
         }
+        tvNickName.setText(SystemInfo.getInstance(getApplicationContext()).getAccount() == "" ? "试用账号" : SystemInfo.getInstance(getApplicationContext()).getAccount());
+        tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getQQName());
+        tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getSinaName());
     }
 
     /*

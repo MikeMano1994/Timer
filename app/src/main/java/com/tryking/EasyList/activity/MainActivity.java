@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.adapter.MainContentPagerAdapter;
@@ -64,10 +65,19 @@ public class MainActivity extends BaseActivity {
         iCons.add(R.drawable.ic_action_emo_wonder);
     }
 
+    /*
+    初始化ToolBar
+     */
+    private void initToolBar() {
+        toolBar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolBar.setTitle(R.string.app_name);
+    }
+
+
     private void initViews() {
         currentIndex = 0;
         manager = getSupportFragmentManager();
-        setSupportActionBar(toolBar);
+        initToolBar();
         mainContent.setAdapter(new MainContentPagerAdapter(manager, fragmentList, titles));
         mainContent.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(mainContent);
