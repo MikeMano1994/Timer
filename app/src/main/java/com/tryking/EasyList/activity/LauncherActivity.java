@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
+import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.SPUtils;
 
@@ -24,7 +25,11 @@ public class LauncherActivity extends BaseActivity {
             startActivity(new Intent(LauncherActivity.this, GuidanceActivity.class));
             SPUtils.put(LauncherActivity.this, Constants.SHARED_PREFERENCE_IS_FIRST_LAUNCHER, false);
         } else {
-            startActivity(new Intent(LauncherActivity.this, LoginAndRegisterActivity.class));
+            if (SystemInfo.getInstance(getApplicationContext()).isLogin()) {
+                startActivity(new Intent(LauncherActivity.this, MainActivity.class));
+            } else {
+                startActivity(new Intent(LauncherActivity.this, LoginAndRegisterActivity.class));
+            }
         }
         finish();
     }

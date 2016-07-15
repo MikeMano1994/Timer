@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
+    <com.tryking.EasyList.widgets.marqueeView.MarqueeView
+        android:id="@+id/mv_notice"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:gravity="center"
-        android:text="我是彩蛋" />
+        android:layout_centerVertical="true"
+        app:mvGravity="center"
+        app:mvSingleLine="true"
+        app:mvTextColor="@color/colorAccent" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

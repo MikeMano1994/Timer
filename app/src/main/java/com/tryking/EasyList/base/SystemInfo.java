@@ -117,8 +117,8 @@ public class SystemInfo {
 
     // TODO: 2016/6/27 先暂时用account来判断，后期换
     public boolean isLogin() {
-        String account = (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_ACCOUNT, "");
-        if (account == null || account.equals("")) {
+        String memberId = (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_MEMBER_ID, "");
+        if (memberId == null || memberId.equals("")) {
             return false;
         }
         return true;
@@ -128,9 +128,9 @@ public class SystemInfo {
      * 退出账户，所有的数据都设为空
      */
     public void logout() {
+        setMemberId("");
         setAccount("");
         setPortraitUrl("");
-        setMemberId("");
         setPassword("");
         setPhone("");
         setToken("");

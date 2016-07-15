@@ -21,6 +21,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.bean.TodayEventData;
 import com.tryking.EasyList.widgets.CountDownTextView;
 import com.tryking.EasyList.widgets.RecyclerView.MyItemDividerDecoration;
@@ -328,7 +329,7 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
         SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(getActivity());
         try {
             Map<String, Object> map = new HashMap<>();
-            map.put("userId", "");
+            map.put("userId", SystemInfo.getInstance(getActivity()).getMemberId());
             String currentDate = (String) SPUtils.get(getActivity(), "currentDate", "");
             map.put("eventDate", currentDate);
             map.put("startTime", startTime);
@@ -337,12 +338,6 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
             e.printStackTrace();
         }
 
-//        try {
-//            ArrayList<SpecificEventSource> specificEventSources = (ArrayList<SpecificEventSource>)specificEventDao.queryAll();
-//            Logger.e("删除后保存的数据" + specificEventSources.toString());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
     }
 
     /*
@@ -352,13 +347,13 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
         EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(getActivity());
         try {
             Map<String, Object> map = new HashMap<>();
-            map.put("userId", "");
+            map.put("userId", SystemInfo.getInstance(getActivity()).getMemberId());
             String currentDate = (String) SPUtils.get(getActivity(), "currentDate", "");
             map.put("eventDate", currentDate);
             ArrayList<EverydayEventSource> todayEventList = (ArrayList<EverydayEventSource>) everydayEventDao.query(map);
             if (todayEventList == null || todayEventList.size() <= 0) {
                 //今日未添加过事项
-                everydayEventDao.save(new EverydayEventSource("", currentDate, startTimes, endTimes, eventTypes));
+                everydayEventDao.save(new EverydayEventSource(SystemInfo.getInstance(getActivity()).getMemberId(), currentDate, startTimes, endTimes, eventTypes));
             } else {
                 todayEventList.get(0).setStartTimes(startTimes);
                 todayEventList.get(0).setEndTimes(endTimes);
@@ -369,11 +364,5 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
             e.printStackTrace();
         }
 
-//        try {
-//            ArrayList<EverydayEventSource> specificEventSources = (ArrayList<EverydayEventSource>)everydayEventDao.queryAll();
-//            Logger.e("删除后保存后的数据" + specificEventSources.toString());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
     }
 }

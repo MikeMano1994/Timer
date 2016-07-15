@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.tryking.EasyList.R;
+import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.bean.TodayEventData;
 import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
 import com.tryking.EasyList.widgets.NumberPickerPopupWindow;
@@ -154,14 +155,14 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                     if (s == "") {
                         s = s + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr(starts[i + 1]);
                     } else {
-                        s = s + ";\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr(starts[i + 1]);
+                        s = s + "\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr(starts[i + 1]);
                     }
                 }
                 if (i == ends.length - 1 && endInt < 2400) {
                     if (ends.length == 1) {
                         s = CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
                     } else
-                        s = s + ";\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
+                        s = s + "\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
                 }
             }
 //            Logger.e("haveThingStartInts:" + haveThingStartInts.toString());
@@ -323,14 +324,14 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
         SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(AddActivity.this);
         try {
             Map<String, Object> map = new HashMap<>();
-            map.put("userId", "");
+            map.put("userId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
             String currentDate = (String) SPUtils.get(AddActivity.this, "currentDate", "");
             map.put("eventDate", currentDate);
             map.put("startTime", startTime);
             ArrayList<SpecificEventSource> specificEventList = (ArrayList<SpecificEventSource>) specificEventDao.query(map);
             if (specificEventList == null || specificEventList.size() <= 0) {
                 //本时段未添加过事项
-                specificEventDao.save(new SpecificEventSource("", currentDate, startTime, specificEvent));
+                specificEventDao.save(new SpecificEventSource(SystemInfo.getInstance(getApplicationContext()).getMemberId(), currentDate, startTime, specificEvent));
             } else {
                 specificEventList.get(0).setSpecificEvent(specificEvent);
                 specificEventDao.update(specificEventList.get(0));
@@ -356,13 +357,13 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
         EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(AddActivity.this);
         try {
             Map<String, Object> map = new HashMap<>();
-            map.put("userId", "");
+            map.put("userId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
             String currentDate = (String) SPUtils.get(AddActivity.this, "currentDate", "");
             map.put("eventDate", currentDate);
             ArrayList<EverydayEventSource> todayEventList = (ArrayList<EverydayEventSource>) everydayEventDao.query(map);
             if (todayEventList == null || todayEventList.size() <= 0) {
                 //今日未添加过事项
-                everydayEventDao.save(new EverydayEventSource("", currentDate, startTimes, endTimes, eventTypes));
+                everydayEventDao.save(new EverydayEventSource(SystemInfo.getInstance(getApplicationContext()).getMemberId(), currentDate, startTimes, endTimes, eventTypes));
             } else {
                 todayEventList.get(0).setStartTimes(startTimes);
                 todayEventList.get(0).setEndTimes(endTimes);

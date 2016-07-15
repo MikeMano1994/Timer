@@ -70,8 +70,9 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
     TextInputLayout registerPasswordLayout;
     @Bind(R.id.et_register_re_password)
     EditText etRegisterRePassword;
-    //    @Bind(R.id.register_re_password_layout)
-//    TextInputLayout registerRePasswordLayout;
+    @Bind(R.id.bt_noaccount_login)
+    Button bt_noaccount_login;
+
     private UMShareAPI mShareAPI;//友盟三方登陆授权
     private SHARE_MEDIA platform;//分享平台
 
@@ -133,7 +134,7 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
     }
 
     @OnClick({R.id.bt_forget_password, R.id.bt_have_account, R.id.bt_establish_account,
-            R.id.bt_register, R.id.bt_login, R.id.bt_qq_login, R.id.bt_wechat_login, R.id.bt_sina_login})
+            R.id.bt_register, R.id.bt_login, R.id.bt_qq_login, R.id.bt_wechat_login, R.id.bt_sina_login, R.id.bt_noaccount_login})
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_have_account:
@@ -216,6 +217,11 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
                 mShareAPI.doOauthVerify(this, platform, umLoginAuthListener);
                 break;
 
+            case R.id.bt_noaccount_login:
+                SystemInfo.getInstance(getApplicationContext()).setMemberId("try");
+                startActivity(new Intent(LoginAndRegisterActivity.this, MainActivity.class));
+                finish();
+                break;
             default:
                 break;
         }
@@ -305,9 +311,9 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
             Logger.e(map.toString());
             switch (share_media) {
                 case QQ:
-                    QQUserInfo qqUserInfo = new QQUserInfo();
                     SystemInfo.getInstance(getApplicationContext()).setQQ(map.get("openid"));
                     SystemInfo.getInstance(getApplicationContext()).setQQName(map.get("screen_name"));
+                    SystemInfo.getInstance(getApplicationContext()).setMemberId("openid");
                     SystemInfo.getInstance(getApplicationContext()).setAccount(map.get("screen_name"));
                     SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(map.get("profile_image_url"));
                     break;
@@ -317,6 +323,7 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
                         JSONObject sinaUserInfo = null;
                         sinaUserInfo = new JSONObject(result);
                         SystemInfo.getInstance(getApplicationContext()).setSina((String) sinaUserInfo.get("idstr"));
+                        SystemInfo.getInstance(getApplicationContext()).setMemberId((String) sinaUserInfo.get("idstr"));
                         SystemInfo.getInstance(getApplicationContext()).setSinaName((String) sinaUserInfo.get("screen_name"));
                         SystemInfo.getInstance(getApplicationContext()).setAccount((String) sinaUserInfo.get("screen_name"));
                         SystemInfo.getInstance(getApplicationContext()).setPortraitUrl((String) sinaUserInfo.get("profile_image_url"));

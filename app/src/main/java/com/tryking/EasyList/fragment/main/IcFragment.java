@@ -22,6 +22,10 @@ import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.test.TestActivity;
 import com.tryking.EasyList.activity.LoginAndRegisterActivity;
 import com.tryking.EasyList.activity.PIMSActivity;
+import com.tryking.EasyList.widgets.marqueeView.MarqueeView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,6 +37,8 @@ import butterknife.OnClick;
 public class IcFragment extends Fragment {
 
 
+    private static final int REQUEST_PIM = 0X00;
+
     @Bind(R.id.head_portrait)
     ImageView headPortrait;
     @Bind(R.id.tv_aboutUs)
@@ -43,6 +49,8 @@ public class IcFragment extends Fragment {
     TextView icAccount;
     @Bind(R.id.ic_signature)
     TextView icSignature;
+    @Bind(R.id.mv_notice)
+    MarqueeView mvNotice;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +69,7 @@ public class IcFragment extends Fragment {
                 if (SystemInfo.getInstance(getActivity()).isLogin()) {
                     startActivity(new Intent(getActivity(), PIMSActivity.class));
                 } else {
-                    startActivity(new Intent(getActivity(), LoginAndRegisterActivity.class));
+                    startActivityForResult(new Intent(getActivity(), LoginAndRegisterActivity.class), REQUEST_PIM);
                     getActivity().finish();
                 }
                 break;
@@ -78,7 +86,7 @@ public class IcFragment extends Fragment {
 
     private void init() {
         Uri uri = Uri.parse(SystemInfo.getInstance(getActivity()).getPortraitUrl());
-        Glide.with(this).load(uri).asBitmap().centerCrop().into(new BitmapImageViewTarget(headPortrait){
+        Glide.with(this).load(uri).asBitmap().centerCrop().into(new BitmapImageViewTarget(headPortrait) {
             @Override
             protected void setResource(Bitmap resource) {
                 RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
@@ -91,9 +99,18 @@ public class IcFragment extends Fragment {
             icSignature.setVisibility(View.VISIBLE);
             icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
         } else {
-            icAccount.setText("未登陆");
+            icAccount.setText("试用账号");
             icSignature.setVisibility(View.GONE);
         }
+
+        List<String> info = new ArrayList<>();
+        info.add("和时间做朋友_1");
+        info.add("和时间做朋友_2");
+        info.add("和时间做朋友_3");
+        info.add("和时间做朋友_4");
+        info.add("和时间做朋友_5");
+        info.add("和时间做朋友_6");
+        mvNotice.startWithList(info);
     }
 
     @Override
@@ -101,5 +118,6 @@ public class IcFragment extends Fragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+    
 }
 

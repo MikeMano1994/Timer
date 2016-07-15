@@ -29,6 +29,7 @@ import com.tryking.EasyList.db.table.EverydayEventSource;
 import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
+import com.tryking.EasyList.widgets.marqueeView.MarqueeView;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -54,6 +55,8 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
     Button btViewYesterday;
     @Bind(R.id.tv_title)
     TextView tvTitle;
+    @Bind(R.id.mv_notice)
+    MarqueeView mvNotice;
 
 
     private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
@@ -72,20 +75,30 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //直接resume的时候跟新
-//        init();
+        init();
+    }
+
+    private void init() {
+        List<String> info = new ArrayList<>();
+        info.add("和时间做朋友_1");
+        info.add("和时间做朋友_2");
+        info.add("和时间做朋友_3");
+        info.add("和时间做朋友_4");
+        info.add("和时间做朋友_5");
+        info.add("和时间做朋友_6");
+        mvNotice.startWithList(info);
     }
 
     @OnClick({R.id.bt_viewHistory, R.id.bt_viewYesterday})
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_viewHistory:
-                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
+//                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
+                TT.showShort(getActivity(), "正在开发中...");
                 break;
             case R.id.bt_viewYesterday:
                 if (btViewYesterday.getText().toString() == "查看昨日") {
                     refreshYesterdayData();
-                    tvTitle.setText("昨日事项统计");
                 } else {
                     refresh();
                     btViewYesterday.setText("查看昨日");
@@ -109,6 +122,7 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
             showPieChart.setDescription("昨日事项统计");
             showPieChart.setCenterText("昨日事项统计");
             btViewYesterday.setText("查看今日");
+            tvTitle.setText("昨日事项统计");
         }
     }
 
@@ -125,7 +139,6 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
         initChart(getEventData(getEventStrings()));
         btViewYesterday.setText("查看昨日");
         tvTitle.setText("今日事项统计");
-//        Logger.e("超时空刷新");
     }
 
     private String[] getEventStrings() {

@@ -23,6 +23,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
+import com.tryking.EasyList.utils.ActivityUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,9 +71,9 @@ public class PIMSActivity extends BaseActivity {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                SystemInfo.getInstance(PIMSActivity.this).logout();
+                                SystemInfo.getInstance(getApplicationContext()).logout();
                                 startActivity(new Intent(PIMSActivity.this, LoginAndRegisterActivity.class));
-                                PIMSActivity.this.finish();
+                                ActivityUtils.getInstance().killAllActivities();
                                 dialog.dismiss();
                             }
                         })
@@ -107,9 +108,15 @@ public class PIMSActivity extends BaseActivity {
                 headPortrait.setImageDrawable(roundedBitmapDrawable);
             }
         });
-        tvNickName.setText(SystemInfo.getInstance(getApplicationContext()).getAccount());
-        tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName());
-        tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName());
+        if (SystemInfo.getInstance(getApplicationContext()).getMemberId() == "try") {
+            tvNickName.setText("试用账号");
+            tvQQ.setText("未绑定");
+            tvSina.setText("未绑定");
+        } else {
+            tvNickName.setText(SystemInfo.getInstance(getApplicationContext()).getAccount());
+            tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getQQName());
+            tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getSinaName());
+        }
     }
 
     /*
