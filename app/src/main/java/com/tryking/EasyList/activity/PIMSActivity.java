@@ -74,14 +74,16 @@ public class PIMSActivity extends BaseActivity {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                SystemInfo.getInstance(getApplicationContext()).logout();
+                                //如果登陆了就让用户登出，把本地的数据清理掉。如果没有登录就不登出，防止用户再次无账号登录时没数据
+                                if (SystemInfo.getInstance(getApplicationContext()).isLogin()) {
+                                    SystemInfo.getInstance(getApplicationContext()).logout();
+                                }
                                 startActivity(new Intent(PIMSActivity.this, LoginActivity.class));
                                 dialog.dismiss();
                                 //给MainActivity发送广播使其finish
                                 Intent intent_exitMain = new Intent(String4Broad.ExitMainActivity);
                                 sendBroadcast(intent_exitMain);
                                 finish();
-
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {

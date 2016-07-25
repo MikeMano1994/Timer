@@ -18,6 +18,7 @@ import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.bean.TodayEventData;
 import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
+import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.widgets.NumberPickerPopupWindow;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
@@ -99,9 +100,9 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
 //        setSupportActionBar(toolBar);
         rbWork.setChecked(true);
 
-        startTimes = (String) SPUtils.get(AddActivity.this, "startTimes", "");
-        endTimes = (String) SPUtils.get(AddActivity.this, "endTimes", "");
-        eventTypes = (String) SPUtils.get(AddActivity.this, "eventTypes", "");
+        startTimes = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.START_TIMES, "");
+        endTimes = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.END_TIMES, "");
+        eventTypes = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.EVENT_TYPES, "");
 //        Logger.e(startTimes + "start:::" + endTimes + "end::::type" + eventTypes);
         String[] starts = CommonUtils.convertStrToArray(startTimes);
         String[] ends = CommonUtils.convertStrToArray(endTimes);
@@ -244,9 +245,9 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
 //                Logger.e(endTimes + ":ends");
 //                Logger.e(eventTypes + ":type");
 
-                SPUtils.put(AddActivity.this, "startTimes", startTimes);
-                SPUtils.put(AddActivity.this, "endTimes", endTimes);
-                SPUtils.put(AddActivity.this, "eventTypes", eventTypes);
+                SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
+                SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
+                SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
                 SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
 //                Logger.e("在这儿");
                 saveToDataBase(startTimes, endTimes, eventTypes);
@@ -270,9 +271,9 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
 //                                Logger.e(startTimes + "::start");
 //                                Logger.e(endTimes + "::ends");
 //                                Logger.e(eventTypes + "::type");
-                                SPUtils.put(AddActivity.this, "startTimes", startTimes);
-                                SPUtils.put(AddActivity.this, "endTimes", endTimes);
-                                SPUtils.put(AddActivity.this, "eventTypes", eventTypes);
+                                SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
+                                SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
+                                SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
                                 saveToDataBase(startTimes, endTimes, eventTypes);
 
                                 //以开始时间作为名字存储事件
@@ -293,9 +294,9 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
 //                                Logger.e(endTimes + ":::ends");
 //                                Logger.e(eventTypes + ":::type");
 
-                                SPUtils.put(AddActivity.this, "startTimes", startTimes);
-                                SPUtils.put(AddActivity.this, "endTimes", endTimes);
-                                SPUtils.put(AddActivity.this, "eventTypes", eventTypes);
+                                SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
+                                SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
+                                SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
                                 saveToDataBase(startTimes, endTimes, eventTypes);
 
 //                                Logger.e(String.valueOf(start) + "qqqqqqqqqq");
@@ -325,7 +326,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("userId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
-            String currentDate = (String) SPUtils.get(AddActivity.this, "currentDate", "");
+            String currentDate = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.CURRENT_DATE, "");
             map.put("eventDate", currentDate);
             map.put("startTime", startTime);
             ArrayList<SpecificEventSource> specificEventList = (ArrayList<SpecificEventSource>) specificEventDao.query(map);
@@ -358,7 +359,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
         try {
             Map<String, Object> map = new HashMap<>();
             map.put("userId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
-            String currentDate = (String) SPUtils.get(AddActivity.this, "currentDate", "");
+            String currentDate = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.CURRENT_DATE, "");
             map.put("eventDate", currentDate);
             ArrayList<EverydayEventSource> todayEventList = (ArrayList<EverydayEventSource>) everydayEventDao.query(map);
             if (todayEventList == null || todayEventList.size() <= 0) {

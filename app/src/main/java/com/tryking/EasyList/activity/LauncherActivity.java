@@ -26,11 +26,7 @@ public class LauncherActivity extends BaseActivity {
             startActivity(new Intent(LauncherActivity.this, GuidanceActivity.class));
             SPUtils.put(LauncherActivity.this, Constants.SHARED_PREFERENCE_IS_FIRST_LAUNCHER, false);
         } else {
-            if (SystemInfo.getInstance(getApplicationContext()).isLogin()) {
-                startActivity(new Intent(LauncherActivity.this, MainActivity.class));
-            } else {
-                startActivity(new Intent(LauncherActivity.this, LoginActivity.class));
-            }
+            startActivity(new Intent(LauncherActivity.this, MainActivity.class));
         }
         finish();
     }

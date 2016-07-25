@@ -3,6 +3,7 @@ package com.tryking.EasyList.base;
 import android.content.Context;
 
 import com.tryking.EasyList.global.ApplicationGlobal;
+import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.SPUtils;
 
 /**
@@ -118,7 +119,7 @@ public class SystemInfo {
     // TODO: 2016/6/27 先暂时用account来判断，后期换
     public boolean isLogin() {
         String memberId = (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_MEMBER_ID, "");
-        if (memberId == null || memberId.equals("")) {
+        if (memberId == null || memberId.equals("") || memberId.equals(Constants.TRY_OUT_ACCOUNT)) {
             return false;
         }
         return true;
@@ -139,5 +140,9 @@ public class SystemInfo {
         setSina("");
         setSinaName("");
         setSignature("");
+        //账户登出，要把本地的信息置为空。用户登录的时候从服务端拿到数据写入本地
+        SPUtils.put(mContext, "startTimes", "");
+        SPUtils.put(mContext, "endTimes", "");
+        SPUtils.put(mContext, "eventTypes", "");
     }
 }

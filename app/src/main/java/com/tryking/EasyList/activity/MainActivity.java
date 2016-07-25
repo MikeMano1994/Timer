@@ -148,4 +148,12 @@ public class MainActivity extends BaseActivity {
             MainActivity.this.finish();
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        if (exitMainActivityReceiver != null) {
+            unregisterReceiver(exitMainActivityReceiver);
+        }
+        super.onDestroy();
+    }
 }

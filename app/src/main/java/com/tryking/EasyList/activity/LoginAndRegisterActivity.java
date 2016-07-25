@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.SystemInfo;
-import com.tryking.EasyList.bean.thirdInfo.QQUserInfo;
 import com.tryking.EasyList.utils.TT;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;

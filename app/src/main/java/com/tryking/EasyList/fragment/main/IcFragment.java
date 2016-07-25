@@ -73,10 +73,10 @@ public class IcFragment extends Fragment {
                 TT.showShort(getActivity(), "关于我们，正在开发...");
                 break;
             case R.id.ll_PIM:
-                if (SystemInfo.getInstance(getActivity()).isLogin()) {
+                if (SystemInfo.getInstance(getContext()).isLogin()) {
                     startActivity(new Intent(getActivity(), PIMSActivity.class));
                 } else {
-                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_PIM);
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
                     getActivity().finish();
                 }
                 break;
@@ -114,9 +114,13 @@ public class IcFragment extends Fragment {
                 }
             });
         }
-        icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount() == "" ? "试用账号" : SystemInfo.getInstance(getActivity()).getAccount());
-        icSignature.setVisibility(View.VISIBLE);
-        icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
+        if (SystemInfo.getInstance(getActivity()).isLogin()) {
+            icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
+            icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
+        } else {
+            icAccount.setText("未登陆");
+            icSignature.setText("点击登录");
+        }
 
         List<String> info = new ArrayList<>();
         info.add("重复言说多半是一种时间上的损失。 \n—— 培根");

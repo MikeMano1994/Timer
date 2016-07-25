@@ -19,6 +19,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -88,6 +89,7 @@
                 android:id="@+id/account_setting"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@drawable/common_background_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="10dp">
@@ -110,13 +112,14 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/white" />
+                android:layout_height="0.1dp"
+                android:background="@color/thin_gray" />
 
             <LinearLayout
                 android:id="@+id/common_setting"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@drawable/common_background_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="10dp">
@@ -139,13 +142,14 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/white" />
+                android:layout_height="0.1dp"
+                android:background="@color/thin_gray" />
 
             <LinearLayout
                 android:id="@+id/recommend"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@drawable/common_background_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="10dp">
@@ -168,13 +172,14 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/white" />
+                android:layout_height="0.1dp"
+                android:background="@color/thin_gray" />
 
             <LinearLayout
                 android:id="@+id/aboutUs"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@drawable/common_background_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="10dp">
@@ -197,8 +202,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/white" />
+                android:layout_height="0.1dp"
+                android:background="@color/thin_gray" />
 
             <!--<Button-->
             <!--android:id="@+id/bt_logout"-->
