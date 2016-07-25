@@ -1,4 +1,4 @@
-package com.tryking.timer;
+package com.tryking.EasyList;
 
 import android.test.AndroidTestCase;
 

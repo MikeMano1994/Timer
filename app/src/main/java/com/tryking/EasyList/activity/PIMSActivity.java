@@ -22,7 +22,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._activity.LoginActivity;
 import com.tryking.EasyList.base.BaseActivity;
+import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.utils.ActivityUtils;
 
@@ -73,9 +75,13 @@ public class PIMSActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 SystemInfo.getInstance(getApplicationContext()).logout();
-                                startActivity(new Intent(PIMSActivity.this, LoginAndRegisterActivity.class));
-                                ActivityUtils.getInstance().killAllActivities();
+                                startActivity(new Intent(PIMSActivity.this, LoginActivity.class));
                                 dialog.dismiss();
+                                //给MainActivity发送广播使其finish
+                                Intent intent_exitMain = new Intent(String4Broad.ExitMainActivity);
+                                sendBroadcast(intent_exitMain);
+                                finish();
+
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {

@@ -24,9 +24,8 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
-
     <application
-        android:name=".base.TimerApplication"
+        android:name=".base.EasyListApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -61,9 +60,14 @@
             android:label="@string/individual_center"
             android:theme="@style/AppTheme.Float" />
         <activity
+            android:name="._activity.LoginActivity"
+            android:label="@string/login" />
+        <activity
             android:name=".activity.LoginAndRegisterActivity"
             android:label="@string/login_and_register"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+
+
         <activity android:name=".umeng.ShareActivity" />
         /************************************友盟相关****开始*********************************/
         <activity
@@ -119,14 +123,14 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         /************************************友盟相关****结束*********************************/
-        /************************************Mob短信验证****开始*********************************/
-        <activity
-            android:name="com.mob.tools.MobUIShell"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        /************************************Mob短信验证****结束*********************************/
-
+        //暂时不集成短信
+        <!-- /************************************Mob短信验证****开始*********************************/ -->
+        <!-- <activity -->
+        <!-- android:name="com.mob.tools.MobUIShell" -->
+        <!-- android:configChanges="keyboardHidden|orientation|screenSize" -->
+        <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar" -->
+        <!-- android:windowSoftInputMode="stateHidden|adjustResize" /> -->
+        <!-- /************************************Mob短信验证****结束*********************************/ -->
     </application>
 
 </manifest>

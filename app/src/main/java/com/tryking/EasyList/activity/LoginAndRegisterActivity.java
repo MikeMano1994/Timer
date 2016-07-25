@@ -312,7 +312,6 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
             switch (share_media) {
                 case QQ:
                     SystemInfo.getInstance(getApplicationContext()).setQQ(map.get("openid"));
-                    SystemInfo.getInstance(getApplicationContext()).setQQName(map.get("screen_name"));
                     SystemInfo.getInstance(getApplicationContext()).setMemberId("openid");
                     SystemInfo.getInstance(getApplicationContext()).setAccount(map.get("screen_name"));
                     SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(map.get("profile_image_url"));
@@ -324,7 +323,6 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
                         sinaUserInfo = new JSONObject(result);
                         SystemInfo.getInstance(getApplicationContext()).setSina((String) sinaUserInfo.get("idstr"));
                         SystemInfo.getInstance(getApplicationContext()).setMemberId((String) sinaUserInfo.get("idstr"));
-                        SystemInfo.getInstance(getApplicationContext()).setSinaName((String) sinaUserInfo.get("screen_name"));
                         SystemInfo.getInstance(getApplicationContext()).setAccount((String) sinaUserInfo.get("screen_name"));
                         SystemInfo.getInstance(getApplicationContext()).setPortraitUrl((String) sinaUserInfo.get("profile_image_url"));
                         SystemInfo.getInstance(getApplicationContext()).setSignature((String) sinaUserInfo.get("description"));

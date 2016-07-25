@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._activity.LoginActivity;
 import com.tryking.EasyList.activity.LoginAndRegisterActivity;
 import com.tryking.EasyList.activity.PIMSActivity;
 import com.tryking.EasyList.base.SystemInfo;
@@ -75,7 +76,7 @@ public class IcFragment extends Fragment {
                 if (SystemInfo.getInstance(getActivity()).isLogin()) {
                     startActivity(new Intent(getActivity(), PIMSActivity.class));
                 } else {
-                    startActivityForResult(new Intent(getActivity(), LoginAndRegisterActivity.class), REQUEST_PIM);
+                    startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_PIM);
                     getActivity().finish();
                 }
                 break;

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._activity.LoginActivity;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.widgets.BackgroundScrollViewPager;
 import com.tryking.EasyList.widgets.circleIndicator.CircleIndicator;
@@ -41,7 +42,7 @@ public class GuidanceActivity extends BaseActivity {
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_entrance:
-                startActivity(new Intent(GuidanceActivity.this, LoginAndRegisterActivity.class));
+                startActivity(new Intent(GuidanceActivity.this, LoginActivity.class));
                 finish();
         }
 

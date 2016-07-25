@@ -1,5 +1,9 @@
 package com.tryking.EasyList.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,6 +17,7 @@ import android.view.View;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.adapter.MainContentPagerAdapter;
 import com.tryking.EasyList.base.BaseActivity;
+import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.fragment.main.IcFragment;
 import com.tryking.EasyList.fragment.main.TodayFragment;
 import com.tryking.EasyList.fragment.main.WeekFragment;
@@ -36,6 +41,7 @@ public class MainActivity extends BaseActivity {
     private List<Integer> iCons;
     private FragmentTransaction transaction;
     private int currentIndex;
+    private MainActivity.exitMainActivityReceiver exitMainActivityReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,15 @@ public class MainActivity extends BaseActivity {
 
         initDatas();
         initViews();
+        init();
 //        startActivity(new Intent(MainActivity.this, TestActivity.class));
+    }
+
+    private void init() {
+        //退出MainActivity的Receiver
+        IntentFilter exitFilter = new IntentFilter(String4Broad.ExitMainActivity);
+        exitMainActivityReceiver = new exitMainActivityReceiver();
+        registerReceiver(exitMainActivityReceiver, exitFilter);
     }
 
     private void initDatas() {
@@ -125,5 +139,13 @@ public class MainActivity extends BaseActivity {
                 throw new IllegalArgumentException("fragmentName Error!");
         }
         return fragment;
+    }
+
+    class exitMainActivityReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            MainActivity.this.finish();
+        }
     }
 }

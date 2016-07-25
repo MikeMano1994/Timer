@@ -68,25 +68,8 @@
                         android:layout_marginLeft="15dp"
                         android:text="头像"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
-                    <!--<com.facebook.drawee.view.SimpleDraweeView-->
-                    <!--android:id="@+id/head_portrait"-->
-                    <!--android:layout_width="80dp"-->
-                    <!--android:layout_height="80dp"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:layout_marginRight="15dp"-->
-                    <!--fresco:actualImageScaleType="fitCenter"-->
-                    <!--fresco:fadeDuration="3000"-->
-                    <!--fresco:failureImage="@drawable/ic_account_circle"-->
-                    <!--fresco:failureImageScaleType="fitCenter"-->
-                    <!--fresco:placeholderImage="@drawable/ic_account_circle_black"-->
-                    <!--fresco:placeholderImageScaleType="fitCenter"-->
-                    <!--fresco:roundAsCircle="true"-->
-                    <!--fresco:roundingBorderColor="@color/colorAccent"-->
-                    <!--fresco:roundingBorderPadding="1dp"-->
-                    <!--fresco:roundingBorderWidth="1dp" />-->
                     <ImageView
                         android:id="@+id/head_portrait"
                         android:layout_width="80dp"
@@ -120,7 +103,7 @@
                         android:layout_marginLeft="15dp"
                         android:text="昵称"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_nickName"
@@ -131,7 +114,7 @@
                         android:layout_marginRight="15dp"
                         android:text="试用账号"
                         android:textColor="@color/gray"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
                 <View
@@ -156,7 +139,7 @@
                         android:layout_marginLeft="15dp"
                         android:text="绑定QQ账号"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_QQ"
@@ -167,7 +150,7 @@
                         android:layout_marginRight="15dp"
                         android:text="末日没有进行曲"
                         android:textColor="@color/gray"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
                 <View
@@ -192,7 +175,7 @@
                         android:layout_marginLeft="15dp"
                         android:text="绑定新浪微博账号"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_Sina"
@@ -203,7 +186,7 @@
                         android:layout_marginRight="15dp"
                         android:text="末日没有进行曲"
                         android:textColor="@color/gray"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -230,7 +213,7 @@
                         android:layout_marginLeft="15dp"
                         android:text="性别"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_gender"
@@ -241,7 +224,7 @@
                         android:layout_marginRight="15dp"
                         android:text="男"
                         android:textColor="@color/gray"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 
@@ -267,7 +250,7 @@
                         android:layout_marginLeft="15dp"
                         android:text="个性签名"
                         android:textColor="@color/black"
-                        android:textSize="18sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_signature"
@@ -278,7 +261,7 @@
                         android:layout_marginRight="15dp"
                         android:text="末日没有进行曲"
                         android:textColor="@color/gray"
-                        android:textSize="16sp" />
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 

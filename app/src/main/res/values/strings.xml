@@ -9,4 +9,5 @@
     <string name="guide">向导</string>
     <string name="individual_center">个人中心</string>
     <string name="login_and_register">登陆/注册</string>
+    <string name="login">登陆</string>
 </resources>

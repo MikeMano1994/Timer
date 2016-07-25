@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.tryking.timer"
+        applicationId "com.tryking.EasyList"
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
@@ -20,9 +20,6 @@ android {
 
     repositories {
         //仓库：Flat directory,Maven,lvy(Studio支持这三种)
-        flatDir {
-            dirs 'libs_sms'
-        }
         maven {
             url "https://jitpack.io"
         }
@@ -47,10 +44,7 @@ dependencies {
     compile files('libs/SocialSDK_WeiXin_2.jar')
     compile files('libs/SocialSDK_WeiXin_1.jar')
     /** ***************************/
-    /** ******Mob短信验证 ***************/
-    compile(name: 'SMSSDK-2.1.0', ext: 'aar')
-    compile(name: 'SMSSDKGUI-2.1.0', ext: 'aar')
-    /** ***************************/
+
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'com.android.support:cardview-v7:23.3.0'
@@ -60,7 +54,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.mcxiaoke.volley:library:1.0.19'
-    //Fresco用不到，jar包太大
+    //Fresco用不到，jar包太大，换Glide
 //    compile 'com.facebook.fresco:fresco:0.11.0'
     /* 日历选择器 */
     compile 'com.prolificinteractive:material-calendarview:1.4.0'

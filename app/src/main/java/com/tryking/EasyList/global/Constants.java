@@ -30,6 +30,11 @@ public class Constants {
     /**
      * SharedPreference存储名
      */
-    public static final String SHARED_PREFERENCE_NAME = "Timer_1.0";
+    public static final String SHARED_PREFERENCE_NAME = "EasyList_1.0";
+
+    /**
+     * 试用账号
+     */
+    public static final String TRY_OUT_ACCOUNT = "try_out_account";
 
 }

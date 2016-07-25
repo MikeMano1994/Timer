@@ -14,7 +14,7 @@ import java.util.Date;
 /**
  * Created by Tryking on 2016/5/25.
  */
-public class TimerApplication extends Application {
+public class EasyListApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();

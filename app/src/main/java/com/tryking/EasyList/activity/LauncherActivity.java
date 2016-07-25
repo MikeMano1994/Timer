@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._activity.LoginActivity;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
@@ -28,7 +29,7 @@ public class LauncherActivity extends BaseActivity {
             if (SystemInfo.getInstance(getApplicationContext()).isLogin()) {
                 startActivity(new Intent(LauncherActivity.this, MainActivity.class));
             } else {
-                startActivity(new Intent(LauncherActivity.this, LoginAndRegisterActivity.class));
+                startActivity(new Intent(LauncherActivity.this, LoginActivity.class));
             }
         }
         finish();

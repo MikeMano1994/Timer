@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by Tryking on 2016/5/14.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-    private static final String TAB_NAME = "timer.db";
+    private static final String TAB_NAME = "EasyList.db";
     private static final int DB_VERSION = 1;
     private static DatabaseHelper instance;
     private Map<String, Dao> daos = new HashMap<>();
