@@ -24,6 +24,7 @@ import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.bean.TodayEventData;
 import com.tryking.EasyList.global.ApplicationGlobal;
+import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.widgets.CountDownTextView;
 import com.tryking.EasyList.widgets.RecyclerView.MyItemDividerDecoration;
 import com.tryking.EasyList.activity.AddActivity;
@@ -261,9 +262,9 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
             @Override
             public void onClick(View v) {
 //                TT.showShort(getActivity(), "删除啦");
-                String startTimes = (String) SPUtils.get(getActivity(), "startTimes", "");
-                String endTimes = (String) SPUtils.get(getActivity(), "endTimes", "");
-                String eventTypes = (String) SPUtils.get(getActivity(), "eventTypes", "");
+                String startTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.START_TIMES, "");
+                String endTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.END_TIMES, "");
+                String eventTypes = (String) SPUtils.get(getActivity(), ApplicationGlobal.EVENT_TYPES, "");
 //                Logger.e("old::" + startTimes + "::" + endTimes + "::type::" + eventTypes);
 //                Logger.e(startTime + "start::end::" + endTime);
 

@@ -20,6 +20,7 @@ import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.global.InterfaceURL;
 import com.tryking.EasyList.network.JsonBeanRequest;
 import com.tryking.EasyList.utils.TT;
+import com.tryking.EasyList.widgets.LoadingDialog;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -47,6 +48,7 @@ public class LoginActivity extends BaseActivity {
 
     private UMShareAPI mShareAPI;//友盟三方登陆授权
     private SHARE_MEDIA platform;//分享平台
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class LoginActivity extends BaseActivity {
 
     private void init() {
         mShareAPI = UMShareAPI.get(this);
+        loadingDialog = new LoadingDialog(this);
     }
 
     @OnClick({R.id.bt_qq_login, R.id.bt_wechat_login, R.id.bt_sina_login, R.id.bt_no_login})
@@ -207,7 +210,7 @@ public class LoginActivity extends BaseActivity {
      */
     private void serverLogin() {
         Logger.e("开始登录");
-
+        loadingDialog.show();
         Map<String, String> params = new HashMap<>();
         params.put("memberid", SystemInfo.getInstance(getApplicationContext()).getMemberId());
         params.put("account", SystemInfo.getInstance(getApplicationContext()).getAccount());
@@ -249,6 +252,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            loadingDialog.dismiss();
             switch (msg.what) {
                 case Constants.Login.loginSuccess:
                     LoginReturnBean login = (LoginReturnBean) msg.obj;
@@ -272,7 +276,8 @@ public class LoginActivity extends BaseActivity {
                     ChangeWidgetEnable(true);
                     break;
                 case Constants.requestException:
-                    TT.showShort(LoginActivity.this, msg.obj.toString());
+                    TT.showShort(LoginActivity.this, "服务器出小差啦");
+                    Logger.e(msg.obj.toString());
                     ChangeWidgetEnable(true);
                     break;
                 default:

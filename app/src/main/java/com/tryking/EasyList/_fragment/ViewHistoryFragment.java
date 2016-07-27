@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.FrameStats;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ public class ViewHistoryFragment extends Fragment {
     FrameLayout changeContent;
     private FragmentTransaction fragmentTransaction;
     private List<Fragment> fragments;
+    private FragmentManager fragmentManager;
 
     @Nullable
     @Override
@@ -68,11 +70,13 @@ public class ViewHistoryFragment extends Fragment {
         fragments = new ArrayList<>();
         fragments.add(new DayFragment());
         fragments.add(new WeekFragment());
-        fragments.add(new WeekFragment());
         fragments.add(new MonthFragment());
+        fragments.add(new AllFragment());
 
-        FragmentManager fragmentManager = getChildFragmentManager();
+        fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.change_content, fragments.get(0));
+        fragmentTransaction.commit();
     }
 
     /*
@@ -84,19 +88,26 @@ public class ViewHistoryFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     rb.setTextColor(getResources().getColor(R.color.white));
-
+                    fragmentTransaction = fragmentManager.beginTransaction();
                     switch (rb.getId()) {
                         case R.id.rb_day:
                             fragmentTransaction.replace(R.id.change_content, fragments.get(0));
+                            fragmentTransaction.commit();
                             break;
                         case R.id.rb_week:
                             fragmentTransaction.replace(R.id.change_content, fragments.get(1));
+                            fragmentTransaction.commit();
+
                             break;
                         case R.id.rb_month:
                             fragmentTransaction.replace(R.id.change_content, fragments.get(2));
+                            fragmentTransaction.commit();
+
                             break;
                         case R.id.rb_all:
                             fragmentTransaction.replace(R.id.change_content, fragments.get(3));
+                            fragmentTransaction.commit();
+
                             break;
                         default:
                             break;

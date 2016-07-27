@@ -27,6 +27,7 @@ import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.utils.ActivityUtils;
+import com.tryking.EasyList.widgets.LoadingDialog;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -125,6 +126,7 @@ public class PIMSActivity extends BaseActivity {
         tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getQQName());
         tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getSinaName());
         tvSignature.setText(SystemInfo.getInstance(getApplicationContext()).getSignature() == "" ? "未设置个性签名" : SystemInfo.getInstance(getApplicationContext()).getSignature());
+
     }
 
     /*
