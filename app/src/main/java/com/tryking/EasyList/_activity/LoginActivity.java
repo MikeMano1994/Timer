@@ -2,16 +2,23 @@ package com.tryking.EasyList._activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._bean.loginBean.LoginReturnBean;
 import com.tryking.EasyList.activity.MainActivity;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.global.InterfaceURL;
+import com.tryking.EasyList.network.JsonBeanRequest;
 import com.tryking.EasyList.utils.TT;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
@@ -20,6 +27,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -84,17 +92,17 @@ public class LoginActivity extends BaseActivity {
     private UMAuthListener umLoginAuthListener = new UMAuthListener() {
         @Override
         public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-//            Logger.e("complete" + "i:" + i + ":map:" + map.toString());
+            ChangeWidgetEnable(false);
             switch (share_media) {
                 case QQ:
-                    TT.showShort(getApplicationContext(), "QQ登陆成功");
+                    TT.showShort(getApplicationContext(), "QQ授权成功，正在登陆");
                     getUserInfo(share_media);
                     break;
                 case WEIXIN:
-                    TT.showShort(getApplicationContext(), "微信登陆成功");
+                    TT.showShort(getApplicationContext(), "微信授权成功，正在登陆");
                     break;
                 case SINA:
-                    TT.showShort(getApplicationContext(), "新浪微博登陆成功");
+                    TT.showShort(getApplicationContext(), "新浪微博授权成功，正在登陆");
                     getUserInfo(share_media);
                     break;
             }
@@ -120,17 +128,27 @@ public class LoginActivity extends BaseActivity {
         public void onCancel(SHARE_MEDIA share_media, int i) {
             switch (share_media) {
                 case QQ:
-                    TT.showShort(getApplicationContext(), "取消QQ授权");
+                    TT.showShort(getApplicationContext(), "取消QQ登陆");
                     break;
                 case WEIXIN:
-                    TT.showShort(getApplicationContext(), "取消微信授权");
+                    TT.showShort(getApplicationContext(), "取消微信登陆");
                     break;
                 case SINA:
-                    TT.showShort(getApplicationContext(), "取消新浪微博授权");
+                    TT.showShort(getApplicationContext(), "取消新浪微博登陆");
                     break;
             }
         }
     };
+
+    /*
+    让控件不能用
+     */
+    private void ChangeWidgetEnable(boolean b) {
+        btQqLogin.setEnabled(b);
+        btSinaLogin.setEnabled(b);
+        btWechatLogin.setEnabled(b);
+        btNoLogin.setEnabled(b);
+    }
 
     /*
     获取用户信息
@@ -170,8 +188,7 @@ public class LoginActivity extends BaseActivity {
                     }
                     break;
             }
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
+            serverLogin();
         }
 
         @Override
@@ -182,6 +199,85 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void onCancel(SHARE_MEDIA share_media, int i) {
 
+        }
+    };
+
+    /*
+    服务器登录验证
+     */
+    private void serverLogin() {
+        Logger.e("开始登录");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("memberid", SystemInfo.getInstance(getApplicationContext()).getMemberId());
+        params.put("account", SystemInfo.getInstance(getApplicationContext()).getAccount());
+        params.put("qq", SystemInfo.getInstance(getApplicationContext()).getQQ());
+        params.put("qqname", SystemInfo.getInstance(getApplicationContext()).getQQName());
+        params.put("sina", SystemInfo.getInstance(getApplicationContext()).getSina());
+        params.put("sinaname", SystemInfo.getInstance(getApplicationContext()).getSinaName());
+        params.put("signature", SystemInfo.getInstance(getApplicationContext()).getSignature());
+
+        String url = InterfaceURL.login;
+        Logger.e("url:" + url);
+        JsonBeanRequest<LoginReturnBean> loginRequest = new JsonBeanRequest<>(url, params, LoginReturnBean.class, new Response.Listener<LoginReturnBean>() {
+            @Override
+            public void onResponse(LoginReturnBean response) {
+                Message msg = new Message();
+                if (response.getResult().equals("1")) {
+                    msg.obj = response;
+                    msg.what = Constants.Login.loginSuccess;
+                } else {
+                    msg.obj = response.getMsg();
+                    msg.what = Constants.Login.loginFailure;
+                }
+                mHandler.sendMessage(msg);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e(error.toString());
+                Message msg = new Message();
+                msg.what = Constants.requestException;
+                msg.obj = error.toString();
+                mHandler.sendMessage(msg);
+            }
+        });
+        addToRequestQueue(loginRequest);
+    }
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case Constants.Login.loginSuccess:
+                    LoginReturnBean login = (LoginReturnBean) msg.obj;
+                    Logger.e(login.toString());
+                    if (login.isNewAccount()) {
+
+                    } else {
+                        SystemInfo.getInstance(getApplicationContext()).setAccount(login.getUser().getAccount());
+                        SystemInfo.getInstance(getApplicationContext()).setQQ(login.getUser().getQq());
+                        SystemInfo.getInstance(getApplicationContext()).setQQName(login.getUser().getQqname());
+                        SystemInfo.getInstance(getApplicationContext()).setSina(login.getUser().getSina());
+                        SystemInfo.getInstance(getApplicationContext()).setSinaName(login.getUser().getSinaname());
+                        SystemInfo.getInstance(getApplicationContext()).setSignature(login.getUser().getSignature());
+                    }
+                    TT.showShort(getApplicationContext(), "登陆成功");
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
+                    break;
+                case Constants.Login.loginFailure:
+                    TT.showShort(getApplicationContext(), "登陆失败");
+                    ChangeWidgetEnable(true);
+                    break;
+                case Constants.requestException:
+                    TT.showShort(LoginActivity.this, msg.obj.toString());
+                    ChangeWidgetEnable(true);
+                    break;
+                default:
+                    break;
+            }
         }
     };
 

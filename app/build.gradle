@@ -11,10 +11,23 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+
     buildTypes {
         release {
+            //debug标记
+            manifestPlaceholders = [IS_DEBUG: "no"]
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
+        }
+
+        dubug {
+//            signingConfig signingConfigs.release
+
+            //debug标记
+            manifestPlaceholders = [IS_DEBUG: "yes"]
         }
     }
 

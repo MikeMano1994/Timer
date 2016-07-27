@@ -124,6 +124,7 @@ public class PIMSActivity extends BaseActivity {
         tvNickName.setText(SystemInfo.getInstance(getApplicationContext()).getAccount() == "" ? "试用账号" : SystemInfo.getInstance(getApplicationContext()).getAccount());
         tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getQQName());
         tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getSinaName());
+        tvSignature.setText(SystemInfo.getInstance(getApplicationContext()).getSignature() == "" ? "未设置个性签名" : SystemInfo.getInstance(getApplicationContext()).getSignature());
     }
 
     /*

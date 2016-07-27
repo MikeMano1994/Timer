@@ -50,6 +50,10 @@
             android:label="@string/view_history"
             android:theme="@style/AppTheme.Float" />
         <activity
+            android:name="._activity.ViewHistoryActivity"
+            android:label="@string/view_history"
+            android:theme="@style/AppTheme.Float" />
+        <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name" />
         <activity
@@ -66,8 +70,6 @@
             android:name=".activity.LoginAndRegisterActivity"
             android:label="@string/login_and_register"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-
-
         <activity android:name=".umeng.ShareActivity" />
         /************************************友盟相关****开始*********************************/
         <activity
@@ -131,6 +133,7 @@
         <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar" -->
         <!-- android:windowSoftInputMode="stateHidden|adjustResize" /> -->
         <!-- /************************************Mob短信验证****结束*********************************/ -->
+
     </application>
 
 </manifest>

@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.orhanobut.logger.Logger;
-import com.tryking.EasyList.bean.BaseBean;
+import com.tryking.EasyList._bean.BaseBean;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class JsonBeanRequest<T> extends Request<T> {
     private Map<String, String> params;
     private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
-    public JsonBeanRequest(String url, Map<String, String> params, Class<T> clazz, Response.Listener listener, Response.ErrorListener errorListener) {
+    public JsonBeanRequest(String url, Map<String, String> params, Class<T> clazz, Response.Listener<T> listener, Response.ErrorListener errorListener) {
         this(Method.POST, url, params, clazz, listener, errorListener);
     }
 

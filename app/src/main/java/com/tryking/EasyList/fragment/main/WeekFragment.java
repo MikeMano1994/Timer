@@ -22,8 +22,8 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._activity.ViewHistoryActivity;
 import com.tryking.EasyList.bean.TodayEventData;
-import com.tryking.EasyList.activity.ViewHistoryActivity;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
 import com.tryking.EasyList.db.table.EverydayEventSource;
 import com.tryking.EasyList.utils.CommonUtils;
@@ -94,7 +94,8 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
         switch (v.getId()) {
             case R.id.bt_viewHistory:
 //                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
-                TT.showShort(getActivity(), "正在开发中...");
+//                TT.showShort(getActivity(), "正在开发中...");
+                startActivity(new Intent(getActivity(),ViewHistoryActivity.class));
                 break;
             case R.id.bt_viewYesterday:
                 if (btViewYesterday.getText().toString() == "查看昨日") {
