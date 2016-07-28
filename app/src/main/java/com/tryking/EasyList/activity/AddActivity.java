@@ -15,8 +15,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList.base.SystemInfo;
-import com.tryking.EasyList.bean.TodayEventData;
 import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
 import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.widgets.NumberPickerPopupWindow;
@@ -255,8 +255,6 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                 setResult(RESULT_OK);
                 finish();
             } else {
-//                Logger.e("NoStart:" + nothingStartInts.toString());
-//                Logger.e("NoEnd:" + nothingEndInts.toString());
                 for (int i = 0; i < nothingStartInts.size(); i++) {
                     if (start >= nothingStartInts.get(i) && end <= nothingEndInts.get(i)) {
                         for (int j = 0; j < haveThingStartInts.size(); j++) {

@@ -6,4 +6,6 @@ package com.tryking.EasyList.global;
 public class InterfaceURL {
 
     public static final String login = ApplicationGlobal.appUrl + "login.html";
+
+    public static final String changeData = ApplicationGlobal.appUrl + "changeData.html";
 }

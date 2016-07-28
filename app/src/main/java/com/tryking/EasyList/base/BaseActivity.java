@@ -6,8 +6,10 @@ import android.view.Window;
 
 import com.android.volley.Request;
 import com.tryking.EasyList.utils.ActivityUtils;
+import com.tryking.EasyList.widgets.LoadingDialog;
 
 public class BaseActivity extends AppCompatActivity {
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +23,19 @@ public class BaseActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    public <T> void addToRequestQueue(Request<T> req){
+    public <T> void addToRequestQueue(Request<T> req) {
         EasyListApplication.getInstance().addToRequestQueue(req, this.getClass().getName());
+    }
+
+    public void showLoadingDialog() {
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.show();
+    }
+
+    public void dismissLoadingDialog() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
     }
 
     @Override

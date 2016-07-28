@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tryking.EasyList.R;
-import com.tryking.EasyList.bean.TodayEventData;
+import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList.utils.CommonUtils;
 
 import java.lang.ref.WeakReference;

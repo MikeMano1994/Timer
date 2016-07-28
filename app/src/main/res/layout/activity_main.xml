@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             app:tabBackground="@color/colorAccent"
-            app:tabIndicatorColor="@color/blue"
+            app:tabIndicatorColor="@color/green"
             app:tabIndicatorHeight="1dp" />
     </android.support.design.widget.AppBarLayout>
 

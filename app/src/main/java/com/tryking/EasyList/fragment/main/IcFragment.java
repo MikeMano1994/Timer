@@ -37,9 +37,6 @@ import butterknife.OnClick;
  */
 public class IcFragment extends Fragment {
 
-
-    private static final int REQUEST_PIM = 0X00;
-
     @Bind(R.id.head_portrait)
     ImageView headPortrait;
     @Bind(R.id.aboutUs)

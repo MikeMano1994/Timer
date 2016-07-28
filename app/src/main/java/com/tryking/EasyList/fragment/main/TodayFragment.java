@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -18,14 +20,25 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._bean.BaseBean;
+import com.tryking.EasyList._bean.TodayEventData;
+import com.tryking.EasyList._bean.changeEventBean.ChangeDataReturnBean;
+import com.tryking.EasyList._bean.changeEventBean.TransferData;
+import com.tryking.EasyList.base.BaseFragment;
+import com.tryking.EasyList.base.EasyListApplication;
 import com.tryking.EasyList.base.SystemInfo;
-import com.tryking.EasyList.bean.TodayEventData;
 import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.global.InterfaceURL;
+import com.tryking.EasyList.network.JsonBeanRequest;
+import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.CountDownTextView;
+import com.tryking.EasyList.widgets.LoadingDialog;
 import com.tryking.EasyList.widgets.RecyclerView.MyItemDividerDecoration;
 import com.tryking.EasyList.activity.AddActivity;
 import com.tryking.EasyList.adapter.TodayEventAdapter;
@@ -51,7 +64,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEventItemClickListener, TodayEventAdapter.onHaveEventItemClickListener, TodayEventAdapter.onHaveEventItemLongClickListener {
+public class TodayFragment extends BaseFragment implements TodayEventAdapter.onNoEventItemClickListener, TodayEventAdapter.onHaveEventItemClickListener, TodayEventAdapter.onHaveEventItemLongClickListener {
     @Bind(R.id.event_content)
     RecyclerView eventContent;
     @Bind(R.id.actionButton)
@@ -65,6 +78,7 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     private TodayEventAdapter todayEventAdapter;
     private RequestQueue mQueue;
     private String currentDate;
+    private TransferData transferData;
 
     @OnClick({R.id.actionButton})
     void click(View view) {
@@ -105,19 +119,38 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
         String endTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.END_TIMES, "");
         String eventTypes = (String) SPUtils.get(getActivity(), ApplicationGlobal.EVENT_TYPES, "");
 
+
+        transferData = new TransferData();
+        transferData.setStartTimes(startTimes);
+        transferData.setEndTimes(endTimes);
+        transferData.setEventTypes(eventTypes);
+        transferData.setSpecificEvents("");
+
+        String[] starts = CommonUtils.convertStrToArray(startTimes);
+        for (int i = 0; i < starts.length; i++) {
+            String s = (String) SPUtils.get(getActivity(), starts[i], "");
+            if (!starts[0].equals("")) {
+                if (i == 0) {
+                    transferData.setSpecificEvents(s);
+                } else {
+                    transferData.setSpecificEvents(transferData.getSpecificEvents() + "#^@" + s);
+                }
+            }
+        }
         refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
+        changeDataToServer();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initViews();
+        initDatas();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        initDatas();
     }
 
     private void initDatas() {
@@ -129,7 +162,66 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
         String endTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.END_TIMES, "");
         String eventTypes = (String) SPUtils.get(getActivity(), ApplicationGlobal.EVENT_TYPES, "");
 
+        transferData = new TransferData();
+        transferData.setStartTimes(startTimes);
+        transferData.setEndTimes(endTimes);
+        transferData.setEventTypes(eventTypes);
+        transferData.setSpecificEvents("");
+
+        String[] starts = CommonUtils.convertStrToArray(startTimes);
+        for (int i = 0; i < starts.length; i++) {
+            String s = (String) SPUtils.get(getActivity(), starts[i], "");
+            if (!starts[0].equals("")) {
+                if (i == 0) {
+                    transferData.setSpecificEvents(s);
+                } else {
+                    transferData.setSpecificEvents(transferData.getSpecificEvents() + "#^@" + s);
+                }
+            }
+        }
         refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
+        changeDataToServer();
+    }
+
+    /*
+    向服务器发送数据
+     */
+    private void changeDataToServer() {
+        showLoadingDialog();
+        Map<String, String> params = new HashMap<>();
+        params.put("memberId", SystemInfo.getInstance(getActivity()).getMemberId());
+        params.put("date", (String) SPUtils.get(getActivity(), ApplicationGlobal.CURRENT_DATE, ""));
+        params.put("startTimes", transferData.getStartTimes());
+        params.put("endTimes", transferData.getEndTimes());
+        params.put("eventTypes", transferData.getEventTypes());
+        params.put("specificEvents", transferData.getSpecificEvents());
+        Logger.e("开始改变数据" + params.toString());
+
+        String url = InterfaceURL.changeData;
+        JsonBeanRequest<ChangeDataReturnBean> changeDataRequest = new JsonBeanRequest<>(url, params, ChangeDataReturnBean.class, new Response.Listener<ChangeDataReturnBean>() {
+            @Override
+            public void onResponse(ChangeDataReturnBean response) {
+                Message msg = new Message();
+                if (response.getResult().equals("1")) {
+                    msg.what = Constants.ChangeData.changeSuccess;
+                    msg.obj = response;
+                } else {
+                    msg.what = Constants.ChangeData.changeFailure;
+                    msg.obj = response.getMsg();
+                }
+                mHandler.sendMessage(msg);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e(error.toString());
+                Message msg = new Message();
+                msg.what = Constants.requestException;
+                msg.obj = error.toString();
+                mHandler.sendMessage(msg);
+            }
+        });
+        EasyListApplication.getInstance().addToRequestQueue(changeDataRequest, this.getClass().getName());
     }
 
     /*
@@ -208,10 +300,6 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
             }
         }
         todayEventAdapter.refresh(todayEventDatas);
-        //直接在MainActivity中更新了
-//        //跟新WeekFragment中的内容
-//        WeekFragment weekFragment = (WeekFragment) ((MainActivity) getActivity()).getFragment("WeekFragment");
-//        weekFragment.refresh();
     }
 
 
@@ -258,57 +346,77 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
     @Override
     public void onHaveEventItemLongClick(int position, final String startTime, final String endTime) {
         final CommonDialog commonDialog = new CommonDialog(getActivity());
-        commonDialog.setDialogContent(null, "删除\t\t" + CommonUtils.addSignToStr(startTime) + " - " + CommonUtils.addSignToStr(endTime) + ("\t\t这条记录").replaceAll(".{1}(?!$)", "$0 "), null, null, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        commonDialog.setDialogContent(null, "删除\t\t" + CommonUtils.addSignToStr(startTime) + " - " + CommonUtils.addSignToStr(endTime) + ("\t\t这条记录").replaceAll(".{1}(?!$)", "$0 "), null, null,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 //                TT.showShort(getActivity(), "删除啦");
-                String startTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.START_TIMES, "");
-                String endTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.END_TIMES, "");
-                String eventTypes = (String) SPUtils.get(getActivity(), ApplicationGlobal.EVENT_TYPES, "");
+                        String startTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.START_TIMES, "");
+                        String endTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.END_TIMES, "");
+                        String eventTypes = (String) SPUtils.get(getActivity(), ApplicationGlobal.EVENT_TYPES, "");
 //                Logger.e("old::" + startTimes + "::" + endTimes + "::type::" + eventTypes);
 //                Logger.e(startTime + "start::end::" + endTime);
 
-                //替换字符串的一种方式
+                        //替换字符串的一种方式
 //                Pattern compileStart = Pattern.compile(startTimes);
 //                Matcher matcherStart = compileStart.matcher(startTime);
 //                String s = matcherStart.replaceFirst("1111");
 
-                String newStarts;
-                String newEnds;
-                String newTypes = "";
-                if (startTimes.contains("," + startTime)) {
-                    newStarts = CommonUtils.deleteStr(startTimes, "," + startTime);
-                    newEnds = CommonUtils.deleteStr(endTimes, "," + endTime);
-                    int i = startTimes.indexOf("," + startTime);
-                    if (i != -1) {
-                        newTypes = eventTypes.substring(0, i) + eventTypes.substring(i + 5);
-                    }
-                } else {
-                    newStarts = CommonUtils.deleteStr(startTimes, startTime);
-                    newEnds = CommonUtils.deleteStr(endTimes, endTime);
-                    int i = startTimes.indexOf(startTime);
-                    if (i != -1) {
-                        newTypes = eventTypes.substring(0, i) + eventTypes.substring(i + 4);
-                    }
-                    if (newStarts.startsWith(",") && newEnds.startsWith(",") && newTypes.startsWith(",")) {
-                        newStarts = newStarts.replaceFirst(",", "");
-                        newEnds = newEnds.replaceFirst(",", "");
-                        newTypes = newTypes.replaceFirst(",", "");
-                    }
-                }
+                        String newStarts;
+                        String newEnds;
+                        String newTypes = "";
+                        if (startTimes.contains("," + startTime)) {
+                            newStarts = CommonUtils.deleteStr(startTimes, "," + startTime);
+                            newEnds = CommonUtils.deleteStr(endTimes, "," + endTime);
+                            int i = startTimes.indexOf("," + startTime);
+                            if (i != -1) {
+                                newTypes = eventTypes.substring(0, i) + eventTypes.substring(i + 5);
+                            }
+                        } else {
+                            newStarts = CommonUtils.deleteStr(startTimes, startTime);
+                            newEnds = CommonUtils.deleteStr(endTimes, endTime);
+                            int i = startTimes.indexOf(startTime);
+                            if (i != -1) {
+                                newTypes = eventTypes.substring(0, i) + eventTypes.substring(i + 4);
+                            }
+                            if (newStarts.startsWith(",") && newEnds.startsWith(",") && newTypes.startsWith(",")) {
+                                newStarts = newStarts.replaceFirst(",", "");
+                                newEnds = newEnds.replaceFirst(",", "");
+                                newTypes = newTypes.replaceFirst(",", "");
+                            }
+                        }
 //                Logger.e("news::" + newStarts + "::" + newEnds + ":::" + newTypes);
-                SPUtils.put(getActivity(), ApplicationGlobal.START_TIMES, newStarts);
-                SPUtils.put(getActivity(), ApplicationGlobal.END_TIMES, newEnds);
-                SPUtils.put(getActivity(), ApplicationGlobal.EVENT_TYPES, newTypes);
-                saveToDataBase(newStarts, newEnds, newTypes);
+                        SPUtils.put(getActivity(), ApplicationGlobal.START_TIMES, newStarts);
+                        SPUtils.put(getActivity(), ApplicationGlobal.END_TIMES, newEnds);
+                        SPUtils.put(getActivity(), ApplicationGlobal.EVENT_TYPES, newTypes);
+                        saveToDataBase(newStarts, newEnds, newTypes);
 
-                //把存储的事件的key删除
-                SPUtils.remove(getActivity(), startTime);
-                deleteFromDataBase(startTime);
-                refreshRecyclerViewDataByString(newStarts, newEnds, newTypes);
-                commonDialog.dismiss();
-            }
-        }, null);
+                        transferData = new TransferData();
+                        transferData.setStartTimes(newStarts);
+                        transferData.setEndTimes(newEnds);
+                        transferData.setEventTypes(newTypes);
+                        transferData.setSpecificEvents("");
+
+                        String[] starts = CommonUtils.convertStrToArray(newStarts);
+                        for (int i = 0; i < starts.length; i++) {
+                            String s = (String) SPUtils.get(getActivity(), starts[i], "");
+                            if (!starts[0].equals("")) {
+                                if (i == 0) {
+                                    transferData.setSpecificEvents(s);
+                                } else {
+                                    transferData.setSpecificEvents(transferData.getSpecificEvents() + "#^@" + s);
+                                }
+                            }
+                        }
+                        changeDataToServer();
+
+                        //把存储的事件的key删除
+                        SPUtils.remove(getActivity(), startTime);
+                        deleteFromDataBase(startTime);
+                        refreshRecyclerViewDataByString(newStarts, newEnds, newTypes);
+                        commonDialog.dismiss();
+                    }
+                }, null);
         commonDialog.show();
     }
 
@@ -355,4 +463,29 @@ public class TodayFragment extends Fragment implements TodayEventAdapter.onNoEve
         }
 
     }
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            dismissLoadingDialog();
+            switch (msg.what) {
+                case Constants.ChangeData.changeSuccess:
+                    ChangeDataReturnBean changeBean = (ChangeDataReturnBean) msg.obj;
+                    if (changeBean.isAmendSuccess()) {
+                        TT.showShort(getContext(), "数据更新成功");
+                    } else {
+                        TT.showShort(getContext(), "数据更新失败");
+                    }
+                    break;
+                case Constants.ChangeData.changeFailure:
+                    ChangeDataReturnBean changeFBean = (ChangeDataReturnBean) msg.obj;
+                    TT.showShort(getContext(), changeFBean.getMsg());
+                    break;
+                case Constants.requestException:
+                    TT.showShort(getContext(), "服务器开小差啦:" + msg.obj.toString());
+                    break;
+            }
+        }
+    };
 }

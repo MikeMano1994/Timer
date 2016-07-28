@@ -9,6 +9,7 @@ import com.android.volley.toolbox.Volley;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.StringUtil;
 import com.umeng.socialize.PlatformConfig;
@@ -52,14 +53,20 @@ public class EasyListApplication extends Application {
         Date nowDate = new Date(System.currentTimeMillis());
         String nowDateStr = dateFormat.format(nowDate);
         String currentDate = nowDateStr.substring(0, 4) + nowDateStr.substring(5, 7) + nowDateStr.substring(8, 10);
-        String saveDate = (String) SPUtils.get(getApplicationContext(), "currentDate", "");
-        Logger.e(currentDate + "cur:::save:" + saveDate);
+        String saveDate = (String) SPUtils.get(this, ApplicationGlobal.CURRENT_DATE, "");
+        Logger.e("CurrentDate:" + currentDate + "\nSaveDate:" + saveDate);
         //如果不是同一天的话就要把所有的数据清除
         if (!saveDate.equals(currentDate)) {
-            SPUtils.put(getApplicationContext(), "startTimes", "");
-            SPUtils.put(getApplicationContext(), "endTimes", "");
-            SPUtils.put(getApplicationContext(), "eventTypes", "");
-            SPUtils.put(getApplicationContext(), "currentDate", currentDate);
+            String startTimes = (String) SPUtils.get(this, ApplicationGlobal.START_TIMES, "");
+            String[] starts = CommonUtils.convertStrToArray(startTimes);
+            for (int i = 0; i < starts.length; i++) {
+                //把昨天存储的事件的key删除
+                SPUtils.remove(this, starts[i]);
+            }
+            SPUtils.put(getApplicationContext(), ApplicationGlobal.START_TIMES, "");
+            SPUtils.put(getApplicationContext(), ApplicationGlobal.END_TIMES, "");
+            SPUtils.put(getApplicationContext(), ApplicationGlobal.EVENT_TYPES, "");
+            SPUtils.put(getApplicationContext(), ApplicationGlobal.CURRENT_DATE, currentDate);
         }
     }
 

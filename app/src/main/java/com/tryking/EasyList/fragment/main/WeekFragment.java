@@ -23,7 +23,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._activity.ViewHistoryActivity;
-import com.tryking.EasyList.bean.TodayEventData;
+import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
 import com.tryking.EasyList.db.table.EverydayEventSource;
 import com.tryking.EasyList.utils.CommonUtils;

@@ -1,4 +1,4 @@
-package com.tryking.EasyList.bean;
+package com.tryking.EasyList._bean;
 
 import java.io.Serializable;
 

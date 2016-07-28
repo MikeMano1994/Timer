@@ -48,7 +48,6 @@ public class LoginActivity extends BaseActivity {
 
     private UMShareAPI mShareAPI;//友盟三方登陆授权
     private SHARE_MEDIA platform;//分享平台
-    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,6 @@ public class LoginActivity extends BaseActivity {
 
     private void init() {
         mShareAPI = UMShareAPI.get(this);
-        loadingDialog = new LoadingDialog(this);
     }
 
     @OnClick({R.id.bt_qq_login, R.id.bt_wechat_login, R.id.bt_sina_login, R.id.bt_no_login})
@@ -210,7 +208,7 @@ public class LoginActivity extends BaseActivity {
      */
     private void serverLogin() {
         Logger.e("开始登录");
-        loadingDialog.show();
+        showLoadingDialog();
         Map<String, String> params = new HashMap<>();
         params.put("memberid", SystemInfo.getInstance(getApplicationContext()).getMemberId());
         params.put("account", SystemInfo.getInstance(getApplicationContext()).getAccount());
@@ -252,7 +250,7 @@ public class LoginActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            loadingDialog.dismiss();
+            dismissLoadingDialog();
             switch (msg.what) {
                 case Constants.Login.loginSuccess:
                     LoginReturnBean login = (LoginReturnBean) msg.obj;
@@ -276,7 +274,7 @@ public class LoginActivity extends BaseActivity {
                     ChangeWidgetEnable(true);
                     break;
                 case Constants.requestException:
-                    TT.showShort(LoginActivity.this, "服务器出小差啦");
+                    TT.showShort(LoginActivity.this, "服务器开小差啦");
                     Logger.e(msg.obj.toString());
                     ChangeWidgetEnable(true);
                     break;

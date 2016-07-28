@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.adapter.MainContentPagerAdapter;
@@ -71,12 +70,12 @@ public class MainActivity extends BaseActivity {
         fragmentList.add(icFragment);
         titles = new ArrayList<>();
         titles.add(new String("今日"));
-        titles.add(new String("本周"));
-        titles.add(new String("我的"));
+        titles.add(new String("统计"));
+        titles.add(new String("个人"));
         iCons = new ArrayList<>();
-        iCons.add(R.drawable.ic_action_book);
-        iCons.add(R.drawable.ic_action_calendar_day);
-        iCons.add(R.drawable.ic_action_emo_wonder);
+        iCons.add(R.drawable.ic_home_today);
+        iCons.add(R.drawable.ic_home_stats);
+        iCons.add(R.drawable.ic_home_center);
     }
 
     /*
