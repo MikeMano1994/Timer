@@ -12,13 +12,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._bean.loginBean.Event;
 import com.tryking.EasyList._bean.loginBean.LoginReturnBean;
 import com.tryking.EasyList.activity.MainActivity;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
+import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.global.InterfaceURL;
 import com.tryking.EasyList.network.JsonBeanRequest;
+import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.LoadingDialog;
 import com.umeng.socialize.UMAuthListener;
@@ -29,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -48,6 +52,7 @@ public class LoginActivity extends BaseActivity {
 
     private UMShareAPI mShareAPI;//友盟三方登陆授权
     private SHARE_MEDIA platform;//分享平台
+    private String portraitUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,29 +172,37 @@ public class LoginActivity extends BaseActivity {
             Logger.e(map.toString());
             switch (share_media) {
                 case QQ:
-                    SystemInfo.getInstance(getApplicationContext()).setQQ(map.get("openid"));
-                    SystemInfo.getInstance(getApplicationContext()).setQQName(map.get("screen_name"));
-                    SystemInfo.getInstance(getApplicationContext()).setMemberId(map.get("openid"));
-                    SystemInfo.getInstance(getApplicationContext()).setAccount(map.get("screen_name"));
-                    SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(map.get("profile_image_url"));
+                    //这里先不要设置，防止用户没有经过服务器验证直接登录成功
+//                    SystemInfo.getInstance(getApplicationContext()).setQQ(map.get("openid"));
+//                    SystemInfo.getInstance(getApplicationContext()).setQQName(map.get("screen_name"));
+//                    SystemInfo.getInstance(getApplicationContext()).setMemberId(map.get("openid"));
+//                    SystemInfo.getInstance(getApplicationContext()).setAccount(map.get("screen_name"));
+//                    SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(map.get("profile_image_url"));
+                    portraitUrl = map.get("profile_image_url");
+                    serverLogin(map.get("openid"), map.get("screen_name"), map.get("openid"),
+                            map.get("screen_name"), "", "", "");
                     break;
                 case SINA:
                     try {
                         String result = map.get("result");
                         JSONObject sinaUserInfo = null;
                         sinaUserInfo = new JSONObject(result);
-                        SystemInfo.getInstance(getApplicationContext()).setSina((String) sinaUserInfo.get("idstr"));
-                        SystemInfo.getInstance(getApplicationContext()).setMemberId((String) sinaUserInfo.get("idstr"));
-                        SystemInfo.getInstance(getApplicationContext()).setSinaName((String) sinaUserInfo.get("screen_name"));
-                        SystemInfo.getInstance(getApplicationContext()).setAccount((String) sinaUserInfo.get("screen_name"));
-                        SystemInfo.getInstance(getApplicationContext()).setPortraitUrl((String) sinaUserInfo.get("profile_image_url"));
-                        SystemInfo.getInstance(getApplicationContext()).setSignature((String) sinaUserInfo.get("description"));
+                        //这里先不要设置，防止用户没有经过服务器验证直接登录成功
+//                        SystemInfo.getInstance(getApplicationContext()).setSina((String) sinaUserInfo.get("idstr"));
+//                        SystemInfo.getInstance(getApplicationContext()).setMemberId((String) sinaUserInfo.get("idstr"));
+//                        SystemInfo.getInstance(getApplicationContext()).setSinaName((String) sinaUserInfo.get("screen_name"));
+//                        SystemInfo.getInstance(getApplicationContext()).setAccount((String) sinaUserInfo.get("screen_name"));
+//                        SystemInfo.getInstance(getApplicationContext()).setPortraitUrl((String) sinaUserInfo.get("profile_image_url"));
+//                        SystemInfo.getInstance(getApplicationContext()).setSignature((String) sinaUserInfo.get("description"));
+                        portraitUrl = (String) sinaUserInfo.get("profile_image_url");
+                        serverLogin((String) sinaUserInfo.get("idstr"), (String) sinaUserInfo.get("screen_name"), "", "",
+                                (String) sinaUserInfo.get("idstr"), (String) sinaUserInfo.get("screen_name"),
+                                (String) sinaUserInfo.get("description"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     break;
             }
-            serverLogin();
         }
 
         @Override
@@ -206,17 +219,17 @@ public class LoginActivity extends BaseActivity {
     /*
     服务器登录验证
      */
-    private void serverLogin() {
+    private void serverLogin(String memberId, String account, String qq, String qqName, String sina, String sinaName, String signature) {
         Logger.e("开始登录");
         showLoadingDialog();
         Map<String, String> params = new HashMap<>();
-        params.put("memberid", SystemInfo.getInstance(getApplicationContext()).getMemberId());
-        params.put("account", SystemInfo.getInstance(getApplicationContext()).getAccount());
-        params.put("qq", SystemInfo.getInstance(getApplicationContext()).getQQ());
-        params.put("qqname", SystemInfo.getInstance(getApplicationContext()).getQQName());
-        params.put("sina", SystemInfo.getInstance(getApplicationContext()).getSina());
-        params.put("sinaname", SystemInfo.getInstance(getApplicationContext()).getSinaName());
-        params.put("signature", SystemInfo.getInstance(getApplicationContext()).getSignature());
+        params.put("memberid", memberId);
+        params.put("account", account);
+        params.put("qq", qq);
+        params.put("qqname", qqName);
+        params.put("sina", sina);
+        params.put("sinaname", sinaName);
+        params.put("signature", signature);
 
         String url = InterfaceURL.login;
         Logger.e("url:" + url);
@@ -236,7 +249,7 @@ public class LoginActivity extends BaseActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Logger.e(error.toString());
+                Logger.e("Error:" + error);
                 Message msg = new Message();
                 msg.what = Constants.requestException;
                 msg.obj = error.toString();
@@ -255,17 +268,50 @@ public class LoginActivity extends BaseActivity {
                 case Constants.Login.loginSuccess:
                     LoginReturnBean login = (LoginReturnBean) msg.obj;
                     Logger.e(login.toString());
+                    //现在对新旧用户的操作是一样的，后期可能会加东西
                     if (login.isNewAccount()) {
-
-                    } else {
+                        SystemInfo.getInstance(getApplicationContext()).setMemberId(login.getUser().getMemberid());
                         SystemInfo.getInstance(getApplicationContext()).setAccount(login.getUser().getAccount());
                         SystemInfo.getInstance(getApplicationContext()).setQQ(login.getUser().getQq());
                         SystemInfo.getInstance(getApplicationContext()).setQQName(login.getUser().getQqname());
                         SystemInfo.getInstance(getApplicationContext()).setSina(login.getUser().getSina());
                         SystemInfo.getInstance(getApplicationContext()).setSinaName(login.getUser().getSinaname());
                         SystemInfo.getInstance(getApplicationContext()).setSignature(login.getUser().getSignature());
+                        SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(portraitUrl);
+                    } else {
+                        SystemInfo.getInstance(getApplicationContext()).setMemberId(login.getUser().getMemberid());
+                        SystemInfo.getInstance(getApplicationContext()).setAccount(login.getUser().getAccount());
+                        SystemInfo.getInstance(getApplicationContext()).setQQ(login.getUser().getQq());
+                        SystemInfo.getInstance(getApplicationContext()).setQQName(login.getUser().getQqname());
+                        SystemInfo.getInstance(getApplicationContext()).setSina(login.getUser().getSina());
+                        SystemInfo.getInstance(getApplicationContext()).setSinaName(login.getUser().getSinaname());
+                        SystemInfo.getInstance(getApplicationContext()).setSignature(login.getUser().getSignature());
+                        SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(portraitUrl);
                     }
+                    List<Event> eventList = login.getDayEvent().getEventList();
+                    String startTimes = "";
+                    String endTimes = "";
+                    String eventTypes = "";
+                    for (int i = 0; i < eventList.size(); i++) {
+                        SPUtils.put(getApplicationContext(), eventList.get(i).getStarttime(), eventList.get(i).getRecord());
+                        if (i == 0) {
+                            startTimes = eventList.get(i).getStarttime();
+                            endTimes = eventList.get(i).getEndtime();
+                            eventTypes = "000" + eventList.get(i).getEventtypes();
+                        } else {
+                            startTimes = startTimes + "," + eventList.get(i).getStarttime();
+                            endTimes = endTimes + "," + eventList.get(i).getEndtime();
+                            eventTypes = eventTypes + ",000" + eventList.get(i).getEventtypes();
+                        }
+                    }
+
+                    SPUtils.put(getApplicationContext(), ApplicationGlobal.START_TIMES, startTimes);
+                    SPUtils.put(getApplicationContext(), ApplicationGlobal.END_TIMES, endTimes);
+                    SPUtils.put(getApplicationContext(), ApplicationGlobal.EVENT_TYPES, eventTypes);
+
+
                     TT.showShort(getApplicationContext(), "登陆成功");
+
                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                     finish();
                     break;
@@ -275,7 +321,6 @@ public class LoginActivity extends BaseActivity {
                     break;
                 case Constants.requestException:
                     TT.showShort(LoginActivity.this, "服务器开小差啦");
-                    Logger.e(msg.obj.toString());
                     ChangeWidgetEnable(true);
                     break;
                 default:

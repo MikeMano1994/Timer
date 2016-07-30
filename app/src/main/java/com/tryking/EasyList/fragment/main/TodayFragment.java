@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +17,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.LinearLayout;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -25,29 +25,27 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
-import com.tryking.EasyList._bean.BaseBean;
 import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList._bean.changeEventBean.ChangeDataReturnBean;
 import com.tryking.EasyList._bean.changeEventBean.TransferData;
+import com.tryking.EasyList.activity.AddActivity;
+import com.tryking.EasyList.adapter.TodayEventAdapter;
 import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.EasyListApplication;
 import com.tryking.EasyList.base.SystemInfo;
+import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
+import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
+import com.tryking.EasyList.db.table.EverydayEventSource;
 import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.global.InterfaceURL;
 import com.tryking.EasyList.network.JsonBeanRequest;
-import com.tryking.EasyList.utils.TT;
-import com.tryking.EasyList.widgets.CountDownTextView;
-import com.tryking.EasyList.widgets.LoadingDialog;
-import com.tryking.EasyList.widgets.RecyclerView.MyItemDividerDecoration;
-import com.tryking.EasyList.activity.AddActivity;
-import com.tryking.EasyList.adapter.TodayEventAdapter;
-import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
-import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
-import com.tryking.EasyList.db.table.EverydayEventSource;
 import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
+import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.CommonDialog;
+import com.tryking.EasyList.widgets.CountDownTextView;
+import com.tryking.EasyList.widgets.RecyclerView.MyItemDividerDecoration;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -71,14 +69,16 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
     FloatingActionButton actionButton;
     @Bind(R.id.tv_awoke)
     CountDownTextView tvAwoke;
+    @Bind(R.id.hint)
+    LinearLayout hint;
 
-
-    private static final int REQUEST_ADD_CODE = 0;//添加事项请求吗
-    List<TodayEventData> todayEventDatas = new ArrayList<>();
     private TodayEventAdapter todayEventAdapter;
+    private static final int REQUEST_ADD_CODE = 0;//添加事项请求吗
+    private List<TodayEventData> todayEventDatas = new ArrayList<>();
     private RequestQueue mQueue;
     private String currentDate;
     private TransferData transferData;
+    private boolean isTryOutAccount;
 
     @OnClick({R.id.actionButton})
     void click(View view) {
@@ -138,7 +138,8 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
             }
         }
         refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
-        changeDataToServer();
+        if (!isTryOutAccount)
+            changeDataToServer();
     }
 
     @Override
@@ -157,6 +158,10 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         long intervalTime = getIntervalTime();
         tvAwoke.setTextPreTime("今天还可以和时间做朋友：");
         tvAwoke.setIntervalTime(intervalTime, true);
+
+        //如果是试用账户就不上传服务器
+        isTryOutAccount = SystemInfo.getInstance(getContext()).getMemberId().equals(Constants.TRY_OUT_ACCOUNT)
+                || SystemInfo.getInstance(getContext()).getMemberId().equals("") ? true : false;
 
         String startTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.START_TIMES, "");
         String endTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.END_TIMES, "");
@@ -180,7 +185,8 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
             }
         }
         refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
-        changeDataToServer();
+        if (!isTryOutAccount)
+            changeDataToServer();
     }
 
     /*
@@ -281,7 +287,9 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
             if (starts[0] == "" && ends[0] == "") {
                 TodayEventData data1 = new TodayEventData(0, "0000", "2400", "未添加事件");
                 todayEventDatas.add(data1);
+                hint.setVisibility(View.VISIBLE);
             } else {
+                hint.setVisibility(View.GONE);
 //                Logger.e(starts[0] + "starts{0}");
                 if (i == 0 && Integer.parseInt(starts[0]) > 0) {
                     TodayEventData data2 = new TodayEventData(0, "0000", starts[0], "未添加事件");
@@ -408,7 +416,8 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                                 }
                             }
                         }
-                        changeDataToServer();
+                        if (!isTryOutAccount)
+                            changeDataToServer();
 
                         //把存储的事件的key删除
                         SPUtils.remove(getActivity(), startTime);
@@ -479,8 +488,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                     }
                     break;
                 case Constants.ChangeData.changeFailure:
-                    ChangeDataReturnBean changeFBean = (ChangeDataReturnBean) msg.obj;
-                    TT.showShort(getContext(), changeFBean.getMsg());
+                    TT.showShort(getContext(), msg.obj.toString());
                     break;
                 case Constants.requestException:
                     TT.showShort(getContext(), "服务器开小差啦:" + msg.obj.toString());

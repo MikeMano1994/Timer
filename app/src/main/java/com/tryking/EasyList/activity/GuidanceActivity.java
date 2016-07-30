@@ -12,6 +12,8 @@ import android.widget.Button;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._activity.LoginActivity;
 import com.tryking.EasyList.base.BaseActivity;
+import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.widgets.BackgroundScrollViewPager;
 import com.tryking.EasyList.widgets.circleIndicator.CircleIndicator;
 
@@ -42,6 +44,7 @@ public class GuidanceActivity extends BaseActivity {
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_entrance:
+                SPUtils.put(GuidanceActivity.this, Constants.SHARED_PREFERENCE_IS_FIRST_LAUNCHER, false);
                 startActivity(new Intent(GuidanceActivity.this, LoginActivity.class));
                 finish();
         }

@@ -28,7 +28,7 @@ public class Event {
     }
 
     public void setMemberid(String memberid) {
-        this.memberid = memberid == null ? null : memberid.trim();
+        this.memberid = memberid;
     }
 
     public String getDate() {
@@ -36,7 +36,23 @@ public class Event {
     }
 
     public void setDate(String date) {
-        this.date = date == null ? null : date.trim();
+        this.date = date;
+    }
+
+    public String getStarttime() {
+        return starttime;
+    }
+
+    public void setStarttime(String starttime) {
+        this.starttime = starttime;
+    }
+
+    public String getEndtime() {
+        return endtime;
+    }
+
+    public void setEndtime(String endtime) {
+        this.endtime = endtime;
     }
 
     public String getEventtypes() {
@@ -44,7 +60,7 @@ public class Event {
     }
 
     public void setEventtypes(String eventtypes) {
-        this.eventtypes = eventtypes == null ? null : eventtypes.trim();
+        this.eventtypes = eventtypes;
     }
 
     public String getRecord() {
@@ -52,7 +68,7 @@ public class Event {
     }
 
     public void setRecord(String record) {
-        this.record = record == null ? null : record.trim();
+        this.record = record;
     }
 
     @Override

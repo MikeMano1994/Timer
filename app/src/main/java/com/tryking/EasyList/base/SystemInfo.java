@@ -2,8 +2,10 @@ package com.tryking.EasyList.base;
 
 import android.content.Context;
 
+import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 
 /**
@@ -141,6 +143,14 @@ public class SystemInfo {
         setSinaName("");
         setSignature("");
         //账户登出，要把本地的信息置为空。用户登录的时候从服务端拿到数据写入本地
+        String startTimes = (String) SPUtils.get(mContext, "startTimes", "");
+        String[] starts = CommonUtils.convertStrToArray(startTimes);
+        
+        //把存储的事件的key删除
+        for (int i = 0; i < starts.length; i++) {
+            SPUtils.remove(mContext, starts[i]);
+        }
+
         SPUtils.put(mContext, "startTimes", "");
         SPUtils.put(mContext, "endTimes", "");
         SPUtils.put(mContext, "eventTypes", "");

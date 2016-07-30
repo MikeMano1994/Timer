@@ -1,52 +1,74 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     tools:context=".fragment.main.TodayFragment">
 
-    <android.support.v4.widget.NestedScrollView
+
+    <com.tryking.EasyList.widgets.CountDownTextView
+        android:id="@+id/tv_awoke"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="今天还可以享受5h49s的时光"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/event_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="50dp"
+        android:visibility="visible" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+    <!--  FloatingActionButton 必须设置border  -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/actionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:src="@drawable/ic_add"
+        app:borderWidth="0dp"
+        app:elevation="5dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="10dp" />
 
-            <com.tryking.EasyList.widgets.CountDownTextView
-                android:id="@+id/tv_awoke"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center"
-                android:text="今天还可以享受5h49s的时光"
-                android:textColor="@color/colorAccent"
-                android:textSize="15sp" />
+    <LinearLayout
+        android:id="@+id/hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/event_content"
-                android:layout_width="match_parent"
-                android:layout_height="450dp"
-                android:visibility="visible" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cat" />
 
-            <!--  FloatingActionButton 必须设置border  -->
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/actionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:src="@drawable/ic_add"
-                app:borderWidth="0dp"
-                app:elevation="5dp"
-                app:fabSize="normal"
-                app:pressedTranslationZ="10dp" />
-        </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="喵～粮仓空了，眼睛好饿～"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:text="赶紧点击右下角添加事件吧"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+</RelativeLayout>

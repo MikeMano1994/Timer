@@ -18,12 +18,14 @@ import com.tryking.EasyList._fragment.viewhistory.AllFragment;
 import com.tryking.EasyList._fragment.viewhistory.DayFragment;
 import com.tryking.EasyList._fragment.viewhistory.MonthFragment;
 import com.tryking.EasyList._fragment.viewhistory.WeekFragment;
+import com.tryking.EasyList.utils.TT;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnLongClick;
 
 
 /**
@@ -58,6 +60,16 @@ public class ViewHistoryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         init();
+    }
+
+    @OnLongClick({R.id.rb_day})
+    boolean click(View v) {
+        switch (v.getId()) {
+            case R.id.rb_day:
+                TT.showShort(getContext(), "长按Day");
+                break;
+        }
+        return false;
     }
 
     private void init() {
