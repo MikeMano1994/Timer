@@ -1,5 +1,6 @@
 package com.tryking.EasyList.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.TodayEventData;
+import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
 import com.tryking.EasyList.global.ApplicationGlobal;
@@ -160,27 +162,20 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                     }
                 }
                 if (i == ends.length - 1 && endInt < 2400) {
-                    if (ends.length == 1) {
-                        s = CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
-                    } else
-                        s = s + "\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
+                    s = s + "\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
                 }
             }
-//            Logger.e("haveThingStartInts:" + haveThingStartInts.toString());
-//            Logger.e("haveThingEndInts:" + haveThingEndInts.toString());
-//            Logger.e("haveThingType:" + haveThingType.toString());
-//            Logger.e("nothingStartInts:" + nothingStartInts.toString());
-//            Logger.e("nothingEndInts:" + noth
+            showChoose.setText(s == "" ? "您没有可选择的时间段" : "您可以选择的时间段有:\n");
+            tvHint.setText(s);
         }
-        showChoose.setText(s == "" ? "您没有可选择的时间段" : "您可以选择的时间段有:\n");
-        tvHint.setText(s);
     }
 
     /*
     初始化ToolBar
      */
+
     private void initToolBar() {
-        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_18dp);
 //        toolBar.setLogo(R.mipmap.ic_launcher);
         toolBar.setTitleTextColor(getResources().getColor(R.color.white));
         toolBar.setTitle(R.string.add_event);
@@ -229,7 +224,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
         int start = Integer.parseInt(startTime);
         int end = Integer.parseInt(endTime);
         if (start >= end) {
-            TT.showShort(AddActivity.this, "您似乎选择的不合理哦！");
+            TT.showShort(AddActivity.this, "您似乎选择的不合理哦～");
         } else {
             int dataType = getDataType();
             String specificEvent = etPrint.getText().toString();
@@ -253,6 +248,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                 saveToDataBase(startTimes, endTimes, eventTypes);
                 saveToDataBase(CommonUtils.intToStr(start), specificEvent);
                 setResult(RESULT_OK);
+                refreshChart();
                 finish();
             } else {
                 for (int i = 0; i < nothingStartInts.size(); i++) {
@@ -279,6 +275,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                                 saveToDataBase(CommonUtils.intToStr(start), specificEvent);
 
                                 setResult(RESULT_OK);
+                                refreshChart();
                                 finish();
                                 return;
                             } else if (j == haveThingStartInts.size() - 1) {
@@ -304,6 +301,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                                 saveToDataBase(CommonUtils.intToStr(start), specificEvent);
 
                                 setResult(RESULT_OK);
+                                refreshChart();
                                 finish();
                                 return;
                             }
@@ -313,6 +311,11 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                 TT.showShort(AddActivity.this, "您似乎选择的不合理哦！");
             }
         }
+    }
+
+    private void refreshChart() {
+        Intent intent_refreshChart = new Intent(String4Broad.RefershChartData);
+        sendBroadcast(intent_refreshChart);
     }
 
     /*

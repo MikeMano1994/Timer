@@ -43,7 +43,7 @@ public class ViewHistoryActivity extends BaseActivity {
        初始化ToolBar
         */
     private void initToolBar() {
-        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_18dp);
         toolBar.setTitleTextColor(getResources().getColor(R.color.white));
         toolBar.setTitle(R.string.view_history);
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {

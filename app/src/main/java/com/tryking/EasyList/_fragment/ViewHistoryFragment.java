@@ -1,11 +1,12 @@
 package com.tryking.EasyList._fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.FrameStats;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,9 @@ import com.tryking.EasyList._fragment.viewhistory.AllFragment;
 import com.tryking.EasyList._fragment.viewhistory.DayFragment;
 import com.tryking.EasyList._fragment.viewhistory.MonthFragment;
 import com.tryking.EasyList._fragment.viewhistory.WeekFragment;
+import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.TT;
+import com.tryking.EasyList.widgets.DateChooseDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +70,8 @@ public class ViewHistoryFragment extends Fragment {
         switch (v.getId()) {
             case R.id.rb_day:
                 TT.showShort(getContext(), "长按Day");
+                DateChooseDialog dateChooseDialog = new DateChooseDialog(getContext(), mHandler, "2015", "2015", "3", "5");
+                dateChooseDialog.show();
                 break;
         }
         return false;
@@ -131,6 +136,20 @@ public class ViewHistoryFragment extends Fragment {
         });
     }
 
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case Constants.ViewHistory.DAY_CHOSE_DATE:
+                    Bundle data = msg.getData();
+                    String choseMonth = data.getString(Constants.HANDLER_CHOSE_MONTH);
+                    String choseYear = data.getString(Constants.HANDLER_CHOSE_YEAR);
+                    TT.showShort(getContext(), "Y:" + choseYear + "|||M:" + choseMonth);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onDestroyView() {

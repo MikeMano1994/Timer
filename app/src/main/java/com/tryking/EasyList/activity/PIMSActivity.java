@@ -3,9 +3,6 @@ package com.tryking.EasyList.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -26,8 +23,6 @@ import com.tryking.EasyList._activity.LoginActivity;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
-import com.tryking.EasyList.utils.ActivityUtils;
-import com.tryking.EasyList.widgets.LoadingDialog;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -136,7 +131,7 @@ public class PIMSActivity extends BaseActivity {
         toolBarLayout.setTitle(getResources().getString(R.string.individual_center));
         toolBarLayout.setExpandedTitleColor(getResources().getColor(R.color.float_transparent));
         toolBarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
-        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left);
+        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_18dp);
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -8,4 +8,9 @@ public class String4Broad {
      * 退出MainActivity
      */
     public static final String ExitMainActivity = "exit_main_activity";
+
+    /**
+     * 更新Chart数据
+     */
+    public static final String RefershChartData = "refresh_chart_data";
 }

@@ -1,6 +1,9 @@
 package com.tryking.EasyList.fragment.main;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +27,7 @@ import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._activity.ViewHistoryActivity;
 import com.tryking.EasyList._bean.TodayEventData;
+import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
 import com.tryking.EasyList.db.table.EverydayEventSource;
 import com.tryking.EasyList.utils.CommonUtils;
@@ -46,7 +50,7 @@ import butterknife.OnClick;
 /**
  * Created by Tryking on 2016/5/13.
  */
-public class WeekFragment extends Fragment implements OnChartValueSelectedListener {
+public class StatsFragment extends Fragment implements OnChartValueSelectedListener {
     @Bind(R.id.showPieChart)
     PieChart showPieChart;
     @Bind(R.id.bt_viewHistory)
@@ -63,10 +67,11 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
     String[] mParties = new String[]{
             "未添加事件", "工作", "娱乐", "生活", "学习"
     };
+    private RefreshChatDataReceiver refreshChatDataReceiver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View inflate = inflater.inflate(R.layout.fragment_weekly, container, false);
+        View inflate = inflater.inflate(R.layout.fragment_stats, container, false);
         ButterKnife.bind(this, inflate);
         return inflate;
     }
@@ -87,6 +92,14 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
         info.add("时间像奔腾澎湃的急湍，它一去无还，毫不留恋。 \n—— 塞万提斯");
         info.add("睡眠和休息丧失了时间，却取得了明天工作的精力。 \n—— 毛泽东");
         mvNotice.startWithList(info);
+
+        initChart(getEventData(getEventStrings()));
+        btViewYesterday.setText("查看昨日");
+        tvTitle.setText("今日事项统计");
+
+        IntentFilter exitFilter = new IntentFilter(String4Broad.RefershChartData);
+        refreshChatDataReceiver = new RefreshChatDataReceiver();
+        getActivity().registerReceiver(refreshChatDataReceiver, exitFilter);
     }
 
     @OnClick({R.id.bt_viewHistory, R.id.bt_viewYesterday})
@@ -95,13 +108,15 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
             case R.id.bt_viewHistory:
 //                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
 //                TT.showShort(getActivity(), "正在开发中...");
-                startActivity(new Intent(getActivity(),ViewHistoryActivity.class));
+                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
                 break;
             case R.id.bt_viewYesterday:
                 if (btViewYesterday.getText().toString() == "查看昨日") {
                     refreshYesterdayData();
                 } else {
-                    refresh();
+                    initChart(getEventData(getEventStrings()));
+                    btViewYesterday.setText("查看昨日");
+                    tvTitle.setText("今日事项统计");
                     btViewYesterday.setText("查看昨日");
                     tvTitle.setText("今日事项统计");
                 }
@@ -130,16 +145,6 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
     @Override
     public void onResume() {
         super.onResume();
-        refresh();
-    }
-
-    /*
-     刷新Fragment的数据
-    */
-    public void refresh() {
-        initChart(getEventData(getEventStrings()));
-        btViewYesterday.setText("查看昨日");
-        tvTitle.setText("今日事项统计");
     }
 
     private String[] getEventStrings() {
@@ -234,7 +239,7 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
 
     private void initChart(float[] eventData) {
         showPieChart.setUsePercentValues(true);
-        showPieChart.setDescription("今日事项统计");
+//        showPieChart.setDescription("今日事项统计");
         showPieChart.setExtraOffsets(5, 10, 5, 5);
         showPieChart.setDragDecelerationFrictionCoef(0.95f);
 
@@ -352,6 +357,21 @@ public class WeekFragment extends Fragment implements OnChartValueSelectedListen
             case 4:
                 showPieChart.setCenterText("学习:\n" + CommonUtils.getApproximation(e.getVal()) + "%");
                 break;
+        }
+    }
+
+    class RefreshChatDataReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initChart(getEventData(getEventStrings()));
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (refreshChatDataReceiver != null) {
+            getActivity().unregisterReceiver(refreshChatDataReceiver);
         }
     }
 

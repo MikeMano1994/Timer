@@ -3,6 +3,7 @@ package com.tryking.EasyList.fragment.main;
 import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +19,9 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -45,7 +49,6 @@ import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.CommonDialog;
 import com.tryking.EasyList.widgets.CountDownTextView;
-import com.tryking.EasyList.widgets.RecyclerView.MyItemDividerDecoration;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -71,6 +74,8 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
     CountDownTextView tvAwoke;
     @Bind(R.id.hint)
     LinearLayout hint;
+    @Bind(R.id.tv_one_word)
+    TextView tvOneWord;
 
     private TodayEventAdapter todayEventAdapter;
     private static final int REQUEST_ADD_CODE = 0;//添加事项请求吗
@@ -79,8 +84,9 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
     private String currentDate;
     private TransferData transferData;
     private boolean isTryOutAccount;
+    private EditText etOneWord;
 
-    @OnClick({R.id.actionButton})
+    @OnClick({R.id.actionButton, R.id.tv_one_word})
     void click(View view) {
         switch (view.getId()) {
             case R.id.actionButton:
@@ -90,7 +96,30 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                 }
                 startActivityForResult(new Intent(getActivity(), AddActivity.class), REQUEST_ADD_CODE);
                 break;
+            case R.id.tv_one_word:
+                View oneWord = LayoutInflater.from(getContext()).inflate(R.layout.add_one_word, null);
+                etOneWord = (EditText) oneWord.findViewById(R.id.et_one_word);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                        .setTitle("一句话总结今日")
+                        .setView(oneWord);
+                setPosAndNegButton(builder);
+                builder.create().show();
+                break;
         }
+    }
+
+    /*
+    给alert设置按钮
+     */
+    private void setPosAndNegButton(final AlertDialog.Builder builder) {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                tvOneWord.setText(etOneWord.getText());
+                // TODO: 2016/7/31 上传服务器
+            }
+        })
+                .setNegativeButton("取消", null);
     }
 
     @Override
@@ -318,7 +347,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         todayEventAdapter.setOnHaveEventItemClickListener(this);
         todayEventAdapter.setOnHaveEventItemLongClickListener(this);
         eventContent.setLayoutManager(new LinearLayoutManager(getActivity()));
-        eventContent.addItemDecoration(new MyItemDividerDecoration(getActivity(), MyItemDividerDecoration.VERTICAL_LIST));
+//        eventContent.addItemDecoration(new MyItemDividerDecoration(getActivity(), MyItemDividerDecoration.VERTICAL_LIST));
         eventContent.setAdapter(todayEventAdapter);
     }
 

@@ -42,6 +42,22 @@
         app:fabSize="normal"
         app:pressedTranslationZ="10dp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_alignTop="@+id/tv_one_word"
+        android:background="@color/thin_gray" />
+
+    <TextView
+        android:textColor="@color/gray"
+        android:id="@+id/tv_one_word"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/thin_gray"
+        android:gravity="center"
+        android:text="一句话总结一下今日吧" />
+
     <LinearLayout
         android:id="@+id/hint"
         android:layout_width="match_parent"

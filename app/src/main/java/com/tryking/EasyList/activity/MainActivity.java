@@ -19,7 +19,7 @@ import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.fragment.main.IcFragment;
 import com.tryking.EasyList.fragment.main.TodayFragment;
-import com.tryking.EasyList.fragment.main.WeekFragment;
+import com.tryking.EasyList.fragment.main.StatsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +64,9 @@ public class MainActivity extends BaseActivity {
     private void initDatas() {
         fragmentList = new ArrayList<>();
         fragmentList.add(new TodayFragment());
-        WeekFragment weekFragment = new WeekFragment();
+        StatsFragment statsFragment = new StatsFragment();
         IcFragment icFragment = new IcFragment();
-        fragmentList.add(weekFragment);
+        fragmentList.add(statsFragment);
         fragmentList.add(icFragment);
         titles = new ArrayList<>();
         titles.add(new String("今日"));
@@ -107,11 +107,6 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                //如果是显示第二页，刷新第二页的数据
-                if (position == 1) {
-                    WeekFragment weekFragment = (WeekFragment) getFragment("WeekFragment");
-                    weekFragment.refresh();
-                }
             }
 
             @Override
@@ -128,8 +123,8 @@ public class MainActivity extends BaseActivity {
             case "TodayFragment":
                 fragment = (TodayFragment) adapter.instantiateItem(mainContent, 0);
                 break;
-            case "WeekFragment":
-                fragment = (WeekFragment) adapter.instantiateItem(mainContent, 1);
+            case "StatsFragment":
+                fragment = (StatsFragment) adapter.instantiateItem(mainContent, 1);
                 break;
             case "IcFragment":
                 fragment = (IcFragment) adapter.instantiateItem(mainContent, 2);
