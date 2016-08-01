@@ -218,4 +218,20 @@ public class CommonUtils {
         }
         return null;
     }
+
+    /**
+     * 给单字符串的日添加一个0
+     *
+     * @param s
+     * @return
+     */
+    public static String add0toOneChar(String s) {
+        if (s.length() == 2) {
+            return s;
+        } else if (s.length() == 1) {
+            return 0 + s;
+        } else {
+            throw new IllegalArgumentException("字符串必须为1～2位");
+        }
+    }
 }

@@ -346,7 +346,6 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         todayEventAdapter.refresh(todayEventDatas);
     }
 
-
     private void initViews() {
         mQueue = Volley.newRequestQueue(getActivity());
         todayEventAdapter = new TodayEventAdapter(new WeakReference<Context>(getActivity()), getActivity(), todayEventDatas);

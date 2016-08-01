@@ -28,13 +28,12 @@ import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.global.InterfaceURL;
 import com.tryking.EasyList.network.JsonBeanRequest;
+import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.DateChooseDialog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -81,12 +80,15 @@ public class _ViewHistoryFragment extends BaseFragment {
     boolean click(View v) {
         switch (v.getId()) {
             case R.id.rb_day:
-                DateChooseDialog dateChooseDialog = new DateChooseDialog(getContext(), mHandler, "2015", "2016", "1", "8");
-                dateChooseDialog.show();
+                if (rbDay.isChecked()) {
+                    DateChooseDialog dateChooseDialog = new DateChooseDialog(getContext(), mHandler, "2015", "2016", "1", "8");
+                    dateChooseDialog.show();
+                }
                 break;
         }
         return false;
     }
+
 
     private void init() {
         rbDay.setChecked(true);
@@ -96,7 +98,8 @@ public class _ViewHistoryFragment extends BaseFragment {
         setRadioButtonChangeListener(rbAll);
 
         Calendar calendar = Calendar.getInstance();
-        curMonth = String.valueOf(calendar.get(Calendar.YEAR)) + "0" + String.valueOf(calendar.get(Calendar.MONTH) + 1);
+        curMonth = String.valueOf(calendar.get(Calendar.YEAR)) + CommonUtils.add0toOneChar(String.valueOf(calendar.get(Calendar.MONTH) + 1));
+        fragmentManager = getFragmentManager();
         getDataOfMonthFromServer(curMonth);
     }
 
@@ -113,6 +116,7 @@ public class _ViewHistoryFragment extends BaseFragment {
                     switch (rb.getId()) {
                         case R.id.rb_day:
                             getDataOfMonthFromServer(curMonth);
+
                             break;
                         case R.id.rb_week:
                             WeekFragment weekFragment = new WeekFragment();
@@ -145,6 +149,7 @@ public class _ViewHistoryFragment extends BaseFragment {
      * @param curMonth
      */
     private void getDataOfMonthFromServer(String curMonth) {
+        showLoadingDialog();
         Map<String, String> params = new HashMap<>();
         params.put("memberId", SystemInfo.getInstance(getContext()).getMemberId());
         params.put("month", curMonth);
@@ -170,6 +175,7 @@ public class _ViewHistoryFragment extends BaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("失败了" + error);
+                mHandler.sendEmptyMessage(Constants.requestException);
             }
         });
         addToRequestQueue(viewMonthRequest);
@@ -179,12 +185,14 @@ public class _ViewHistoryFragment extends BaseFragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            dismissLoadingDialog();
             switch (msg.what) {
                 case Constants.ViewHistory.DAY_CHOSE_DATE:
                     Bundle data = msg.getData();
                     String choseMonth = data.getString(Constants.HANDLER_CHOSE_MONTH);
                     String choseYear = data.getString(Constants.HANDLER_CHOSE_YEAR);
                     TT.showShort(getContext(), "Y:" + choseYear + "|||M:" + choseMonth);
+                    getDataOfMonthFromServer(choseYear + CommonUtils.add0toOneChar(choseMonth));
                     break;
                 case Constants.ViewHistory.GET_DATA_FOR_MONTH_SUCCESS:
                     ViewMonthReturnBean viewMonthReturnBean = (ViewMonthReturnBean) msg.obj;
@@ -206,7 +214,6 @@ public class _ViewHistoryFragment extends BaseFragment {
     private void refreshMainContent(ViewMonthReturnBean viewMonthReturnBean) {
         DayFragment dayFragment = DayFragment.getInstance(viewMonthReturnBean);
 
-        fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.change_content, dayFragment);
         fragmentTransaction.commit();

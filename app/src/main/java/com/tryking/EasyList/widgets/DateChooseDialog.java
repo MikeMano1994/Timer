@@ -72,7 +72,7 @@ public class DateChooseDialog extends Dialog {
         npYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Logger.e("old:" + oldVal + "new:" + newVal);
+//                Logger.e("old:" + oldVal + "new:" + newVal);
                 chooseYear = String.valueOf(newVal);
                 if (newVal == npYear.getMinValue()) {
                     npMonth.setMinValue(sMonth);
@@ -89,7 +89,7 @@ public class DateChooseDialog extends Dialog {
         npMonth.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Logger.e("old:" + oldVal + "new:" + newVal);
+//                Logger.e("old:" + oldVal + "new:" + newVal);
                 chooseMonth = String.valueOf(newVal);
             }
         });
@@ -109,6 +109,7 @@ public class DateChooseDialog extends Dialog {
 
     @Override
     public void dismiss() {
+        mDateChooseDialog.startAnimation(disAppearAnim);
         Message msg = new Message();
         Bundle b = new Bundle();
         b.putString(Constants.HANDLER_CHOSE_YEAR, chooseYear);
@@ -116,7 +117,6 @@ public class DateChooseDialog extends Dialog {
         msg.setData(b);
         msg.what = Constants.ViewHistory.DAY_CHOSE_DATE;
         mHandler.sendMessage(msg);
-        mDateChooseDialog.startAnimation(disAppearAnim);
         super.dismiss();
     }
 }

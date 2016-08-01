@@ -161,9 +161,9 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         view.setTranslationY(AppUtils.getScreenHeight(mCtx));
         view.animate()
                 .translationY(0)
-                .setStartDelay(100 * position)
+                .setStartDelay(10 * position)
                 .setInterpolator(new DecelerateInterpolator(3.0f))
-                .setDuration(700)
+                .setDuration(400)
                 .start();
     }
 
