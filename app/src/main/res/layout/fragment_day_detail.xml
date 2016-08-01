@@ -17,12 +17,12 @@
             android:padding="10dp"
             android:text="一句话总结" />
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/showPieChart"
-            android:layout_width="300dp"
-            android:layout_height="450dp"
-            android:layout_gravity="center"
-            android:padding="10dp" />
+        <!--<com.github.mikephil.charting.charts.PieChart-->
+            <!--android:id="@+id/showPieChart"-->
+            <!--android:layout_width="300dp"-->
+            <!--android:layout_height="450dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:padding="10dp" />-->
     </com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader>
 
     <android.support.v7.widget.RecyclerView

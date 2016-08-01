@@ -11,7 +11,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,6 +39,7 @@ import com.tryking.EasyList.activity.AddActivity;
 import com.tryking.EasyList.adapter.TodayEventAdapter;
 import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.EasyListApplication;
+import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
 import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
@@ -94,6 +98,9 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                 if (animator != null) {
                     animator.start();
                 }
+//                Intent intent = new Intent(getActivity(), AddActivity.class);
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
+//                ActivityCompat.startActivityForResult(getActivity(), intent, REQUEST_ADD_CODE, options.toBundle());
                 startActivityForResult(new Intent(getActivity(), AddActivity.class), REQUEST_ADD_CODE);
                 break;
             case R.id.tv_one_word:
@@ -222,7 +229,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
     向服务器发送数据
      */
     private void changeDataToServer() {
-        showLoadingDialog();
+//        showLoadingDialog();
         Map<String, String> params = new HashMap<>();
         params.put("memberId", SystemInfo.getInstance(getActivity()).getMemberId());
         params.put("date", (String) SPUtils.get(getActivity(), ApplicationGlobal.CURRENT_DATE, ""));
@@ -256,7 +263,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                 mHandler.sendMessage(msg);
             }
         });
-        EasyListApplication.getInstance().addToRequestQueue(changeDataRequest, this.getClass().getName());
+        addToRequestQueue(changeDataRequest);
     }
 
     /*
@@ -342,12 +349,14 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
 
     private void initViews() {
         mQueue = Volley.newRequestQueue(getActivity());
-        todayEventAdapter = new TodayEventAdapter(new WeakReference<Context>(getActivity()), todayEventDatas);
+        todayEventAdapter = new TodayEventAdapter(new WeakReference<Context>(getActivity()), getActivity(), todayEventDatas);
         todayEventAdapter.setOnNoEventItemClickListener(this);
         todayEventAdapter.setOnHaveEventItemClickListener(this);
         todayEventAdapter.setOnHaveEventItemLongClickListener(this);
         eventContent.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        eventContent.addItemDecoration(new MyItemDividerDecoration(getActivity(), MyItemDividerDecoration.VERTICAL_LIST));
+        eventContent.setHasFixedSize(true);
+        eventContent.setItemAnimator(new DefaultItemAnimator());
         eventContent.setAdapter(todayEventAdapter);
     }
 
@@ -447,6 +456,9 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                         }
                         if (!isTryOutAccount)
                             changeDataToServer();
+
+                        Intent intent_refreshChart = new Intent(String4Broad.RefershChartData);
+                        getActivity().sendBroadcast(intent_refreshChart);
 
                         //把存储的事件的key删除
                         SPUtils.remove(getActivity(), startTime);

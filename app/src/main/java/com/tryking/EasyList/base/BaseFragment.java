@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.android.volley.Request;
 import com.tryking.EasyList.widgets.LoadingDialog;
 
 /**
@@ -26,5 +27,9 @@ public class BaseFragment extends Fragment {
         if (loadingDialog != null && loadingDialog.isShowing()) {
             loadingDialog.dismiss();
         }
+    }
+
+    public <T> void addToRequestQueue(Request<T> req) {
+        EasyListApplication.getInstance().addToRequestQueue(req, this.getClass().getName());
     }
 }

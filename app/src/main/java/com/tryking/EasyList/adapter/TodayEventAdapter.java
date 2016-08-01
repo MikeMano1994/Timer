@@ -5,11 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.TodayEventData;
+import com.tryking.EasyList.utils.AppInfoUtil;
+import com.tryking.EasyList.utils.AppUtils;
 import com.tryking.EasyList.utils.CommonUtils;
 
 import java.lang.ref.WeakReference;
@@ -26,11 +29,21 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private List<TodayEventData> mData;
     private WeakReference<Context> mContext;
     private LayoutInflater mInflater;
+    private Context mCtx;
+    private boolean isNeedAnim = true;
 
-    public TodayEventAdapter(WeakReference<Context> context, List<TodayEventData> data) {
+    public TodayEventAdapter(WeakReference<Context> context, List<TodayEventData> data, boolean needAnim) {
         mContext = context;
         mData = data;
         mInflater = LayoutInflater.from(mContext.get());
+        isNeedAnim = needAnim;
+    }
+
+    public TodayEventAdapter(WeakReference<Context> context, Context ctx, List<TodayEventData> data) {
+        mContext = context;
+        mData = data;
+        mInflater = LayoutInflater.from(mContext.get());
+        mCtx = ctx;
     }
 
     @Override
@@ -78,6 +91,9 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        if (isNeedAnim) {
+            runEnterAnimation(holder.itemView, position);
+        }
         if (holder instanceof HaveEventViewHolder) {
             switch (mData.get(position).getDataType()) {
                 case TodayEventData.TYPE_WORK:
@@ -139,6 +155,16 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         }
+    }
+
+    private void runEnterAnimation(View view, int position) {
+        view.setTranslationY(AppUtils.getScreenHeight(mCtx));
+        view.animate()
+                .translationY(0)
+                .setStartDelay(100 * position)
+                .setInterpolator(new DecelerateInterpolator(3.0f))
+                .setDuration(700)
+                .start();
     }
 
 

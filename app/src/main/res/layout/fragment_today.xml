@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/thin_gray"
+        android:background="@drawable/background_gray"
         android:gravity="center"
         android:text="一句话总结一下今日吧" />
 

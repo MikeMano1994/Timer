@@ -131,7 +131,7 @@ public class PIMSActivity extends BaseActivity {
         toolBarLayout.setTitle(getResources().getString(R.string.individual_center));
         toolBarLayout.setExpandedTitleColor(getResources().getColor(R.color.float_transparent));
         toolBarLayout.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
-        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_18dp);
+        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_24dp);
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

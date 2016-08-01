@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.tryking.EasyList.R;
-import com.tryking.EasyList._fragment.ViewHistoryFragment;
+import com.tryking.EasyList._fragment._ViewHistoryFragment;
 import com.tryking.EasyList.base.BaseActivity;
 
 import butterknife.Bind;
@@ -33,7 +33,7 @@ public class ViewHistoryActivity extends BaseActivity {
     private void init() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content, new ViewHistoryFragment());
+        fragmentTransaction.replace(R.id.content, new _ViewHistoryFragment());
         fragmentTransaction.commit();
 
         initToolBar();
@@ -43,7 +43,7 @@ public class ViewHistoryActivity extends BaseActivity {
        初始化ToolBar
         */
     private void initToolBar() {
-        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_18dp);
+        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_24dp);
         toolBar.setTitleTextColor(getResources().getColor(R.color.white));
         toolBar.setTitle(R.string.view_history);
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {

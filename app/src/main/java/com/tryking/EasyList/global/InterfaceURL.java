@@ -8,4 +8,7 @@ public class InterfaceURL {
     public static final String login = ApplicationGlobal.appUrl + "login.html";
 
     public static final String changeData = ApplicationGlobal.appUrl + "changeData.html";
+
+    public static final String viewMonthData = ApplicationGlobal.appUrl + "viewMonthData.html";
+
 }

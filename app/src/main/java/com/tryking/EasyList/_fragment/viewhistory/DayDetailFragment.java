@@ -2,6 +2,7 @@ package com.tryking.EasyList._fragment.viewhistory;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.TodayEventData;
+import com.tryking.EasyList._bean.TodayEventDataImParcelable;
 import com.tryking.EasyList.adapter.TodayEventAdapter;
 import com.tryking.EasyList.base.BaseFragment;
+import com.tryking.EasyList.global.Constants;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -34,6 +37,14 @@ public class DayDetailFragment extends BaseFragment {
     RecyclerViewHeader header;
     private ArrayList<TodayEventData> todayEventDatas;
 
+    public static DayDetailFragment getInstance(ArrayList<TodayEventDataImParcelable> data) {
+        DayDetailFragment dayDetailFragment = new DayDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(Constants.ViewHistory.DAY_DETAIL_ARGUMENT, data);
+        dayDetailFragment.setArguments(bundle);
+        return dayDetailFragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,25 +62,18 @@ public class DayDetailFragment extends BaseFragment {
 
     private void init() {
         todayEventDatas = new ArrayList<>();
-        todayEventDatas.add(new TodayEventData(1, "0120", "0220", "111"));
-        todayEventDatas.add(new TodayEventData(2, "0120", "0220", "111"));
-        todayEventDatas.add(new TodayEventData(3, "0320", "0320", "222"));
-        todayEventDatas.add(new TodayEventData(4, "0520", "0520", "333"));
-        todayEventDatas.add(new TodayEventData(0, "0720", "0720", "444"));
-        todayEventDatas.add(new TodayEventData(1, "0120", "0220", "111"));
-        todayEventDatas.add(new TodayEventData(2, "0120", "0220", "111"));
-        todayEventDatas.add(new TodayEventData(3, "0320", "0320", "222"));
-        todayEventDatas.add(new TodayEventData(4, "0520", "0520", "333"));
-        todayEventDatas.add(new TodayEventData(0, "0720", "0720", "444"));
-        todayEventDatas.add(new TodayEventData(1, "0920", "0920", "555"));
-        todayEventDatas.add(new TodayEventData(1, "0120", "0220", "111"));
-        todayEventDatas.add(new TodayEventData(2, "0120", "0220", "111"));
-        todayEventDatas.add(new TodayEventData(3, "0320", "0320", "222"));
-        todayEventDatas.add(new TodayEventData(4, "0520", "0520", "333"));
-        todayEventDatas.add(new TodayEventData(0, "0720", "0720", "444"));
-        todayEventDatas.add(new TodayEventData(1, "0920", "0920", "555"));
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            ArrayList<TodayEventDataImParcelable> todayDatas = arguments.getParcelableArrayList(Constants.ViewHistory.DAY_DETAIL_ARGUMENT);
+            for (int i = 0; i < todayDatas.size(); i++) {
+                TodayEventData todayEventData = new TodayEventData(todayDatas.get(i).getDataType(), todayDatas.get(i).getStartTime(),
+                        todayDatas.get(i).getEndTime(), todayDatas.get(i).getSpecificEvent());
+                todayEventDatas.add(todayEventData);
+            }
+        }
+
         rvContent.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvContent.setAdapter(new TodayEventAdapter(new WeakReference<Context>(getContext()), todayEventDatas));
+        rvContent.setAdapter(new TodayEventAdapter(new WeakReference<Context>(getContext()), todayEventDatas, false));
         header.attachTo(rvContent);
     }
 

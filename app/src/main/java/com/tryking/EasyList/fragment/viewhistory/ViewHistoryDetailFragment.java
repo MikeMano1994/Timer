@@ -97,7 +97,7 @@ public class ViewHistoryDetailFragment extends Fragment implements OnChartValueS
         }
 
         rvShowData.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new TodayEventAdapter(new WeakReference<Context>(getActivity()), eventDatas);
+        adapter = new TodayEventAdapter(new WeakReference<Context>(getActivity()), eventDatas, false);
         rvShowData.setAdapter(adapter);
         String[] dataFromDatabase = getDataFromDatabase(date);
         if (dataFromDatabase.length != 0) {

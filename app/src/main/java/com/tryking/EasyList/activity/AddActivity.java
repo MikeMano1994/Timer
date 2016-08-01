@@ -175,7 +175,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
      */
 
     private void initToolBar() {
-        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_18dp);
+        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_24dp);
 //        toolBar.setLogo(R.mipmap.ic_launcher);
         toolBar.setTitleTextColor(getResources().getColor(R.color.white));
         toolBar.setTitle(R.string.add_event);
@@ -224,7 +224,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
         int start = Integer.parseInt(startTime);
         int end = Integer.parseInt(endTime);
         if (start >= end) {
-            TT.showShort(AddActivity.this, "您似乎选择的不合理哦～");
+            TT.showShort(AddActivity.this, "您选择的似乎不合理哦～");
         } else {
             int dataType = getDataType();
             String specificEvent = etPrint.getText().toString();
@@ -247,8 +247,9 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
 //                Logger.e("在这儿");
                 saveToDataBase(startTimes, endTimes, eventTypes);
                 saveToDataBase(CommonUtils.intToStr(start), specificEvent);
-                setResult(RESULT_OK);
                 refreshChart();
+                setResult(RESULT_OK);
+//                ActivityCompat.finishAfterTransition(AddActivity.this);
                 finish();
             } else {
                 for (int i = 0; i < nothingStartInts.size(); i++) {
@@ -274,8 +275,9 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                                 SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
                                 saveToDataBase(CommonUtils.intToStr(start), specificEvent);
 
-                                setResult(RESULT_OK);
                                 refreshChart();
+                                setResult(RESULT_OK);
+//                                ActivityCompat.finishAfterTransition(AddActivity.this);
                                 finish();
                                 return;
                             } else if (j == haveThingStartInts.size() - 1) {
@@ -300,15 +302,16 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                                 SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
                                 saveToDataBase(CommonUtils.intToStr(start), specificEvent);
 
-                                setResult(RESULT_OK);
                                 refreshChart();
+                                setResult(RESULT_OK);
+//                                ActivityCompat.finishAfterTransition(AddActivity.this);
                                 finish();
                                 return;
                             }
                         }
                     }
                 }
-                TT.showShort(AddActivity.this, "您似乎选择的不合理哦！");
+                TT.showShort(AddActivity.this, "您选择的似乎不合理哦！");
             }
         }
     }
