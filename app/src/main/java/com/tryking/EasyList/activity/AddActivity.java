@@ -165,9 +165,9 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                     s = s + "\n" + CommonUtils.addSignToStr(ends[i]) + "  -  " + CommonUtils.addSignToStr("2400");
                 }
             }
-            showChoose.setText(s == "" ? "您没有可选择的时间段" : "您可以选择的时间段有:\n");
-            tvHint.setText(s);
         }
+        showChoose.setText(s == "" ? "您没有可选择的时间段" : "您可以选择的时间段有:\n");
+        tvHint.setText(s);
     }
 
     /*

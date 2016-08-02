@@ -89,6 +89,8 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
     private TransferData transferData;
     private boolean isTryOutAccount;
     private EditText etOneWord;
+    private boolean isShowNetDisable = false;
+    private boolean isShowServerDisable = false;
 
     @OnClick({R.id.actionButton, R.id.tv_one_word})
     void click(View view) {
@@ -256,11 +258,13 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Logger.e(error.toString());
+                Logger.e(error.getMessage());
                 Message msg = new Message();
                 msg.what = Constants.requestException;
-                msg.obj = error.toString();
+                msg.obj = error.getMessage();
                 mHandler.sendMessage(msg);
+
+//                com.android.volley.TimeoutError
             }
         });
         addToRequestQueue(changeDataRequest);
@@ -531,9 +535,20 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                     TT.showShort(getContext(), msg.obj.toString());
                     break;
                 case Constants.requestException:
-                    TT.showShort(getContext(), "服务器开小差啦:" + msg.obj.toString());
+                    if (msg.obj != null && msg.obj.toString().contains("java.net.ConnectException")) {
+                        if (!isShowNetDisable) {
+                            TT.showShort(getContext(), "检测到网络异常，数据无法同步");
+                            isShowNetDisable = true;
+                        }
+                    } else {
+                        if (!isShowServerDisable) {
+                            TT.showShort(getContext(), "服务器开小差啦～");
+                            isShowServerDisable = true;
+                        }
+                    }
                     break;
             }
         }
+
     };
 }

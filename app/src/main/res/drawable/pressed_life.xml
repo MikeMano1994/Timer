@@ -3,14 +3,12 @@
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
             <solid android:color="@color/life" />
-            <stroke android:width="1px" />
             <corners android:radius="3dp" />
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <solid android:color="@color/life_dark" />
-            <stroke android:width="1px" />
             <corners android:radius="3dp" />
         </shape>
     </item>
