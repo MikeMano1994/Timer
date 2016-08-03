@@ -26,6 +26,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._activity.ViewHistoryActivity;
+import com.tryking.EasyList._activity._ViewHistoryActivity;
 import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
@@ -108,7 +109,8 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
             case R.id.bt_viewHistory:
 //                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
 //                TT.showShort(getActivity(), "正在开发中...");
-                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
+//                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
+                startActivity(new Intent(getActivity(), _ViewHistoryActivity.class));
                 break;
             case R.id.bt_viewYesterday:
                 if (btViewYesterday.getText().toString() == "查看昨日") {

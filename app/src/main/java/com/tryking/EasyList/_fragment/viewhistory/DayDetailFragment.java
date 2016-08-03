@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bartoszlipinski.recyclerviewheader2.RecyclerViewHeader;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList._bean.TodayEventDataImParcelable;
@@ -33,8 +32,8 @@ public class DayDetailFragment extends BaseFragment {
     TextView tvOneWord;
     @Bind(R.id.rv_content)
     RecyclerView rvContent;
-    @Bind(R.id.header)
-    RecyclerViewHeader header;
+//    @Bind(R.id.header)
+//    RecyclerViewHeader header;
     private ArrayList<TodayEventData> todayEventDatas;
 
     public static DayDetailFragment getInstance(ArrayList<TodayEventDataImParcelable> data) {
@@ -74,7 +73,7 @@ public class DayDetailFragment extends BaseFragment {
 
         rvContent.setLayoutManager(new LinearLayoutManager(getContext()));
         rvContent.setAdapter(new TodayEventAdapter(new WeakReference<Context>(getContext()), todayEventDatas, false));
-        header.attachTo(rvContent);
+//        header.attachTo(rvContent);
     }
 
     @Override

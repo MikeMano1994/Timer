@@ -10,6 +10,7 @@ import com.tryking.EasyList._activity.LoginActivity;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.test.TestActivity;
 import com.tryking.EasyList.utils.SPUtils;
 
 public class LauncherActivity extends BaseActivity {
@@ -40,6 +41,7 @@ public class LauncherActivity extends BaseActivity {
             startActivity(new Intent(LauncherActivity.this, GuidanceActivity.class));
         } else {
             startActivity(new Intent(LauncherActivity.this, MainActivity.class));
+//            startActivity(new Intent(LauncherActivity.this, TestActivity.class));
         }
         finish();
     }

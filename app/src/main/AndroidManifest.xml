@@ -50,6 +50,10 @@
             android:label="@string/view_history"
             android:theme="@style/AppTheme.Float" />
         <activity
+            android:name="._activity._ViewHistoryActivity"
+            android:label="@string/view_history"
+            android:theme="@style/AppTheme.Float" />
+        <activity
             android:name="._activity.ViewHistoryActivity"
             android:label="@string/view_history"
             android:theme="@style/AppTheme.Float" />

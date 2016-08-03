@@ -23,4 +23,18 @@
     <color name="study">#99CC00</color>
     <color name="study_dark">#669966</color>
     <color name="noEvent">#767676</color>
+
+    <color name="red">#FFC93437</color>
+    <color name="yellow">#FFF7D23E</color>
+
+
+    <color name="bg_group_item_expanded_state">#ff88dd88</color>
+    <color name="bg_group_item_expanded_pressed_state">#ff99cc99</color>
+    <color name="bg_group_item_normal_state">#ffddffdd</color>
+    <color name="bg_group_item_normal_pressed_state">#ff99cc99</color>
+
+    <color name="bg_item_normal_state">#fff0f0f0</color>
+    <color name="bg_swipe_item_neutral">@android:color/transparent</color>
+    <color name="expandable_item_indicator_color">#42000000</color>
+
 </resources>

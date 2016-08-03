@@ -100,7 +100,7 @@ public class DateChooseDialog extends Dialog {
         mDateChooseDialog.setAlpha(0.8f);
         Window mWindow = getWindow();
         WindowManager.LayoutParams lp = mWindow.getAttributes();
-        lp.y = -300;
+        lp.y = -400;
         this.onWindowAttributesChanged(lp);
         mDateChooseDialog.startAnimation(appearAnim);
         setContentView(mDateChooseDialog);

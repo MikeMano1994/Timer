@@ -1,24 +1,21 @@
 package com.tryking.EasyList.test;
 
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.tryking.EasyList.R;
-import com.tryking.EasyList.widgets.BackgroundScrollViewPager;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class TestActivity extends AppCompatActivity {
-    @Bind(R.id.test)
-    BackgroundScrollViewPager test;
-    private ArrayList<View> objects;
+    private static final String FRAGMENT_TAG_DATA_PROVIDER = "data_provider";
+    private static final String FRAGMENT_LIST_VIEW = "list_view";
+
+    @Bind(R.id.container)
+    RelativeLayout container;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,37 +27,16 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        objects = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            ImageView imageView = new ImageView(TestActivity.this);
-            imageView.setImageResource(R.drawable.ic_add);
-            objects.add(imageView);
-        }
-        test.setAdapter(new MyAdapter());
+        getSupportFragmentManager().beginTransaction().add(
+                new ExampleExpandableDataProviderFragment(), FRAGMENT_TAG_DATA_PROVIDER)
+                .commit();
+        getSupportFragmentManager().beginTransaction().add(
+                R.id.container, new ExpandableExampleFragment(), FRAGMENT_LIST_VIEW).commit();
     }
 
-    class MyAdapter extends PagerAdapter {
-
-        @Override
-        public int getCount() {
-            return objects.size();
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-
-            container.addView(objects.get(position));
-            return objects.get(position);
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return  view == object;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(objects.get(position));
-        }
+    public AbstractExpandableDataProvider getDataprovider() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DATA_PROVIDER);
+        return ((ExampleExpandableDataProviderFragment) fragment).getDataProvider();
     }
+
 }

@@ -48,4 +48,7 @@
         <item name="android:windowSoftInputMode">adjustResize|stateHidden</item>
     </style>
 
+    <style name="commonListItemStyle">
+    </style>
+
 </resources>
