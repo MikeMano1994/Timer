@@ -14,12 +14,9 @@
  *    limitations under the License.
  */
 
-package com.tryking.EasyList.test;
+package com.tryking.EasyList.widgets.ExpandIndicator;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.drawable.Animatable;
-import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -29,9 +26,7 @@ import android.view.View;
 import com.tryking.EasyList.R;
 
 
-// NOTE: AnimatedVectorDrawableCompat works on API level 11+
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-class ExpandableItemIndicatorImplAnim extends ExpandableItemIndicator.Impl {
+class ExpandableItemIndicatorImplNoAnim extends ExpandableItemIndicator.Impl {
     private AppCompatImageView mImageView;
 
     @Override
@@ -42,13 +37,7 @@ class ExpandableItemIndicatorImplAnim extends ExpandableItemIndicator.Impl {
 
     @Override
     public void setExpandedState(boolean isExpanded, boolean animate) {
-        if (animate) {
-            @DrawableRes int resId = isExpanded ? R.drawable.ic_expand_more_to_expand_less : R.drawable.ic_expand_less_to_expand_more;
-            mImageView.setImageResource(resId);
-            ((Animatable) mImageView.getDrawable()).start();
-        } else {
-            @DrawableRes int resId = isExpanded ? R.drawable.ic_expand_less : R.drawable.ic_expand_more;
-            mImageView.setImageResource(resId);
-        }
+        @DrawableRes int resId = (isExpanded) ? R.drawable.ic_expand_less : R.drawable.ic_expand_more;
+        mImageView.setImageResource(resId);
     }
 }

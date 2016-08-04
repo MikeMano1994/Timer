@@ -234,4 +234,37 @@ public class CommonUtils {
             throw new IllegalArgumentException("字符串必须为1～2位");
         }
     }
+
+    /**
+     * 给日期添加汉字年月
+     *
+     * @param date
+     * @return
+     */
+    public static String addHanZitoDate(String date) {
+        String s = date.substring(0, 4) + "年" + date.substring(4, 6) + "月";
+        return s;
+    }
+
+    /**
+     * 给日期添加汉字年月日
+     *
+     * @param date
+     * @return
+     */
+    public static String addZitoDate(String date) {
+        String s = date.substring(0, 4) + "年" + date.substring(4, 6) + "月" + date.substring(6) + "日";
+        return s;
+    }
+
+    /**
+     * 由日期得到月份
+     *
+     * @param date
+     * @return
+     */
+    public static String getMonthFromDate(String date) {
+        String s = date.substring(0, 4) + date.substring(4, 6);
+        return s;
+    }
 }

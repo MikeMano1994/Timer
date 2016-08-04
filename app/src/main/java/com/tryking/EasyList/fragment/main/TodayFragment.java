@@ -21,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -112,7 +114,18 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                         .setTitle("一句话总结今日")
                         .setView(oneWord);
                 setPosAndNegButton(builder);
-                builder.create().show();
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                etOneWord.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    }
+                });
+                //只用上面这个就很管用
+//                etOneWord.setFocusable(true);
+//                etOneWord.setFocusableInTouchMode(true);
+//                etOneWord.requestFocus();
                 break;
         }
     }
@@ -526,9 +539,9 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                 case Constants.ChangeData.changeSuccess:
                     ChangeDataReturnBean changeBean = (ChangeDataReturnBean) msg.obj;
                     if (changeBean.isAmendSuccess()) {
-                        TT.showShort(getContext(), "数据更新成功");
+                        TT.showShort(getContext(), "同步成功");
                     } else {
-                        TT.showShort(getContext(), "数据更新失败");
+                        TT.showShort(getContext(), "同步失败");
                     }
                     break;
                 case Constants.ChangeData.changeFailure:

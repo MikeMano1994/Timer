@@ -12,21 +12,21 @@
         android:layout_centerInParent="true">
 
         <TextView
-            android:layout_marginBottom="100dp"
+            android:layout_marginBottom="150dp"
             android:id="@+id/tv_friend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
             android:text="和时间做朋友"
             android:textColor="@color/white"
-            android:textSize="26sp" />
+            android:textSize="32sp" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         android:gravity="center">
 
         <ImageView

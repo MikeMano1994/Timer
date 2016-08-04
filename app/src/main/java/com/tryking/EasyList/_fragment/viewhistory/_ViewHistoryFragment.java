@@ -1,5 +1,6 @@
 package com.tryking.EasyList._fragment.viewhistory;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryChildData;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryGroupData;
+import com.tryking.EasyList._bean.viewHistoryBean.ViewMonthReturnBean;
 import com.tryking.EasyList.adapter.viewhistory.ViewHistoryExpandableAdapter;
+import com.tryking.EasyList.utils.CommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,7 @@ import butterknife.ButterKnife;
 /**
  * Created by 26011 on 2016/8/3.
  */
+@SuppressLint("ValidFragment")
 public class _ViewHistoryFragment extends Fragment implements RecyclerViewExpandableItemManager.OnGroupCollapseListener,
         RecyclerViewExpandableItemManager.OnGroupExpandListener {
 
@@ -44,8 +48,20 @@ public class _ViewHistoryFragment extends Fragment implements RecyclerViewExpand
     private RecyclerViewExpandableItemManager mRecyclerViewExpandableItemManager;
     private RecyclerView.Adapter mWrapperAdapter;
 
-   List<ViewHistoryGroupData> mGroupDatas = new ArrayList<>();
-   List<List<ViewHistoryChildData>> mChildDatas = new ArrayList<>();
+    private ViewMonthReturnBean mViewMonthReturnBean;
+
+    List<ViewHistoryGroupData> mGroupDatas = new ArrayList<>();
+    List<List<ViewHistoryChildData>> mChildDatas = new ArrayList<>();
+
+    /**
+     * 这样写不是很规范
+     *
+     * @param viewMonthReturnBean
+     */
+    @SuppressLint("ValidFragment")
+    public _ViewHistoryFragment(ViewMonthReturnBean viewMonthReturnBean) {
+        mViewMonthReturnBean = viewMonthReturnBean;
+    }
 
     @Nullable
     @Override
@@ -72,7 +88,7 @@ public class _ViewHistoryFragment extends Fragment implements RecyclerViewExpand
         mRecyclerViewExpandableItemManager.setOnGroupExpandListener(this);
 
         getData();
-        final ViewHistoryExpandableAdapter myItemAdapter = new ViewHistoryExpandableAdapter(mGroupDatas,mChildDatas);
+        final ViewHistoryExpandableAdapter myItemAdapter = new ViewHistoryExpandableAdapter(mGroupDatas, mChildDatas);
         mWrapperAdapter = mRecyclerViewExpandableItemManager.createWrappedAdapter(myItemAdapter);
         final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
 
@@ -93,12 +109,26 @@ public class _ViewHistoryFragment extends Fragment implements RecyclerViewExpand
 
     private void getData() {
         //数据
-        for (int i = 0; i < 20; i++) {
-            ViewHistoryGroupData parentData = new ViewHistoryGroupData("201" + i, "一句话", i);
-            mGroupDatas.add(parentData);
+//        for (int i = 0; i < 20; i++) {
+//            ViewHistoryGroupData parentData = new ViewHistoryGroupData("201" + i, "一句话", i);
+//            mGroupDatas.add(parentData);
+//            ArrayList<ViewHistoryChildData> childDatas = new ArrayList<>();
+//            for (int j = 0; j < 5; j++) {
+//                ViewHistoryChildData childData = new ViewHistoryChildData(1, "1012", "1123", "具体是", j);
+//                childDatas.add(childData);
+//            }
+//            mChildDatas.add(childDatas);
+//        }
+
+        for (int i = 0; i < mViewMonthReturnBean.getMonthEvents().size(); i++) {
+            ViewHistoryGroupData viewHistoryGroupData = new ViewHistoryGroupData(CommonUtils.addZitoDate(mViewMonthReturnBean.getMonthEvents().get(i).getDate()), "", i);
+            mGroupDatas.add(viewHistoryGroupData);
             ArrayList<ViewHistoryChildData> childDatas = new ArrayList<>();
-            for (int j = 0; j < 5; j++) {
-                ViewHistoryChildData childData = new ViewHistoryChildData(1, "1012", "1123", "具体是", j);
+            for (int j = 0; j < mViewMonthReturnBean.getMonthEvents().get(i).getEventList().size(); j++) {
+                ViewHistoryChildData childData = new ViewHistoryChildData(Integer.parseInt(mViewMonthReturnBean.getMonthEvents().get(i).getEventList().get(j).getEventtypes()),
+                        mViewMonthReturnBean.getMonthEvents().get(i).getEventList().get(j).getStarttime(),
+                        mViewMonthReturnBean.getMonthEvents().get(i).getEventList().get(j).getEndtime(),
+                        mViewMonthReturnBean.getMonthEvents().get(i).getEventList().get(j).getRecord(), j);
                 childDatas.add(childData);
             }
             mChildDatas.add(childDatas);

@@ -37,12 +37,19 @@
             android:layout_marginRight="40dp"
             android:gravity="center" />
 
-        <!--<com.tryking.EasyList.test.ExpandableItemIndicator-->
-        <!--android:id="@+id/indicator"-->
-        <!--android:layout_width="24dp"-->
-        <!--android:layout_height="24dp"-->
-        <!--android:layout_gravity="right|center_vertical"-->
-        <!--android:layout_marginRight="16dp"/>-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/indicator"-->
+            <!--android:layout_width="24dp"-->
+            <!--android:layout_height="24dp"-->
+            <!--android:layout_gravity="right|center_vertical"-->
+            <!--android:layout_marginRight="16dp" />-->
+        <com.tryking.EasyList.widgets.ExpandIndicator.ExpandableItemIndicator
+        android:id="@+id/indicator"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="16dp"/>
 
     </FrameLayout>
 

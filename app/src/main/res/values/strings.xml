@@ -6,6 +6,7 @@
     <!--    Activity Labels-->
     <string name="add_event">新增事件</string>
     <string name="view_history">查看历史</string>
+    <string name="view_yesterday">查看昨日</string>
     <string name="guide">向导</string>
     <string name="individual_center">个人中心</string>
     <string name="login_and_register">登陆/注册</string>

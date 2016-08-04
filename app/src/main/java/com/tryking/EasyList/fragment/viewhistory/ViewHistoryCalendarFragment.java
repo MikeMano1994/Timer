@@ -131,11 +131,11 @@ public class ViewHistoryCalendarFragment extends Fragment implements OnDateSelec
         if (!judgeIsDatabaseHaveEvent(selectedDate)) {
             TT.showShort(getActivity(), "此日未添加过数据");
         } else {
-            ViewHistoryDetailFragment viewHistoryDetailFragment = ViewHistoryDetailFragment.getInstance(selectedDateString);
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.rl_content, viewHistoryDetailFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+//            ViewHistoryDetailFragment viewHistoryDetailFragment = ViewHistoryDetailFragment.getInstance(selectedDateString);
+//            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//            transaction.replace(R.id.rl_content, viewHistoryDetailFragment);
+//            transaction.addToBackStack(null);
+//            transaction.commit();
         }
     }
 

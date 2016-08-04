@@ -1,8 +1,10 @@
 package com.tryking.EasyList.adapter.viewhistory;
 
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryChildData;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryGroupData;
 import com.tryking.EasyList.utils.CommonUtils;
+import com.tryking.EasyList.widgets.ExpandIndicator.ExpandableItemIndicator;
 
 import java.util.List;
 
@@ -61,25 +64,29 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
     @Override
     public void onBindGroupViewHolder(MyGroupViewHolder holder, int groupPosition, int viewType) {
         holder.groupDate.setText(mGroupDatas.get(groupPosition).getDate());
-        holder.groupOneWord.setText(mGroupDatas.get(groupPosition).getOneWord());
+        holder.groupOneWord.setText(mGroupDatas.get(groupPosition).getOneWord().equals("") ? "和时间做朋友" : mGroupDatas.get(groupPosition).getOneWord());
 
-        int expandStateFlags = holder.getExpandStateFlags();
+        final int expandStateFlags = holder.getExpandStateFlags();
         if ((expandStateFlags & ExpandableItemConstants.STATE_FLAG_IS_UPDATED) != 0) {
-            int bgResId;
+            int mainBgResId;
+            int arrowBgResId;
             boolean isExpanded;
-            boolean animateIndicator = ((expandStateFlags & Expandable.STATE_FLAG_HAS_EXPANDED_STATE_CHANGED) != 0);
+//            boolean animateIndicator = ((expandStateFlags & Expandable.STATE_FLAG_HAS_EXPANDED_STATE_CHANGED) != 0);
 
             if ((expandStateFlags & Expandable.STATE_FLAG_IS_EXPANDED) != -0) {
-                bgResId = R.drawable.bg_group_item_expanded_state;
+                mainBgResId = R.drawable.bg_group_item_expanded_state;
+                arrowBgResId = R.drawable.ic_expand_more_to_expand_less;
                 isExpanded = false;
             } else {
-                bgResId = R.drawable.bg_group_item_normal_state;
+                mainBgResId = R.drawable.bg_group_item_normal_state;
+                arrowBgResId = R.drawable.ic_expand_more;
                 isExpanded = false;
             }
 
             //这里可能需要根据是否打开来设置背景
-//            holder.mContainer.setBackgroundResource(bgResId);
+            holder.mContainer.setBackgroundResource(mainBgResId);
 //            holder.mIndicator.setExpandedState(isExpanded, animateIndicator);
+            holder.mIndicator.setBackgroundResource(arrowBgResId);
         }
 
     }
@@ -130,6 +137,10 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
         TextView groupDate;
         @Bind(R.id.group_one_word)
         TextView groupOneWord;
+        @Bind(R.id.m_container)
+        CardView mContainer;
+        @Bind(R.id.indicator)
+        ImageView mIndicator;
 
         public MyGroupViewHolder(View itemView) {
             super(itemView);

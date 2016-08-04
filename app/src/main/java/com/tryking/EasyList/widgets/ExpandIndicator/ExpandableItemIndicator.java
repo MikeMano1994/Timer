@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.tryking.EasyList.test;
+package com.tryking.EasyList.widgets.ExpandIndicator;
 
 import android.content.Context;
 import android.os.Build;

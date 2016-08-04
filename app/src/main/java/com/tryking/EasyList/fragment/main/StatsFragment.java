@@ -4,10 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +21,16 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
-import com.tryking.EasyList._activity.ViewHistoryActivity;
+import com.tryking.EasyList._activity.ViewYesterdayActivity;
 import com.tryking.EasyList._activity._ViewHistoryActivity;
 import com.tryking.EasyList._bean.TodayEventData;
+import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
 import com.tryking.EasyList.db.table.EverydayEventSource;
@@ -37,8 +40,6 @@ import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.marqueeView.MarqueeView;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +52,7 @@ import butterknife.OnClick;
 /**
  * Created by Tryking on 2016/5/13.
  */
-public class StatsFragment extends Fragment implements OnChartValueSelectedListener {
+public class StatsFragment extends BaseFragment implements OnChartValueSelectedListener {
     @Bind(R.id.showPieChart)
     PieChart showPieChart;
     @Bind(R.id.bt_viewHistory)
@@ -64,7 +65,7 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
     MarqueeView mvNotice;
 
 
-    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
+    //    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     String[] mParties = new String[]{
             "未添加事件", "工作", "娱乐", "生活", "学习"
     };
@@ -94,9 +95,10 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
         info.add("睡眠和休息丧失了时间，却取得了明天工作的精力。 \n—— 毛泽东");
         mvNotice.startWithList(info);
 
+
         initChart(getEventData(getEventStrings()));
         btViewYesterday.setText("查看昨日");
-        tvTitle.setText("今日事项统计");
+        tvTitle.setText("今日");
 
         IntentFilter exitFilter = new IntentFilter(String4Broad.RefershChartData);
         refreshChatDataReceiver = new RefreshChatDataReceiver();
@@ -110,11 +112,14 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
 //                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
 //                TT.showShort(getActivity(), "正在开发中...");
 //                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
+                //上面的弃用，改为下面这个
                 startActivity(new Intent(getActivity(), _ViewHistoryActivity.class));
                 break;
             case R.id.bt_viewYesterday:
                 if (btViewYesterday.getText().toString() == "查看昨日") {
-                    refreshYesterdayData();
+//                    refreshYesterdayData();
+                    //上面的是从数据库获取昨日数据
+                    startActivity(new Intent(getActivity(), ViewYesterdayActivity.class));
                 } else {
                     initChart(getEventData(getEventStrings()));
                     btViewYesterday.setText("查看昨日");
@@ -241,17 +246,14 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
 
     private void initChart(float[] eventData) {
         showPieChart.setUsePercentValues(true);
-//        showPieChart.setDescription("今日事项统计");
+        showPieChart.setDescription("");
         showPieChart.setExtraOffsets(5, 10, 5, 5);
         showPieChart.setDragDecelerationFrictionCoef(0.95f);
 
         showPieChart.setDrawHoleEnabled(true);
-//        showPieChart.setHoleColor(Color.WHITE);
-        showPieChart.setHoleColorTransparent(true);
-        showPieChart.setCenterText("今日事项统计");
-        showPieChart.setCenterTextSize(25);
+        showPieChart.setHoleColor(Color.WHITE);
 
-        showPieChart.setTransparentCircleColor(Color.BLACK);
+        showPieChart.setTransparentCircleColor(Color.WHITE);
         showPieChart.setTransparentCircleAlpha(110);
 
         showPieChart.setHoleRadius(58f);
@@ -261,7 +263,7 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
 
         showPieChart.setRotationAngle(0);
         // enable rotation of the chart by touch
-        showPieChart.setRotationEnabled(false);
+        showPieChart.setRotationEnabled(true);
         showPieChart.setHighlightPerTapEnabled(true);
 
         // showPieChart.setUnit(" €");
@@ -270,7 +272,7 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
         // add a selection listener
         showPieChart.setOnChartValueSelectedListener(this);
 
-        setData(4, 100, eventData);
+        setData(5, 100, eventData);
 
         showPieChart.animateY(1400, Easing.EasingOption.EaseInOutQuad);
         // mChart.spin(2000, 0, 360);
@@ -281,34 +283,25 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
         l.setYEntrySpace(0f);
         l.setYOffset(0f);
 
+        // entry label styling
+        showPieChart.setEntryLabelColor(Color.WHITE);
+        showPieChart.setEntryLabelTextSize(12f);
     }
 
-    /*
-    给chart设置数据
-     */
-    private void setData(int count, float range, float[] eventData) {
-
+    private void setData(int count, int range, float[] eventData) {
         float mult = range;
+        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-
-        // IMPORTANT: In a PieChart, no values (Entry) should have the same
-        // xIndex (even if from different DataSets), since no values can be
-        // drawn above each other.
-        for (int i = 0; i < count + 1; i++) {
-            yVals1.add(new Entry(eventData[i], i));
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        for (int i = 0; i < count; i++) {
+            entries.add(new PieEntry(eventData[i], mParties[i % mParties.length]));
         }
 
-        ArrayList<String> xVals = new ArrayList<String>();
-
-        for (int i = 0; i < count + 1; i++)
-            xVals.add(mParties[i % mParties.length]);
-
-        PieDataSet dataSet = new PieDataSet(yVals1, "颜色标识");
+        PieDataSet dataSet = new PieDataSet(entries, "颜色标识");
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);
 
-        // add a lot of colors
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
 
@@ -321,45 +314,24 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
         dataSet.setColors(colors);
         //dataSet.setSelectionShift(0f);
 
-        PieData data = new PieData(xVals, dataSet);
+        PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
-        data.setValueTextColor(Color.TRANSPARENT);
-//        data.setValueTypeface(tf);
+        data.setValueTextColor(Color.WHITE);
+        //这个应当是和字体有关的
+//        data.setValueTypeface(mTfLight);
         showPieChart.setData(data);
-
-        // undo all highlights
         showPieChart.highlightValues(null);
 
         showPieChart.invalidate();
+
     }
+
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-    }
-
-    @Override
-    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-//        "未添加事件", "工作", "娱乐", "生活", "学习"
-        switch (e.getXIndex()) {
-            case 0:
-                showPieChart.setCenterText("未添加事件:\n" + CommonUtils.getApproximation(e.getVal()) + "%");
-                break;
-            case 1:
-                showPieChart.setCenterText("工作:\n" + CommonUtils.getApproximation(e.getVal()) + "%");
-                break;
-            case 2:
-                showPieChart.setCenterText("娱乐:\n" + CommonUtils.getApproximation(e.getVal()) + "%");
-                break;
-            case 3:
-                showPieChart.setCenterText("生活:\n" + CommonUtils.getApproximation(e.getVal()) + "%");
-                break;
-            case 4:
-                showPieChart.setCenterText("学习:\n" + CommonUtils.getApproximation(e.getVal()) + "%");
-                break;
-        }
     }
 
     class RefreshChatDataReceiver extends BroadcastReceiver {
@@ -375,6 +347,11 @@ public class StatsFragment extends Fragment implements OnChartValueSelectedListe
         if (refreshChatDataReceiver != null) {
             getActivity().unregisterReceiver(refreshChatDataReceiver);
         }
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+
     }
 
     @Override

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/m_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/item_pressed_group"
+    android:layout_margin="10dp"
     app:cardCornerRadius="3dp">
 
     <LinearLayout
@@ -31,4 +32,17 @@
             android:text="一句话总结今日"
             android:textColor="@color/black" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/indicator"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="16dp" />
+    <!--<com.tryking.EasyList.widgets.ExpandIndicator.ExpandableItemIndicator-->
+    <!--android:id="@+id/indicator"-->
+    <!--android:layout_width="24dp"-->
+    <!--android:layout_height="24dp"-->
+    <!--android:layout_gravity="right|center_vertical"-->
+    <!--android:layout_marginRight="16dp" />-->
 </android.support.v7.widget.CardView>

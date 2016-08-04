@@ -11,4 +11,6 @@ public class InterfaceURL {
 
     public static final String viewMonthData = ApplicationGlobal.appUrl + "viewMonthData.html";
 
+    public static final String viewDayData = ApplicationGlobal.appUrl + "viewDayData.html";
+
 }

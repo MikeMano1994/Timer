@@ -66,8 +66,10 @@ public class DateChooseDialog extends Dialog {
         } else {
             npMonth.setMaxValue(12);
         }
-        chooseYear = String.valueOf(npYear.getMinValue());
-        chooseMonth = String.valueOf(1);
+        npYear.setValue(eYear);
+        npMonth.setValue(eMonth);
+        chooseYear = String.valueOf(eYear);
+        chooseMonth = String.valueOf(eMonth);
 
         npYear.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -97,7 +99,7 @@ public class DateChooseDialog extends Dialog {
 
     @Override
     public void show() {
-        mDateChooseDialog.setAlpha(0.8f);
+        mDateChooseDialog.setAlpha(1.0f);
         Window mWindow = getWindow();
         WindowManager.LayoutParams lp = mWindow.getAttributes();
         lp.y = -400;

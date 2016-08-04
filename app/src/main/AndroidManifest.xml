@@ -58,6 +58,11 @@
             android:label="@string/view_history"
             android:theme="@style/AppTheme.Float" />
         <activity
+            android:name="._activity.ViewYesterdayActivity"
+            android:label="@string/view_yesterday"
+            android:theme="@style/AppTheme.Float" />
+
+        <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name" />
         <activity
