@@ -15,12 +15,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
 import com.tryking.EasyList.global.ApplicationGlobal;
+import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.widgets.NumberPickerPopupWindow;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
@@ -86,6 +88,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
     private String startTimes;//从SharedPreference中取出的开始时间汇总
     private String endTimes;//从SharedPreference中取出的结束时间汇总
     private String eventTypes;//从SharedPreference中取出的事件类型汇总
+    private boolean isTodayAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,13 +101,24 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
     }
 
     private void initView() {
-        initToolBar();
-//        setSupportActionBar(toolBar);
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {//昨日
+            Bundle bundle = extras.getBundle(Constants.ViewYesterday.INTENT_ARGUMENT);
+            startTimes = bundle.getString(ApplicationGlobal.START_TIMES);
+            endTimes = bundle.getString(ApplicationGlobal.END_TIMES);
+            eventTypes = bundle.getString(ApplicationGlobal.EVENT_TYPES);
+//            Logger.e(startTimes + "::" + endTimes + "::" + eventTypes);
+            initToolBar("昨日");
+            isTodayAdd = false;
+        } else {//今日
+            startTimes = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.START_TIMES, "");
+            endTimes = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.END_TIMES, "");
+            eventTypes = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.EVENT_TYPES, "");
+            initToolBar("今日");
+            isTodayAdd = true;
+        }
         rbWork.setChecked(true);
-
-        startTimes = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.START_TIMES, "");
-        endTimes = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.END_TIMES, "");
-        eventTypes = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.EVENT_TYPES, "");
 //        Logger.e(startTimes + "start:::" + endTimes + "end::::type" + eventTypes);
         String[] starts = CommonUtils.convertStrToArray(startTimes);
         String[] ends = CommonUtils.convertStrToArray(endTimes);
@@ -174,12 +188,13 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
     初始化ToolBar
      */
 
-    private void initToolBar() {
+    private void initToolBar(String subTitle) {
         toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_24dp);
 //        toolBar.setLogo(R.mipmap.ic_launcher);
         toolBar.setTitleTextColor(getResources().getColor(R.color.white));
         toolBar.setTitle(R.string.add_event);
-//        toolBar.setSubtitle("今日");
+        toolBar.setSubtitle(subTitle);
+        toolBar.setSubtitleTextColor(getResources().getColor(R.color.blue));
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,18 +254,30 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
 //                Logger.e(startTimes + ":start");
 //                Logger.e(endTimes + ":ends");
 //                Logger.e(eventTypes + ":type");
-
-                SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
-                SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
-                SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
-                SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
+                if (isTodayAdd) {
+                    SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
+                    SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
+                    SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
+                    SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
 //                Logger.e("在这儿");
-                saveToDataBase(startTimes, endTimes, eventTypes);
-                saveToDataBase(CommonUtils.intToStr(start), specificEvent);
-                refreshChart();
-                setResult(RESULT_OK);
+                    saveToDataBase(startTimes, endTimes, eventTypes);
+                    saveToDataBase(CommonUtils.intToStr(start), specificEvent);
+                    refreshChart();
+                    setResult(RESULT_OK);
 //                ActivityCompat.finishAfterTransition(AddActivity.this);
-                finish();
+                    finish();
+                } else {
+                    Intent intent = getIntent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ApplicationGlobal.START_TIMES, startTimes);
+                    bundle.putString(ApplicationGlobal.END_TIMES, endTimes);
+                    bundle.putString(ApplicationGlobal.EVENT_TYPES, eventTypes);
+                    bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_START_TIME, CommonUtils.intToStr(start));
+                    bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_SPECIFIC_EVENT, specificEvent);
+                    intent.putExtra(Constants.ViewYesterday.INTENT_ARGUMENT, bundle);
+                    setResult(Constants.ViewYesterday.RESULT_Add_To_ViewYesterday, intent);
+                    finish();
+                }
             } else {
                 for (int i = 0; i < nothingStartInts.size(); i++) {
                     if (start >= nothingStartInts.get(i) && end <= nothingEndInts.get(i)) {
@@ -266,19 +293,32 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
 //                                Logger.e(startTimes + "::start");
 //                                Logger.e(endTimes + "::ends");
 //                                Logger.e(eventTypes + "::type");
-                                SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
-                                SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
-                                SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
-                                saveToDataBase(startTimes, endTimes, eventTypes);
+                                if (isTodayAdd) {
+                                    SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
+                                    SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
+                                    SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
+                                    saveToDataBase(startTimes, endTimes, eventTypes);
 
-                                //以开始时间作为名字存储事件
-                                SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
-                                saveToDataBase(CommonUtils.intToStr(start), specificEvent);
+                                    //以开始时间作为名字存储事件
+                                    SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
+                                    saveToDataBase(CommonUtils.intToStr(start), specificEvent);
 
-                                refreshChart();
-                                setResult(RESULT_OK);
+                                    refreshChart();
+                                    setResult(RESULT_OK);
 //                                ActivityCompat.finishAfterTransition(AddActivity.this);
-                                finish();
+                                    finish();
+                                } else {
+                                    Intent intent = getIntent();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(ApplicationGlobal.START_TIMES, startTimes);
+                                    bundle.putString(ApplicationGlobal.END_TIMES, endTimes);
+                                    bundle.putString(ApplicationGlobal.EVENT_TYPES, eventTypes);
+                                    bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_START_TIME, CommonUtils.intToStr(start));
+                                    bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_SPECIFIC_EVENT, specificEvent);
+                                    intent.putExtra(Constants.ViewYesterday.INTENT_ARGUMENT, bundle);
+                                    setResult(Constants.ViewYesterday.RESULT_Add_To_ViewYesterday,intent);
+                                    finish();
+                                }
                                 return;
                             } else if (j == haveThingStartInts.size() - 1) {
                                 haveThingStartInts.add(start);
@@ -290,22 +330,34 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
 //                                Logger.e(startTimes + ":::start");
 //                                Logger.e(endTimes + ":::ends");
 //                                Logger.e(eventTypes + ":::type");
-
-                                SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
-                                SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
-                                SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
-                                saveToDataBase(startTimes, endTimes, eventTypes);
+                                if (isTodayAdd) {
+                                    SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
+                                    SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
+                                    SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
+                                    saveToDataBase(startTimes, endTimes, eventTypes);
 
 //                                Logger.e(String.valueOf(start) + "qqqqqqqqqq");
 
-                                //以开始时间作为名字存储事件
-                                SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
-                                saveToDataBase(CommonUtils.intToStr(start), specificEvent);
+                                    //以开始时间作为名字存储事件
+                                    SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
+                                    saveToDataBase(CommonUtils.intToStr(start), specificEvent);
 
-                                refreshChart();
-                                setResult(RESULT_OK);
+                                    refreshChart();
+                                    setResult(RESULT_OK);
 //                                ActivityCompat.finishAfterTransition(AddActivity.this);
-                                finish();
+                                    finish();
+                                } else {
+                                    Intent intent = getIntent();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(ApplicationGlobal.START_TIMES, startTimes);
+                                    bundle.putString(ApplicationGlobal.END_TIMES, endTimes);
+                                    bundle.putString(ApplicationGlobal.EVENT_TYPES, eventTypes);
+                                    bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_START_TIME, CommonUtils.intToStr(start));
+                                    bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_SPECIFIC_EVENT, specificEvent);
+                                    intent.putExtra(Constants.ViewYesterday.INTENT_ARGUMENT, bundle);
+                                    setResult(Constants.ViewYesterday.RESULT_Add_To_ViewYesterday,intent);
+                                    finish();
+                                }
                                 return;
                             }
                         }

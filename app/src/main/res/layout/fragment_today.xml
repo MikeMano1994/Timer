@@ -49,27 +49,29 @@
         android:background="@color/thin_gray" />
 
     <TextView
-        android:textColor="@color/gray"
         android:id="@+id/tv_one_word"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
+        android:paddingRight="70dp"
         android:background="@drawable/background_gray"
         android:gravity="center"
-        android:text="一句话总结一下今日吧" />
+        android:text="一句话总结一下今日吧"
+        android:textColor="@color/gray" />
 
     <LinearLayout
         android:id="@+id/hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/cat" />
+            android:src="@drawable/easylist_no_add" />
 
         <TextView
             android:layout_width="wrap_content"

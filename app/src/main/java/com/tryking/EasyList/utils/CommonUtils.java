@@ -241,7 +241,7 @@ public class CommonUtils {
      * @param date
      * @return
      */
-    public static String addHanZitoDate(String date) {
+    public static String addNianYueToDate(String date) {
         String s = date.substring(0, 4) + "年" + date.substring(4, 6) + "月";
         return s;
     }

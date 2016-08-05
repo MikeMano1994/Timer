@@ -102,6 +102,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                 if (animator != null) {
                     animator.start();
                 }
+                //这个是Activity启动动画，有点儿问题，先不用了，而且这个一般是那种两个Activity中都有同一个图片的那种，图片会放大跳转
 //                Intent intent = new Intent(getActivity(), AddActivity.class);
 //                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity());
 //                ActivityCompat.startActivityForResult(getActivity(), intent, REQUEST_ADD_CODE, options.toBundle());
@@ -184,7 +185,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                 if (i == 0) {
                     transferData.setSpecificEvents(s);
                 } else {
-                    transferData.setSpecificEvents(transferData.getSpecificEvents() + "#^@" + s);
+                    transferData.setSpecificEvents(transferData.getSpecificEvents() + Constants.SPLIT_SPECIFIC_EVENT_STRING + s);
                 }
             }
         }
@@ -231,7 +232,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                 if (i == 0) {
                     transferData.setSpecificEvents(s);
                 } else {
-                    transferData.setSpecificEvents(transferData.getSpecificEvents() + "#^@" + s);
+                    transferData.setSpecificEvents(transferData.getSpecificEvents() + Constants.SPLIT_SPECIFIC_EVENT_STRING + s);
                 }
             }
         }

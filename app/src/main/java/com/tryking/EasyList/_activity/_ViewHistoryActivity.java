@@ -4,12 +4,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -48,7 +50,16 @@ public class _ViewHistoryActivity extends BaseActivity {
     FrameLayout mainContent;
     @Bind(R.id.top_date)
     TextView topDate;
+    @Bind(R.id.show_no_net)
+    RelativeLayout showNoNet;
+    @Bind(R.id.show_server_error)
+    RelativeLayout showServerError;
+    @Bind(R.id.show_no_content)
+    RelativeLayout showNoContent;
+
     private String curMonth;
+    private _ViewHistoryFragment viewHistoryFragment;
+    private FragmentManager manager;
 
 
     @Override
@@ -81,6 +92,7 @@ public class _ViewHistoryActivity extends BaseActivity {
 
     private void init() {
         initToolBar();
+        manager = getSupportFragmentManager();
         String curDate = (String) SPUtils.get(getApplicationContext(), ApplicationGlobal.CURRENT_DATE, "");
         curMonth = CommonUtils.getMonthFromDate(curDate);
         getMonthDataFromServer(curMonth);
@@ -115,27 +127,32 @@ public class _ViewHistoryActivity extends BaseActivity {
                     String choseMonth = data.getString(Constants.HANDLER_CHOSE_MONTH);
                     String choseYear = data.getString(Constants.HANDLER_CHOSE_YEAR);
 //                    TT.showShort(getApplicationContext(), "Y:" + choseYear + "|||M:" + choseMonth);
+                    topDate.setText(CommonUtils.addNianYueToDate(choseYear + CommonUtils.add0toOneChar(choseMonth)));
                     getMonthDataFromServer(choseYear + CommonUtils.add0toOneChar(choseMonth));
                     break;
                 case Constants.ViewHistory.GET_DATA_FOR_MONTH_SUCCESS:
                     ViewMonthReturnBean viewMonthReturnBean = (ViewMonthReturnBean) msg.obj;
                     if (viewMonthReturnBean.getMonthEvents() == null || viewMonthReturnBean.getMonthEvents().equals("")) {
-                        TT.showLong(getApplicationContext(), "您选择的月份还没有过记录哦～");
+                        manager.beginTransaction().hide(viewHistoryFragment).commit();
+                        showView(showNoContent);
                     } else {
-                        topDate.setText(CommonUtils.addHanZitoDate(viewMonthReturnBean.getMonth()));
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.main_content, new _ViewHistoryFragment(viewMonthReturnBean));
+                        hideAbnormalViews();
+                        FragmentTransaction transaction = manager.beginTransaction();
+                        viewHistoryFragment = new _ViewHistoryFragment(viewMonthReturnBean);
+                        transaction.replace(R.id.main_content, viewHistoryFragment);
                         transaction.commit();
                     }
                     break;
                 case Constants.ViewHistory.GET_DATA_FOR_MONTH_FAILURE:
-                    TT.showShort(getApplicationContext(), "服务器开小差啦～");
+                    showView(showServerError);
                     break;
                 case Constants.requestException:
                     if (msg.obj != null && msg.obj.toString().contains("java.net.ConnectException")) {
                         TT.showShort(getApplicationContext(), "网络异常");
+                        showView(showNoNet);
                     } else {
                         TT.showShort(getApplicationContext(), "服务器开小差啦～");
+                        showView(showServerError);
                     }
                     break;
                 default:
@@ -143,6 +160,40 @@ public class _ViewHistoryActivity extends BaseActivity {
             }
         }
     };
+
+    /*
+    把异常的view全部隐藏
+     */
+    private void hideAbnormalViews() {
+        showNoContent.setVisibility(View.GONE);
+        showNoNet.setVisibility(View.GONE);
+        showServerError.setVisibility(View.GONE);
+    }
+
+    /*
+    显示传入的view
+     */
+    private void showView(RelativeLayout view) {
+        switch (view.getId()) {
+            case R.id.show_no_content:
+                showNoContent.setVisibility(View.VISIBLE);
+                showNoNet.setVisibility(View.GONE);
+                showServerError.setVisibility(View.GONE);
+                break;
+            case R.id.show_no_net:
+                showNoNet.setVisibility(View.VISIBLE);
+                showNoContent.setVisibility(View.GONE);
+                showServerError.setVisibility(View.GONE);
+                break;
+            case R.id.show_server_error:
+                showServerError.setVisibility(View.VISIBLE);
+                showNoNet.setVisibility(View.GONE);
+                showNoContent.setVisibility(View.GONE);
+                break;
+            default:
+                break;
+        }
+    }
 
     /*
     从服务端获取该月的所有事件
