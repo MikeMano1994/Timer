@@ -13,4 +13,6 @@ public class InterfaceURL {
 
     public static final String viewDayData = ApplicationGlobal.appUrl + "viewDayData.html";
 
+    public static final String addOneWord = ApplicationGlobal.appUrl + "addOneWord.html";
+
 }

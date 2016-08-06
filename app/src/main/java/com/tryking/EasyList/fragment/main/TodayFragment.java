@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -138,11 +139,50 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                tvOneWord.setText(etOneWord.getText());
+                tvOneWord.setText(etOneWord.getText().toString());
                 // TODO: 2016/7/31 上传服务器
+                addOneWordToServer(etOneWord.getText().toString());
             }
         })
                 .setNegativeButton("取消", null);
+    }
+
+    /*
+    将每日一句上传到服务器
+     */
+    private void addOneWordToServer(String oneWord) {
+        // TODO: 2016/8/5 接口调试成功，完成后续动作
+        showLoadingDialog();
+        Map<String, String> params = new HashMap<>();
+        params.put("memberId", SystemInfo.getInstance(getActivity()).getMemberId());
+        params.put("date", (String) SPUtils.get(getActivity(), ApplicationGlobal.CURRENT_DATE, ""));
+        params.put("dataType", Constants.oneWordDataType);
+        params.put("oneWord", oneWord);
+        String url = InterfaceURL.addOneWord;
+        JsonBeanRequest<ChangeDataReturnBean> changeDataRequest = new JsonBeanRequest<>(url, params, ChangeDataReturnBean.class, new Response.Listener<ChangeDataReturnBean>() {
+            @Override
+            public void onResponse(ChangeDataReturnBean response) {
+                Message msg = new Message();
+                if (response.getResult().equals("1")) {
+                    msg.what = Constants.ChangeData.addOneWordSuccess;
+                    msg.obj = response;
+                } else {
+                    msg.what = Constants.ChangeData.addOneWordFailure;
+                    msg.obj = response.getMsg();
+                }
+                mHandler.sendMessage(msg);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e(error.getMessage());
+                Message msg = new Message();
+                msg.what = Constants.requestException;
+                msg.obj = error.getMessage();
+                mHandler.sendMessage(msg);
+            }
+        });
+        addToRequestQueue(changeDataRequest);
     }
 
     @Override
@@ -546,6 +586,17 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                     }
                     break;
                 case Constants.ChangeData.changeFailure:
+                    TT.showShort(getContext(), msg.obj.toString());
+                    break;
+                case Constants.ChangeData.addOneWordSuccess:
+                    ChangeDataReturnBean chaBean = (ChangeDataReturnBean) msg.obj;
+                    if (chaBean.isAmendSuccess()) {
+                        TT.showShort(getContext(), "同步成功");
+                    } else {
+                        TT.showShort(getContext(), "同步失败");
+                    }
+                    break;
+                case Constants.ChangeData.addOneWordFailure:
                     TT.showShort(getContext(), msg.obj.toString());
                     break;
                 case Constants.requestException:

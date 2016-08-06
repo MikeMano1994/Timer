@@ -33,6 +33,7 @@ import com.tryking.EasyList.network.JsonBeanRequest;
 import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
+import com.tryking.EasyList.widgets.CommonDialog;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -47,7 +48,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ViewYesterdayActivity extends BaseActivity {
+public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapterWithHeader.onHaveEventItemLongClickListener {
 
     @Bind(R.id.toolBar)
     Toolbar toolBar;
@@ -190,6 +191,9 @@ public class ViewYesterdayActivity extends BaseActivity {
                     } else {
                         hideAbnormalViews();
                         List<Event> eventList = dayEventBean.getEventList();
+                        if (dayEventBean.getOneWord() != null && !dayEventBean.getOneWord().equals("")) {
+                            etOneWord.setText(dayEventBean.getOneWord());
+                        }
                         initView(eventList);
                     }
                     break;
@@ -268,8 +272,9 @@ public class ViewYesterdayActivity extends BaseActivity {
         }
         mainContent.setLayoutManager(new LinearLayoutManager(ViewYesterdayActivity.this));
         adapterWithHeader = new DayEventAdapterWithHeader(ViewYesterdayActivity.this, mDatas, false);
+        adapterWithHeader.setOnHaveEventItemLongClickListener(this);
         mainContent.setAdapter(adapterWithHeader);
-        Logger.e("old:" + specificEvents.toString());
+//        Logger.e("old:" + specificEvents.toString());
     }
 
     public Map<String, String> sortMapByKey(Map<String, String> oriMap) {
@@ -409,5 +414,92 @@ public class ViewYesterdayActivity extends BaseActivity {
             }
         });
         addToRequestQueue(changeDataRequest);
+    }
+
+    @Override
+    public void onHaveEventItemLongClick(int position, final String startTime, final String endTime) {
+        final CommonDialog commonDialog = new CommonDialog(this);
+        commonDialog.setDialogContent(null, "删除\t\t" + CommonUtils.addSignToStr(startTime) + " - " + CommonUtils.addSignToStr(endTime) + ("\t\t这条记录").replaceAll(".{1}(?!$)", "$0 "), null, null,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String newStarts;
+                        String newEnds;
+                        String newTypes = "";
+                        if (startTimes.contains("," + startTime)) {
+                            newStarts = CommonUtils.deleteStr(startTimes, "," + startTime);
+                            newEnds = CommonUtils.deleteStr(endTimes, "," + endTime);
+                            int i = startTimes.indexOf("," + startTime);
+                            if (i != -1) {
+                                newTypes = eventTypes.substring(0, i) + eventTypes.substring(i + 5);
+                            }
+                        } else {
+                            newStarts = CommonUtils.deleteStr(startTimes, startTime);
+                            newEnds = CommonUtils.deleteStr(endTimes, endTime);
+                            int i = startTimes.indexOf(startTime);
+                            if (i != -1) {
+                                newTypes = eventTypes.substring(0, i) + eventTypes.substring(i + 4);
+                            }
+                            if (newStarts.startsWith(",") && newEnds.startsWith(",") && newTypes.startsWith(",")) {
+                                newStarts = newStarts.replaceFirst(",", "");
+                                newEnds = newEnds.replaceFirst(",", "");
+                                newTypes = newTypes.replaceFirst(",", "");
+                            }
+                        }
+                        startTimes = newStarts;
+                        endTimes = newEnds;
+                        eventTypes = newTypes;
+                        Logger.e(specificEvents.toString());
+                        specificEvents.remove(startTime);
+                        Logger.e(specificEvents.toString());
+
+                        Map<String, String> newMap = sortMapByKey(specificEvents);
+
+                        Set<String> keySet = newMap.keySet();
+                        Iterator<String> iterator = keySet.iterator();
+                        speEvents = "";
+                        while (iterator.hasNext()) {
+                            speEvents += newMap.get(iterator.next()) + Constants.SPLIT_SPECIFIC_EVENT_STRING;
+                        }
+                        speEvents = speEvents.substring(0, speEvents.length() - Constants.SPLIT_SPECIFIC_EVENT_STRING.length());
+
+                        changeDataToServer();
+                        refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
+                        commonDialog.dismiss();
+                    }
+                }, null);
+        commonDialog.show();
+    }
+
+    /*
+    将每日一句上传到服务器
+     */
+    private void addOneWordToServer(String oneWord) {
+        // TODO: 2016/8/5 接口调试成功，完成后续动作
+        showLoadingDialog();
+        Map<String, String> params = new HashMap<>();
+        params.put("memberId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
+        params.put("date", CommonUtils.getPreviousDay((String) SPUtils.get(getApplicationContext(), ApplicationGlobal.CURRENT_DATE, ""), -1));
+        params.put("dataType", Constants.oneWordDataType);
+        params.put("oneWord", oneWord);
+        String url = InterfaceURL.addOneWord;
+        JsonBeanRequest<ChangeDataReturnBean> changeDataRequest = new JsonBeanRequest<>(url, params, ChangeDataReturnBean.class, new Response.Listener<ChangeDataReturnBean>() {
+            @Override
+            public void onResponse(ChangeDataReturnBean response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+              
+            }
+        });
+        addToRequestQueue(changeDataRequest);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        addOneWordToServer(etOneWord.getText().toString());
     }
 }

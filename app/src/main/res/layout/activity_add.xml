@@ -197,7 +197,6 @@
                         android:padding="10dp"
                         android:text="学习"
                         android:textColor="@color/white" />
-
                 </RadioGroup>
             </LinearLayout>
 
@@ -222,6 +221,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:maxLength="25"
                     android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>
