@@ -1,4 +1,4 @@
-package com.tryking.EasyList._activity;
+package com.tryking.EasyList.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +22,6 @@ import com.tryking.EasyList._bean.DayEventReturnBean;
 import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList._bean.changeEventBean.ChangeDataReturnBean;
 import com.tryking.EasyList._bean.loginBean.Event;
-import com.tryking.EasyList.activity.AddActivity;
 import com.tryking.EasyList.adapter.DayEventAdapterWithHeader;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
@@ -34,6 +33,7 @@ import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.CommonDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -501,5 +501,20 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     protected void onDestroy() {
         super.onDestroy();
         addOneWordToServer(etOneWord.getText().toString());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //友盟统计：Activity自己实现的页面需要这样写(不包含Fragment)
+        MobclickAgent.onPageStart(getString(R.string.view_yesterday));//统计页面
+        MobclickAgent.onResume(this);//统计时长
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.view_yesterday));//统计页面
+        MobclickAgent.onPause(this);//统计时长
     }
 }

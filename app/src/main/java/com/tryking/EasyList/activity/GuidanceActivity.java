@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.tryking.EasyList.R;
-import com.tryking.EasyList._activity.LoginActivity;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.widgets.BackgroundScrollViewPager;
 import com.tryking.EasyList.widgets.circleIndicator.CircleIndicator;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -110,5 +110,20 @@ public class GuidanceActivity extends BaseActivity {
         @Override
         public void onPageScrollStateChanged(int state) {
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //友盟统计：Activity自己实现的页面需要这样写
+        MobclickAgent.onPageStart(getString(R.string.guide));//统计页面
+        MobclickAgent.onResume(this);//统计时长
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.guide));//统计页面
+        MobclickAgent.onPause(this);//统计时长
     }
 }

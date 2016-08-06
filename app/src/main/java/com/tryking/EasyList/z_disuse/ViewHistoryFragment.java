@@ -1,4 +1,4 @@
-package com.tryking.EasyList._fragment;
+package com.tryking.EasyList.z_disuse;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,21 +19,18 @@ import com.android.volley.VolleyError;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewMonthReturnBean;
-import com.tryking.EasyList._fragment.viewhistory.AllFragment;
-import com.tryking.EasyList._fragment.viewhistory.DayFragment;
-import com.tryking.EasyList._fragment.viewhistory.MonthFragment;
-import com.tryking.EasyList._fragment.viewhistory.WeekFragment;
 import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.global.InterfaceURL;
 import com.tryking.EasyList.network.JsonBeanRequest;
-import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.DateChooseDialog;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -44,7 +41,7 @@ import butterknife.OnLongClick;
 /**
  * Created by 26011 on 2016/7/26.
  */
-public class _ViewHistoryFragment extends BaseFragment {
+public class ViewHistoryFragment extends BaseFragment {
 
     @Bind(R.id.rb_day)
     RadioButton rbDay;
@@ -56,10 +53,9 @@ public class _ViewHistoryFragment extends BaseFragment {
     RadioButton rbAll;
     @Bind(R.id.change_content)
     FrameLayout changeContent;
-
     private FragmentTransaction fragmentTransaction;
+    private List<Fragment> fragments;
     private FragmentManager fragmentManager;
-    private String curMonth;
 
     @Nullable
     @Override
@@ -80,15 +76,13 @@ public class _ViewHistoryFragment extends BaseFragment {
     boolean click(View v) {
         switch (v.getId()) {
             case R.id.rb_day:
-                if (rbDay.isChecked()) {
-                    DateChooseDialog dateChooseDialog = new DateChooseDialog(getContext(), mHandler, "2015", "2016", "1", "8");
-                    dateChooseDialog.show();
-                }
+                TT.showShort(getContext(), "长按Day");
+                DateChooseDialog dateChooseDialog = new DateChooseDialog(getContext(), mHandler, "2015", "2015", "3", "5");
+                dateChooseDialog.show();
                 break;
         }
         return false;
     }
-
 
     private void init() {
         rbDay.setChecked(true);
@@ -98,8 +92,7 @@ public class _ViewHistoryFragment extends BaseFragment {
         setRadioButtonChangeListener(rbAll);
 
         Calendar calendar = Calendar.getInstance();
-        curMonth = String.valueOf(calendar.get(Calendar.YEAR)) + CommonUtils.add0toOneChar(String.valueOf(calendar.get(Calendar.MONTH) + 1));
-        fragmentManager = getFragmentManager();
+        String curMonth = String.valueOf(calendar.get(Calendar.YEAR)) + "0" + String.valueOf(calendar.get(Calendar.MONTH) + 1);
         getDataOfMonthFromServer(curMonth);
     }
 
@@ -115,23 +108,27 @@ public class _ViewHistoryFragment extends BaseFragment {
                     fragmentTransaction = fragmentManager.beginTransaction();
                     switch (rb.getId()) {
                         case R.id.rb_day:
-                            getDataOfMonthFromServer(curMonth);
-
+                            fragmentTransaction.replace(R.id.change_content, fragments.get(0));
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
                             break;
                         case R.id.rb_week:
-                            WeekFragment weekFragment = new WeekFragment();
-                            fragmentTransaction.replace(R.id.change_content, weekFragment);
+                            fragmentTransaction.replace(R.id.change_content, fragments.get(1));
+                            fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
+
                             break;
                         case R.id.rb_month:
-                            MonthFragment monthFragment = new MonthFragment();
-                            fragmentTransaction.replace(R.id.change_content, monthFragment);
+                            fragmentTransaction.replace(R.id.change_content, fragments.get(2));
+                            fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
+
                             break;
                         case R.id.rb_all:
-                            AllFragment allFragment = new AllFragment();
-                            fragmentTransaction.replace(R.id.change_content, allFragment);
+                            fragmentTransaction.replace(R.id.change_content, fragments.get(3));
+                            fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
+
                             break;
                         default:
                             break;
@@ -175,7 +172,6 @@ public class _ViewHistoryFragment extends BaseFragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Logger.e("失败了" + error);
-                mHandler.sendEmptyMessage(Constants.requestException);
             }
         });
         addToRequestQueue(viewMonthRequest);
@@ -192,7 +188,6 @@ public class _ViewHistoryFragment extends BaseFragment {
                     String choseMonth = data.getString(Constants.HANDLER_CHOSE_MONTH);
                     String choseYear = data.getString(Constants.HANDLER_CHOSE_YEAR);
                     TT.showShort(getContext(), "Y:" + choseYear + "|||M:" + choseMonth);
-                    getDataOfMonthFromServer(choseYear + CommonUtils.add0toOneChar(choseMonth));
                     break;
                 case Constants.ViewHistory.GET_DATA_FOR_MONTH_SUCCESS:
                     ViewMonthReturnBean viewMonthReturnBean = (ViewMonthReturnBean) msg.obj;
@@ -212,10 +207,15 @@ public class _ViewHistoryFragment extends BaseFragment {
     更新DayFragment中的内容
      */
     private void refreshMainContent(ViewMonthReturnBean viewMonthReturnBean) {
-        DayFragment dayFragment = DayFragment.getInstance(viewMonthReturnBean);
+        fragments = new ArrayList<>();
+        fragments.add(DayFragment.getInstance(viewMonthReturnBean));
+        fragments.add(new WeekFragment());
+        fragments.add(new MonthFragment());
+        fragments.add(new AllFragment());
 
+        fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.change_content, dayFragment);
+        fragmentTransaction.replace(R.id.change_content, fragments.get(0));
         fragmentTransaction.commit();
     }
 

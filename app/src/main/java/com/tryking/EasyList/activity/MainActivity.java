@@ -20,6 +20,7 @@ import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.fragment.main.IcFragment;
 import com.tryking.EasyList.fragment.main.TodayFragment;
 import com.tryking.EasyList.fragment.main.StatsFragment;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,5 +150,16 @@ public class MainActivity extends BaseActivity {
             unregisterReceiver(exitMainActivityReceiver);
         }
         super.onDestroy();
+    }
+
+    //友盟统计：有Activity和Fragment构成的页面需要这样写
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);       //统计时长
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

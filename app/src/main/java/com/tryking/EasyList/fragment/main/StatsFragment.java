@@ -4,9 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.AssetManager;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -27,8 +25,8 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
-import com.tryking.EasyList._activity.ViewYesterdayActivity;
-import com.tryking.EasyList._activity._ViewHistoryActivity;
+import com.tryking.EasyList.activity.ViewYesterdayActivity;
+import com.tryking.EasyList.activity.ViewHistoryActivity;
 import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.String4Broad;
@@ -38,6 +36,7 @@ import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.marqueeView.MarqueeView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -109,11 +108,8 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_viewHistory:
-//                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
-//                TT.showShort(getActivity(), "正在开发中...");
-//                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
                 //上面的弃用，改为下面这个
-                startActivity(new Intent(getActivity(), _ViewHistoryActivity.class));
+                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
                 break;
             case R.id.bt_viewYesterday:
                 if (btViewYesterday.getText().toString() == "查看昨日") {
@@ -147,11 +143,6 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
             btViewYesterday.setText("查看今日");
             tvTitle.setText("昨日事项统计");
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     private String[] getEventStrings() {
@@ -357,5 +348,16 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
     @Override
     public void onNothingSelected() {
         showPieChart.setCenterText("今日事项统计");
+    }
+
+    //友盟统计：由Activity和Fragment构成的页面需要这样写
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(getString(R.string.main_stats));
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.main_stats));
     }
 }

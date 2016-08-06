@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.tryking.EasyList.test;
+package com.tryking.EasyList.z_test;
 
 public abstract class AbstractExpandableDataProvider {
     public static abstract class BaseData {

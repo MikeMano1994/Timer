@@ -1,4 +1,4 @@
-package com.tryking.EasyList.activity;
+package com.tryking.EasyList.z_disuse;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList.activity.MainActivity;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.utils.TT;
 import com.umeng.socialize.UMAuthListener;

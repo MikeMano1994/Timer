@@ -31,6 +31,7 @@ import com.tryking.EasyList.db.table.SpecificEventSource;
 import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
+import com.umeng.analytics.MobclickAgent;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -316,7 +317,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                                     bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_START_TIME, CommonUtils.intToStr(start));
                                     bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_SPECIFIC_EVENT, specificEvent);
                                     intent.putExtra(Constants.ViewYesterday.INTENT_ARGUMENT, bundle);
-                                    setResult(Constants.ViewYesterday.RESULT_Add_To_ViewYesterday,intent);
+                                    setResult(Constants.ViewYesterday.RESULT_Add_To_ViewYesterday, intent);
                                     finish();
                                 }
                                 return;
@@ -355,7 +356,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                                     bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_START_TIME, CommonUtils.intToStr(start));
                                     bundle.putString(Constants.ViewYesterday.INTENT_ARGUMENT_SPECIFIC_EVENT, specificEvent);
                                     intent.putExtra(Constants.ViewYesterday.INTENT_ARGUMENT, bundle);
-                                    setResult(Constants.ViewYesterday.RESULT_Add_To_ViewYesterday,intent);
+                                    setResult(Constants.ViewYesterday.RESULT_Add_To_ViewYesterday, intent);
                                     finish();
                                 }
                                 return;
@@ -498,5 +499,28 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
     @Override
     public void onDismiss() {
         mPicker = null;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //友盟统计：Activity自己实现的页面需要这样写(不包含Fragment)
+        if (isTodayAdd) {
+            MobclickAgent.onPageStart(getString(R.string.add_event_today));//统计页面
+        } else {
+            MobclickAgent.onPageStart(getString(R.string.add_event_yesterday));//统计页面
+        }
+        MobclickAgent.onResume(this);//统计时长
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (isTodayAdd) {
+            MobclickAgent.onPageEnd(getString(R.string.add_event_today));//统计页面
+        } else {
+            MobclickAgent.onPageEnd(getString(R.string.add_event_yesterday));//统计页面
+        }
+        MobclickAgent.onPause(this);//统计时长
     }
 }

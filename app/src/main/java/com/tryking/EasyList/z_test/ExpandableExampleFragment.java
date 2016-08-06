@@ -1,4 +1,4 @@
-package com.tryking.EasyList.test;
+package com.tryking.EasyList.z_test;
 
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;

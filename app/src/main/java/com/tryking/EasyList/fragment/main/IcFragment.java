@@ -18,12 +18,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tryking.EasyList.R;
-import com.tryking.EasyList._activity.LoginActivity;
-import com.tryking.EasyList.activity.LoginAndRegisterActivity;
+import com.tryking.EasyList.activity.LoginActivity;
 import com.tryking.EasyList.activity.PIMSActivity;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.marqueeView.MarqueeView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,6 +133,17 @@ public class IcFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    //友盟统计：由Activity和Fragment构成的页面需要这样写
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(getString(R.string.main_ic));
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.main_ic));
     }
 
 }

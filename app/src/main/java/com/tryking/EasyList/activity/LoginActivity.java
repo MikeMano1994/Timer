@@ -1,4 +1,4 @@
-package com.tryking.EasyList._activity;
+package com.tryking.EasyList.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.loginBean.Event;
 import com.tryking.EasyList._bean.loginBean.LoginReturnBean;
-import com.tryking.EasyList.activity.MainActivity;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.ApplicationGlobal;
@@ -23,7 +22,7 @@ import com.tryking.EasyList.global.InterfaceURL;
 import com.tryking.EasyList.network.JsonBeanRequest;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
-import com.tryking.EasyList.widgets.LoadingDialog;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -172,6 +171,8 @@ public class LoginActivity extends BaseActivity {
             Logger.e(map.toString());
             switch (share_media) {
                 case QQ:
+                    //友盟统计账号来源
+                    MobclickAgent.onProfileSignIn("QQ", map.get("openid"));
                     //这里先不要设置，防止用户没有经过服务器验证直接登录成功
 //                    SystemInfo.getInstance(getApplicationContext()).setQQ(map.get("openid"));
 //                    SystemInfo.getInstance(getApplicationContext()).setQQName(map.get("screen_name"));
@@ -187,6 +188,9 @@ public class LoginActivity extends BaseActivity {
                         String result = map.get("result");
                         JSONObject sinaUserInfo = null;
                         sinaUserInfo = new JSONObject(result);
+
+                        //友盟统计账号来源
+                        MobclickAgent.onProfileSignIn("SinaWeibo", String.valueOf(sinaUserInfo.get("idstr")));
                         //这里先不要设置，防止用户没有经过服务器验证直接登录成功
 //                        SystemInfo.getInstance(getApplicationContext()).setSina((String) sinaUserInfo.get("idstr"));
 //                        SystemInfo.getInstance(getApplicationContext()).setMemberId((String) sinaUserInfo.get("idstr"));
@@ -220,6 +224,7 @@ public class LoginActivity extends BaseActivity {
     服务器登录验证
      */
     private void serverLogin(String memberId, String account, String qq, String qqName, String sina, String sinaName, String signature) {
+
         Logger.e("开始登录");
         showLoadingDialog();
         Map<String, String> params = new HashMap<>();
@@ -333,5 +338,20 @@ public class LoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mShareAPI.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //友盟统计：Activity自己实现的页面需要这样写(不包含Fragment)
+        MobclickAgent.onPageStart(getString(R.string.login));//统计页面
+        MobclickAgent.onResume(this);//统计时长
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.login));//统计页面
+        MobclickAgent.onPause(this);//统计时长
     }
 }

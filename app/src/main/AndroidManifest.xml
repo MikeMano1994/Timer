@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tryking.EasyList">
 
-    <!-- 友盟申请权限 -->
+    <!-- 友盟统计相关（友盟三方登陆分享有的已经删除） -->
+    <uses-sdk android:minSdkVersion="4" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- 友盟三方登陆分享申请权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -44,21 +48,17 @@
             android:label="@string/add_event"
             android:theme="@style/AppTheme.Float"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".test.TestActivity" />
+        <activity android:name=".z_test.TestActivity" />
+        <activity
+            android:name=".z_disuse.ViewHistoryActivity"
+            android:label="@string/view_history"
+            android:theme="@style/AppTheme.Float" />
         <activity
             android:name=".activity.ViewHistoryActivity"
             android:label="@string/view_history"
             android:theme="@style/AppTheme.Float" />
         <activity
-            android:name="._activity._ViewHistoryActivity"
-            android:label="@string/view_history"
-            android:theme="@style/AppTheme.Float" />
-        <activity
-            android:name="._activity.ViewHistoryActivity"
-            android:label="@string/view_history"
-            android:theme="@style/AppTheme.Float" />
-        <activity
-            android:name="._activity.ViewYesterdayActivity"
+            android:name=".activity.ViewYesterdayActivity"
             android:label="@string/view_yesterday"
             android:theme="@style/AppTheme.Float" />
 
@@ -73,10 +73,10 @@
             android:label="@string/individual_center"
             android:theme="@style/AppTheme.Float" />
         <activity
-            android:name="._activity.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:label="@string/login" />
         <activity
-            android:name=".activity.LoginAndRegisterActivity"
+            android:name=".z_disuse.LoginAndRegisterActivity"
             android:label="@string/login_and_register"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".umeng.ShareActivity" />
@@ -143,6 +143,18 @@
         <!-- android:windowSoftInputMode="stateHidden|adjustResize" /> -->
         <!-- /************************************Mob短信验证****结束*********************************/ -->
 
+        <!-- 友盟统计，社会化分享里面定义了 -->
+        <!--<meta-data-->
+            <!--android:name="UMENG_APPKEY"-->
+            <!--android:value="576e40a9e0f55a5dde002e50" />-->
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${UMENG_CHANNEL_VALUE}" />
+
+        <!-- debug标记 -->
+        <meta-data
+            android:name="IS_DEBUG"
+            android:value="${IS_DEBUG}" />
     </application>
 
 </manifest>

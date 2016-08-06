@@ -6,12 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.tryking.EasyList.R;
-import com.tryking.EasyList._activity.LoginActivity;
 import com.tryking.EasyList.base.BaseActivity;
-import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
-import com.tryking.EasyList.test.TestActivity;
 import com.tryking.EasyList.utils.SPUtils;
+import com.umeng.analytics.MobclickAgent;
 
 public class LauncherActivity extends BaseActivity {
 
@@ -21,6 +19,13 @@ public class LauncherActivity extends BaseActivity {
         setContentView(R.layout.activity_launcher);
 
         mHandler.sendEmptyMessageDelayed(Constants.launchStartInit, 2000);
+        initThird();
+    }
+
+    private void initThird() {
+        /** 设置是否对日志信息进行加密, 默认false(不加密). */
+        //友盟官方文档让放在入口Activity
+        MobclickAgent.enableEncrypt(true);//6.0.0版本及以后
     }
 
     Handler mHandler = new Handler() {
@@ -44,5 +49,20 @@ public class LauncherActivity extends BaseActivity {
 //            startActivity(new Intent(LauncherActivity.this, TestActivity.class));
         }
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //友盟统计：Activity自己实现的页面需要这样写
+        MobclickAgent.onPageStart(getString(R.string.launcher));//统计页面
+        MobclickAgent.onResume(this);//统计时长
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.launcher));//统计页面
+        MobclickAgent.onPause(this);//统计时长
     }
 }

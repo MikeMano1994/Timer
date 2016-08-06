@@ -1,4 +1,4 @@
-package com.tryking.EasyList._fragment.viewhistory;
+package com.tryking.EasyList.z_disuse;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,11 +12,11 @@ import com.tryking.EasyList.R;
 /**
  * Created by 26011 on 2016/7/27.
  */
-public class AllFragment extends Fragment {
+public class WeekFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_viewhistory_all, container, false);
+        View view = inflater.inflate(R.layout.fragment_viewhistory_week, container, false);
         return view;
     }
 }

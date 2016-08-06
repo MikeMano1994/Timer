@@ -1,4 +1,4 @@
-package com.tryking.EasyList.test;
+package com.tryking.EasyList.z_test;
 
 
 import android.support.v4.util.Pair;

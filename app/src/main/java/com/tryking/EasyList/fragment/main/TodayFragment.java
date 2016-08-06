@@ -56,6 +56,7 @@ import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.CommonDialog;
 import com.tryking.EasyList.widgets.CountDownTextView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -239,11 +240,6 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         super.onActivityCreated(savedInstanceState);
         initViews();
         initDatas();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     private void initDatas() {
@@ -616,4 +612,15 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         }
 
     };
+
+    //友盟统计：由Activity和Fragment构成的页面需要这样写
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(getString(R.string.main_today));
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.main_today));
+    }
 }

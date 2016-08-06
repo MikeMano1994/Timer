@@ -1,4 +1,4 @@
-package com.tryking.EasyList._fragment.viewhistory;
+package com.tryking.EasyList.fragment.viewhistory;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.NinePatchDrawable;
@@ -26,6 +26,7 @@ import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryGroupData;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewMonthReturnBean;
 import com.tryking.EasyList.adapter.viewhistory.ViewHistoryExpandableAdapter;
 import com.tryking.EasyList.utils.CommonUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ import butterknife.ButterKnife;
  * Created by 26011 on 2016/8/3.
  */
 @SuppressLint("ValidFragment")
-public class _ViewHistoryFragment extends Fragment implements RecyclerViewExpandableItemManager.OnGroupCollapseListener,
+public class ViewHistoryFragment extends Fragment implements RecyclerViewExpandableItemManager.OnGroupCollapseListener,
         RecyclerViewExpandableItemManager.OnGroupExpandListener {
 
     @Bind(R.id.recycler_view)
@@ -59,7 +60,7 @@ public class _ViewHistoryFragment extends Fragment implements RecyclerViewExpand
      * @param viewMonthReturnBean
      */
     @SuppressLint("ValidFragment")
-    public _ViewHistoryFragment(ViewMonthReturnBean viewMonthReturnBean) {
+    public ViewHistoryFragment(ViewMonthReturnBean viewMonthReturnBean) {
         mViewMonthReturnBean = viewMonthReturnBean;
     }
 
@@ -189,5 +190,16 @@ public class _ViewHistoryFragment extends Fragment implements RecyclerViewExpand
 
     private boolean supportsViewElevation() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
+    }
+
+    //友盟统计：由Activity和Fragment构成的页面需要这样写
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(getString(R.string.view_history));
+    }
+
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.view_history));
     }
 }

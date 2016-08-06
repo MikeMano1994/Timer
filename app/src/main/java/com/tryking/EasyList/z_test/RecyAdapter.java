@@ -1,4 +1,4 @@
-package com.tryking.EasyList.test;
+package com.tryking.EasyList.z_test;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

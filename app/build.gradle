@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
@@ -9,26 +13,79 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
+
+        // dex突破65535的限制
+        multiDexEnabled true
+
+        manifestPlaceholders = [IS_DEBUG: "yes"]
+    }
+
+    signingConfigs {
+        debug {
+            // No debug config
+        }
+
+        release {
+            storeFile file("../yourapp.keystore")
+            storePassword "your password"
+            keyAlias "your alias"
+            keyPassword "your password"
+        }
     }
 
 
     buildTypes {
         release {
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
             //debug标记
             manifestPlaceholders = [IS_DEBUG: "no"]
 
-            minifyEnabled false
+            minifyEnabled true
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称为boohee_v1.0_2015-01-15_wandoujia.apk
+                        def fileName = "boohee_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
         }
 
-        dubug {
-//            signingConfig signingConfigs.release
+        debug {
+            signingConfig signingConfigs.debug
 
             //debug标记
             manifestPlaceholders = [IS_DEBUG: "yes"]
+
+            // 友盟统计：默认是umeng的渠道
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "_Debug"]
         }
+    }
+
+    // 友盟多渠道打包
+    productFlavors {
+        _Debug {}
+        wandoujia {}
+        _360 {}
+        baidu {}
+        xiaomi {}
+        tencent {}
+        taobao {}
+    }
+
+    productFlavors.all { flavor ->
+        flavor.manifestPlaceholders = [UMENG_CHANNEL_VALUE: name]
     }
 
     repositories {
@@ -75,8 +132,10 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     //    compile 'com.android.support:multidex:1.0.1'
-
+    /* 可展开RecyclerView */
     compile('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.9.3@aar') {
         transitive = true
     }
+    /* U盟统计 */
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }

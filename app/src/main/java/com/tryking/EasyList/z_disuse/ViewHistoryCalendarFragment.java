@@ -1,4 +1,4 @@
-package com.tryking.EasyList.fragment.viewhistory;
+package com.tryking.EasyList.z_disuse;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

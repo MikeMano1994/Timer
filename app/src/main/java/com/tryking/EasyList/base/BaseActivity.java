@@ -7,6 +7,7 @@ import android.view.Window;
 import com.android.volley.Request;
 import com.tryking.EasyList.utils.ActivityUtils;
 import com.tryking.EasyList.widgets.LoadingDialog;
+import com.umeng.analytics.MobclickAgent;
 
 public class BaseActivity extends AppCompatActivity {
     private LoadingDialog loadingDialog;
@@ -16,11 +17,6 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityUtils.getInstance().addActivity(this);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     public <T> void addToRequestQueue(Request<T> req) {

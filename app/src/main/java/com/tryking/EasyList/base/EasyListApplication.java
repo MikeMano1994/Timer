@@ -12,6 +12,7 @@ import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.StringUtil;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.PlatformConfig;
 
 import java.text.SimpleDateFormat;
@@ -79,6 +80,14 @@ public class EasyListApplication extends Application {
         //SMSSDK一初始化就报错，应该是和别的三方冲突，和Fresco也冲突。（貌似只有5.1版本的手机才有错）
 //        SMSSDK.initSDK(getApplicationContext(),Constants.THIRD_MOB_APP_KEY,Constants.THIRD_MOB_APP_SECRET);
         initUMeng();
+
+        //U盟统计集成测试
+        MobclickAgent.setDebugMode(true);
+        //友盟统计（因为包含Fragment，所以需要自己做处理）
+        MobclickAgent.openActivityDurationTrack(false);
+        //开启友盟异常捕获上传
+        MobclickAgent.setCatchUncaughtExceptions(true);
+        // TODO: 2016/8/6 http://dev.umeng.com/analytics/android-doc/integration 5友盟社交统计没有集成
     }
 
     /*

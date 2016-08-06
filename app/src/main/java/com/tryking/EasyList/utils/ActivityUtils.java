@@ -2,6 +2,8 @@ package com.tryking.EasyList.utils;
 
 import android.app.Activity;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,6 +47,7 @@ public class ActivityUtils {
                 ) {
             activity.finish();
         }
+        // TODO: 2016/8/6   如果开发者调用Process.kill或者System.exit之类的方法杀死进程，请务必在此之前调用MobclickAgent.onKillProcess(Context context)方法，用来保存统计数据。
         System.exit(0);
         //杀死当前的进程
         android.os.Process.killProcess(android.os.Process.myPid());
