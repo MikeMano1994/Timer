@@ -19,9 +19,9 @@ import com.android.volley.VolleyError;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewMonthReturnBean;
-import com.tryking.EasyList.fragment.viewhistory.ViewHistoryFragment;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
+import com.tryking.EasyList.fragment.viewhistory.ViewHistoryFragment;
 import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.global.InterfaceURL;
@@ -55,6 +55,8 @@ public class ViewHistoryActivity extends BaseActivity {
     RelativeLayout showNoNet;
     @Bind(R.id.show_server_error)
     RelativeLayout showServerError;
+    @Bind(R.id.show_no_data)
+    RelativeLayout showNoData;
     @Bind(R.id.show_no_content)
     RelativeLayout showNoContent;
 
@@ -132,7 +134,7 @@ public class ViewHistoryActivity extends BaseActivity {
                     ViewMonthReturnBean viewMonthReturnBean = (ViewMonthReturnBean) msg.obj;
                     if (viewMonthReturnBean.getMonthEvents() == null || viewMonthReturnBean.getMonthEvents().equals("")) {
                         manager.beginTransaction().hide(viewHistoryFragment).commit();
-                        showView(showNoContent);
+                        showView(showNoData);
                     } else {
                         hideAbnormalViews();
                         FragmentTransaction transaction = manager.beginTransaction();
@@ -163,7 +165,7 @@ public class ViewHistoryActivity extends BaseActivity {
     把异常的view全部隐藏
      */
     private void hideAbnormalViews() {
-        showNoContent.setVisibility(View.GONE);
+        showNoData.setVisibility(View.GONE);
         showNoNet.setVisibility(View.GONE);
         showServerError.setVisibility(View.GONE);
     }
@@ -175,17 +177,26 @@ public class ViewHistoryActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.show_no_content:
                 showNoContent.setVisibility(View.VISIBLE);
+                showNoData.setVisibility(View.GONE);
                 showNoNet.setVisibility(View.GONE);
                 showServerError.setVisibility(View.GONE);
                 break;
+            case R.id.show_no_data:
+                showNoData.setVisibility(View.VISIBLE);
+                showNoNet.setVisibility(View.GONE);
+                showServerError.setVisibility(View.GONE);
+                showNoContent.setVisibility(View.GONE);
+                break;
             case R.id.show_no_net:
                 showNoNet.setVisibility(View.VISIBLE);
-                showNoContent.setVisibility(View.GONE);
+                showNoData.setVisibility(View.GONE);
                 showServerError.setVisibility(View.GONE);
+                showNoContent.setVisibility(View.GONE);
                 break;
             case R.id.show_server_error:
                 showServerError.setVisibility(View.VISIBLE);
                 showNoNet.setVisibility(View.GONE);
+                showNoData.setVisibility(View.GONE);
                 showNoContent.setVisibility(View.GONE);
                 break;
             default:
@@ -207,7 +218,6 @@ public class ViewHistoryActivity extends BaseActivity {
         JsonBeanRequest<ViewMonthReturnBean> monthRequest = new JsonBeanRequest<ViewMonthReturnBean>(url, params, ViewMonthReturnBean.class, new Response.Listener<ViewMonthReturnBean>() {
             @Override
             public void onResponse(ViewMonthReturnBean response) {
-                Logger.e("成功了：" + response.toString());
                 Message msg = new Message();
                 if (response.getResult().equals("1")) {
                     msg.what = Constants.ViewHistory.GET_DATA_FOR_MONTH_SUCCESS;

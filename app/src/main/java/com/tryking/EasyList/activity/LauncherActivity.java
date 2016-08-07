@@ -7,6 +7,7 @@ import android.os.Message;
 
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
+import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.SPUtils;
 import com.umeng.analytics.MobclickAgent;
@@ -17,6 +18,9 @@ public class LauncherActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+
+        //为了测试方便，穿进去memberId，不用登陆
+//        SystemInfo.getInstance(getApplicationContext()).setMemberId("6E49327D182AA31306D297B794B59EDE");
 
         mHandler.sendEmptyMessageDelayed(Constants.launchStartInit, 2000);
         initThird();

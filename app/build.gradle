@@ -17,8 +17,6 @@ android {
 
         // dex突破65535的限制
         multiDexEnabled true
-
-        manifestPlaceholders = [IS_DEBUG: "yes"]
     }
 
     signingConfigs {
@@ -67,9 +65,6 @@ android {
 
             //debug标记
             manifestPlaceholders = [IS_DEBUG: "yes"]
-
-            // 友盟统计：默认是umeng的渠道
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "_Debug"]
         }
     }
 

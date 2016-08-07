@@ -62,10 +62,12 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     RelativeLayout showNoNet;
     @Bind(R.id.show_server_error)
     RelativeLayout showServerError;
-    @Bind(R.id.show_no_content)
-    RelativeLayout showNoContent;
+    @Bind(R.id.show_no_data)
+    RelativeLayout showNoData;
     @Bind(R.id.bt_reLoad)
     Button btReLoad;
+    @Bind(R.id.show_no_content)
+    RelativeLayout showNoContent;
 
     private List<TodayEventData> mDatas;
     private String startTimes;
@@ -100,11 +102,17 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     }
 
     private void init() {
+        showView(showNoContent);
         initToolBar();
         startTimes = "";
         endTimes = "";
         eventTypes = "";
         specificEvents = new HashMap<>();
+        mDatas = new ArrayList<>();
+        mainContent.setLayoutManager(new LinearLayoutManager(ViewYesterdayActivity.this));
+        adapterWithHeader = new DayEventAdapterWithHeader(ViewYesterdayActivity.this, mDatas, false);
+        adapterWithHeader.setOnHaveEventItemLongClickListener(this);
+        mainContent.setAdapter(adapterWithHeader);
         getYesterdayDataFromServer();
     }
 
@@ -187,7 +195,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                 case Constants.ViewYesterday.GET_YESTERDAY_DATA_SUCCESS:
                     DayEventReturnBean dayEventBean = (DayEventReturnBean) msg.obj;
                     if (dayEventBean == null || dayEventBean.getEventList() == null) {
-                        showView(showNoContent);
+                        showView(showNoData);
                     } else {
                         hideAbnormalViews();
                         List<Event> eventList = dayEventBean.getEventList();
@@ -222,19 +230,29 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
         switch (view.getId()) {
             case R.id.show_no_content:
                 showNoContent.setVisibility(View.VISIBLE);
+                showNoData.setVisibility(View.GONE);
                 showNoNet.setVisibility(View.GONE);
                 showServerError.setVisibility(View.GONE);
                 showContent.setVisibility(View.GONE);
                 break;
+            case R.id.show_no_data:
+                showNoData.setVisibility(View.VISIBLE);
+                showNoNet.setVisibility(View.GONE);
+                showServerError.setVisibility(View.GONE);
+                showNoContent.setVisibility(View.GONE);
+                showContent.setVisibility(View.GONE);
+                break;
             case R.id.show_no_net:
                 showNoNet.setVisibility(View.VISIBLE);
-                showNoContent.setVisibility(View.GONE);
+                showNoData.setVisibility(View.GONE);
                 showServerError.setVisibility(View.GONE);
+                showNoContent.setVisibility(View.GONE);
                 showContent.setVisibility(View.GONE);
                 break;
             case R.id.show_server_error:
                 showServerError.setVisibility(View.VISIBLE);
                 showNoNet.setVisibility(View.GONE);
+                showNoData.setVisibility(View.GONE);
                 showNoContent.setVisibility(View.GONE);
                 showContent.setVisibility(View.GONE);
                 break;
@@ -248,13 +266,13 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
         */
     private void hideAbnormalViews() {
         showNoContent.setVisibility(View.GONE);
+        showNoData.setVisibility(View.GONE);
         showNoNet.setVisibility(View.GONE);
         showServerError.setVisibility(View.GONE);
         showContent.setVisibility(View.VISIBLE);
     }
 
     private void initView(List<Event> eventList) {
-        mDatas = new ArrayList<>();
         for (int i = 0; i < eventList.size(); i++) {
             TodayEventData todayEventData = new TodayEventData(Integer.parseInt(eventList.get(i).getEventtypes()), eventList.get(i).getStarttime(),
                     eventList.get(i).getEndtime(), eventList.get(i).getRecord());
@@ -270,11 +288,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
             specificEvents.put(eventList.get(i).getStarttime(), eventList.get(i).getRecord());
             mDatas.add(todayEventData);
         }
-        mainContent.setLayoutManager(new LinearLayoutManager(ViewYesterdayActivity.this));
-        adapterWithHeader = new DayEventAdapterWithHeader(ViewYesterdayActivity.this, mDatas, false);
-        adapterWithHeader.setOnHaveEventItemLongClickListener(this);
-        mainContent.setAdapter(adapterWithHeader);
-//        Logger.e("old:" + specificEvents.toString());
+        adapterWithHeader.refresh(mDatas);
     }
 
     public Map<String, String> sortMapByKey(Map<String, String> oriMap) {
@@ -370,7 +384,9 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                 }
             }
         }
+        Logger.e("到这里了。。。");
         adapterWithHeader.refresh(mDatas);
+        hideAbnormalViews();
     }
 
     /*
@@ -491,7 +507,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-              
+
             }
         });
         addToRequestQueue(changeDataRequest);

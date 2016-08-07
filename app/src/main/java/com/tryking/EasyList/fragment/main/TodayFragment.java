@@ -247,6 +247,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         tvAwoke.setTextPreTime("今天还可以和时间做朋友：");
         tvAwoke.setIntervalTime(intervalTime, true);
 
+        Logger.e("当前用户：" + SystemInfo.getInstance(getContext()).getMemberId());
         //如果是试用账户就不上传服务器
         isTryOutAccount = SystemInfo.getInstance(getContext()).getMemberId().equals(Constants.TRY_OUT_ACCOUNT)
                 || SystemInfo.getInstance(getContext()).getMemberId().equals("") ? true : false;
@@ -292,6 +293,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         Logger.e("开始改变数据" + params.toString());
 
         String url = InterfaceURL.changeData;
+        Logger.e(url);
         JsonBeanRequest<ChangeDataReturnBean> changeDataRequest = new JsonBeanRequest<>(url, params, ChangeDataReturnBean.class, new Response.Listener<ChangeDataReturnBean>() {
             @Override
             public void onResponse(ChangeDataReturnBean response) {

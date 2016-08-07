@@ -3,6 +3,7 @@ package com.tryking.EasyList.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList.utils.AppUtils;
@@ -63,11 +65,14 @@ public class DayEventAdapterWithHeader extends RecyclerView.Adapter<RecyclerView
         mInflater = LayoutInflater.from(ctx);
         mCtx = ctx;
         isNeedAnim = needAnim;
-
         handleData(data);
     }
 
     private void handleData(List<TodayEventData> datas) {
+        workTime = 0;
+        amuseTime = 0;
+        lifeTime = 0;
+        studyTime = 0;
         for (int i = 0; i < datas.size(); i++) {
             switch (datas.get(i).getDataType()) {
                 case TodayEventData.TYPE_WORK:
@@ -87,6 +92,9 @@ public class DayEventAdapterWithHeader extends RecyclerView.Adapter<RecyclerView
             }
         }
         float[] eventData = new float[]{workTime, amuseTime, lifeTime, studyTime};
+        for (int i = 0; i < eventData.length; i++) {
+            Logger.e("数据：" + eventData[i]);
+        }
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
@@ -347,6 +355,7 @@ public class DayEventAdapterWithHeader extends RecyclerView.Adapter<RecyclerView
 
     public void refresh(List<TodayEventData> data) {
         mData = data;
+        handleData(mData);
         notifyDataSetChanged();
     }
 
