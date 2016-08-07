@@ -92,9 +92,6 @@ public class DayEventAdapterWithHeader extends RecyclerView.Adapter<RecyclerView
             }
         }
         float[] eventData = new float[]{workTime, amuseTime, lifeTime, studyTime};
-        for (int i = 0; i < eventData.length; i++) {
-            Logger.e("数据：" + eventData[i]);
-        }
         ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of

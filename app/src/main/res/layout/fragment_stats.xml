@@ -63,7 +63,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/button_common"
-            android:text="查看更早"
+            android:text="查看更多"
             android:textColor="@color/white" />
     </RelativeLayout>
 </FrameLayout>

@@ -283,6 +283,7 @@ public class LoginActivity extends BaseActivity {
                         SystemInfo.getInstance(getApplicationContext()).setSinaName(login.getUser().getSinaname());
                         SystemInfo.getInstance(getApplicationContext()).setSignature(login.getUser().getSignature());
                         SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(portraitUrl);
+                        SPUtils.put(getApplicationContext(), Constants.SP_TODAY_ONE_WORD, login.getDayEvent().getOneWord());
                     } else {
                         SystemInfo.getInstance(getApplicationContext()).setMemberId(login.getUser().getMemberid());
                         SystemInfo.getInstance(getApplicationContext()).setAccount(login.getUser().getAccount());

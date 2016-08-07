@@ -1,5 +1,6 @@
 package com.tryking.EasyList.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,8 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -35,6 +39,7 @@ import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.CommonDialog;
 import com.umeng.analytics.MobclickAgent;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -68,6 +73,8 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     Button btReLoad;
     @Bind(R.id.show_no_content)
     RelativeLayout showNoContent;
+    @Bind(R.id.add_one_word)
+    ImageView addOneWord;
 
     private List<TodayEventData> mDatas;
     private String startTimes;
@@ -76,6 +83,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     private String speEvents;
     private HashMap<String, String> specificEvents;
     private DayEventAdapterWithHeader adapterWithHeader;
+    private boolean isEdit = false;
 
 
     @Override
@@ -87,14 +95,29 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
         init();
     }
 
-    @OnClick({R.id.bt_reLoad, R.id.et_one_word})
+    @OnClick({R.id.bt_reLoad, R.id.add_one_word})
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_reLoad:
                 getYesterdayDataFromServer();
                 break;
-            case R.id.tv_one_word:
-                TT.showShort(this, "我要修改");
+            case R.id.add_one_word:
+                if (isEdit) {
+                    addOneWord.setImageDrawable(getResources().getDrawable(R.drawable.ic_edit_primary_dark_18dp));
+                    etOneWord.setEnabled(false);
+                    isEdit = false;
+                    if (!etOneWord.getText().toString().equals("")) {
+                        addOneWordToServer(etOneWord.getText().toString());
+                    }
+                } else {
+                    addOneWord.setImageDrawable(getResources().getDrawable(R.drawable.ic_done_primary_dark_24dp));
+                    etOneWord.setEnabled(true);
+                    etOneWord.setFocusable(true);
+                    etOneWord.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) etOneWord.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+                    isEdit = true;
+                }
                 break;
             default:
                 break;
@@ -199,6 +222,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                     } else {
                         hideAbnormalViews();
                         List<Event> eventList = dayEventBean.getEventList();
+                        Logger.e("OneWord:" + dayEventBean.getOneWord());
                         if (dayEventBean.getOneWord() != null && !dayEventBean.getOneWord().equals("")) {
                             etOneWord.setText(dayEventBean.getOneWord());
                         }
@@ -491,8 +515,6 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     将每日一句上传到服务器
      */
     private void addOneWordToServer(String oneWord) {
-        // TODO: 2016/8/5 接口调试成功，完成后续动作
-        showLoadingDialog();
         Map<String, String> params = new HashMap<>();
         params.put("memberId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
         params.put("date", CommonUtils.getPreviousDay((String) SPUtils.get(getApplicationContext(), ApplicationGlobal.CURRENT_DATE, ""), -1));
@@ -516,7 +538,6 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        addOneWordToServer(etOneWord.getText().toString());
     }
 
     @Override

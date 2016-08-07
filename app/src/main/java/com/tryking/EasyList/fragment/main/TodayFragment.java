@@ -11,21 +11,18 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,7 +38,6 @@ import com.tryking.EasyList._bean.changeEventBean.TransferData;
 import com.tryking.EasyList.activity.AddActivity;
 import com.tryking.EasyList.adapter.TodayEventAdapter;
 import com.tryking.EasyList.base.BaseFragment;
-import com.tryking.EasyList.base.EasyListApplication;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
@@ -73,7 +69,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class TodayFragment extends BaseFragment implements TodayEventAdapter.onNoEventItemClickListener, TodayEventAdapter.onHaveEventItemClickListener, TodayEventAdapter.onHaveEventItemLongClickListener {
+public class TodayFragment extends BaseFragment implements TodayEventAdapter.onHaveEventItemLongClickListener {
     @Bind(R.id.event_content)
     RecyclerView eventContent;
     @Bind(R.id.actionButton)
@@ -84,6 +80,11 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
     LinearLayout hint;
     @Bind(R.id.tv_one_word)
     TextView tvOneWord;
+    @Bind(R.id.add_one_word)
+    ImageView addOneWord;
+    @Bind(R.id.ll_one_word)
+    LinearLayout llOneWord;
+
 
     private TodayEventAdapter todayEventAdapter;
     private static final int REQUEST_ADD_CODE = 0;//添加事项请求吗
@@ -96,7 +97,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
     private boolean isShowNetDisable = false;
     private boolean isShowServerDisable = false;
 
-    @OnClick({R.id.actionButton, R.id.tv_one_word})
+    @OnClick({R.id.actionButton, R.id.add_one_word})
     void click(View view) {
         switch (view.getId()) {
             case R.id.actionButton:
@@ -110,7 +111,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
 //                ActivityCompat.startActivityForResult(getActivity(), intent, REQUEST_ADD_CODE, options.toBundle());
                 startActivityForResult(new Intent(getActivity(), AddActivity.class), REQUEST_ADD_CODE);
                 break;
-            case R.id.tv_one_word:
+            case R.id.add_one_word:
                 View oneWord = LayoutInflater.from(getContext()).inflate(R.layout.add_one_word, null);
                 etOneWord = (EditText) oneWord.findViewById(R.id.et_one_word);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
@@ -140,9 +141,11 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                tvOneWord.setText(etOneWord.getText().toString());
-                // TODO: 2016/7/31 上传服务器
-                addOneWordToServer(etOneWord.getText().toString());
+                if (!etOneWord.getText().toString().equals("")) {
+                    tvOneWord.setText(etOneWord.getText().toString());
+                    addOneWordToServer(etOneWord.getText().toString());
+                    SPUtils.put(getActivity(), Constants.SP_TODAY_ONE_WORD, etOneWord.getText().toString());
+                }
             }
         })
                 .setNegativeButton("取消", null);
@@ -152,8 +155,6 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
     将每日一句上传到服务器
      */
     private void addOneWordToServer(String oneWord) {
-        // TODO: 2016/8/5 接口调试成功，完成后续动作
-        showLoadingDialog();
         Map<String, String> params = new HashMap<>();
         params.put("memberId", SystemInfo.getInstance(getActivity()).getMemberId());
         params.put("date", (String) SPUtils.get(getActivity(), ApplicationGlobal.CURRENT_DATE, ""));
@@ -256,6 +257,8 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         String endTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.END_TIMES, "");
         String eventTypes = (String) SPUtils.get(getActivity(), ApplicationGlobal.EVENT_TYPES, "");
 
+        String oneWord = (String) SPUtils.get(getActivity(), Constants.SP_TODAY_ONE_WORD, "");
+
         transferData = new TransferData();
         transferData.setStartTimes(startTimes);
         transferData.setEndTimes(endTimes);
@@ -274,15 +277,16 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
             }
         }
         refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
-        if (!isTryOutAccount)
-            changeDataToServer();
+
+        if (oneWord != null && !oneWord.equals("")) {
+            tvOneWord.setText(oneWord);
+        }
     }
 
     /*
     向服务器发送数据
      */
     private void changeDataToServer() {
-//        showLoadingDialog();
         Map<String, String> params = new HashMap<>();
         params.put("memberId", SystemInfo.getInstance(getActivity()).getMemberId());
         params.put("date", (String) SPUtils.get(getActivity(), ApplicationGlobal.CURRENT_DATE, ""));
@@ -293,7 +297,6 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         Logger.e("开始改变数据" + params.toString());
 
         String url = InterfaceURL.changeData;
-        Logger.e(url);
         JsonBeanRequest<ChangeDataReturnBean> changeDataRequest = new JsonBeanRequest<>(url, params, ChangeDataReturnBean.class, new Response.Listener<ChangeDataReturnBean>() {
             @Override
             public void onResponse(ChangeDataReturnBean response) {
@@ -405,8 +408,6 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
     private void initViews() {
         mQueue = Volley.newRequestQueue(getActivity());
         todayEventAdapter = new TodayEventAdapter(new WeakReference<Context>(getActivity()), getActivity(), todayEventDatas);
-        todayEventAdapter.setOnNoEventItemClickListener(this);
-        todayEventAdapter.setOnHaveEventItemClickListener(this);
         todayEventAdapter.setOnHaveEventItemLongClickListener(this);
         eventContent.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        eventContent.addItemDecoration(new MyItemDividerDecoration(getActivity(), MyItemDividerDecoration.VERTICAL_LIST));
@@ -432,17 +433,6 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         return null;
     }
 
-    @Override
-    public void onHaveEventItemClick(int position, String hint) {
-//        TT.showShort(getActivity(), "我有事件" + position + ":" + hint);
-//        startActivity(new Intent(getActivity(), TestActivity.class));
-    }
-
-    @Override
-    public void onNoEventItemClick(int position, String hint) {
-//        TT.showShort(getActivity(), "我没事件" + position + ":" + hint);
-    }
-
 
     @Override
     public void onHaveEventItemLongClick(int position, final String startTime, final String endTime) {
@@ -451,12 +441,9 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                TT.showShort(getActivity(), "删除啦");
                         String startTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.START_TIMES, "");
                         String endTimes = (String) SPUtils.get(getActivity(), ApplicationGlobal.END_TIMES, "");
                         String eventTypes = (String) SPUtils.get(getActivity(), ApplicationGlobal.EVENT_TYPES, "");
-//                Logger.e("old::" + startTimes + "::" + endTimes + "::type::" + eventTypes);
-//                Logger.e(startTime + "start::end::" + endTime);
 
                         //替换字符串的一种方式
 //                Pattern compileStart = Pattern.compile(startTimes);
@@ -486,7 +473,6 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                                 newTypes = newTypes.replaceFirst(",", "");
                             }
                         }
-//                Logger.e("news::" + newStarts + "::" + newEnds + ":::" + newTypes);
                         SPUtils.put(getActivity(), ApplicationGlobal.START_TIMES, newStarts);
                         SPUtils.put(getActivity(), ApplicationGlobal.END_TIMES, newEnds);
                         SPUtils.put(getActivity(), ApplicationGlobal.EVENT_TYPES, newTypes);
@@ -573,7 +559,6 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            dismissLoadingDialog();
             switch (msg.what) {
                 case Constants.ChangeData.changeSuccess:
                     ChangeDataReturnBean changeBean = (ChangeDataReturnBean) msg.obj;
@@ -600,12 +585,14 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onN
                 case Constants.requestException:
                     if (msg.obj != null && msg.obj.toString().contains("java.net.ConnectException")) {
                         if (!isShowNetDisable) {
+                            //这种错误只在用户启动的时候显示一遍
                             TT.showShort(getContext(), "检测到网络异常，数据无法同步");
                             isShowNetDisable = true;
                         }
                     } else {
                         if (!isShowServerDisable) {
-                            TT.showShort(getContext(), "服务器开小差啦～");
+                            //这种错误只在用户启动的时候显示一遍
+                            TT.showShort(getContext(), "服务器开小差啦~");
                             isShowServerDisable = true;
                         }
                     }

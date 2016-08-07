@@ -122,7 +122,8 @@ public class ViewHistoryFragment extends Fragment implements RecyclerViewExpanda
 //        }
 
         for (int i = 0; i < mViewMonthReturnBean.getMonthEvents().size(); i++) {
-            ViewHistoryGroupData viewHistoryGroupData = new ViewHistoryGroupData(CommonUtils.addZitoDate(mViewMonthReturnBean.getMonthEvents().get(i).getDate()), "", i);
+            ViewHistoryGroupData viewHistoryGroupData = new ViewHistoryGroupData(CommonUtils.addZitoDate(
+                    mViewMonthReturnBean.getMonthEvents().get(i).getDate()), mViewMonthReturnBean.getMonthEvents().get(i).getOneWord(), i);
             mGroupDatas.add(viewHistoryGroupData);
             ArrayList<ViewHistoryChildData> childDatas = new ArrayList<>();
             for (int j = 0; j < mViewMonthReturnBean.getMonthEvents().get(i).getEventList().size(); j++) {
