@@ -20,6 +20,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.activity.LoginActivity;
 import com.tryking.EasyList.activity.PIMSActivity;
+import com.tryking.EasyList.activity.about_easylist.AboutEasyListActivity;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.marqueeView.MarqueeView;
@@ -39,8 +40,8 @@ public class IcFragment extends Fragment {
 
     @Bind(R.id.head_portrait)
     ImageView headPortrait;
-    @Bind(R.id.aboutUs)
-    LinearLayout aboutUs;
+    @Bind(R.id.aboutEasyList)
+    LinearLayout aboutEasyList;
     @Bind(R.id.ll_PIM)
     LinearLayout llPIM;
     @Bind(R.id.ic_account)
@@ -63,11 +64,11 @@ public class IcFragment extends Fragment {
         return inflate;
     }
 
-    @OnClick({R.id.aboutUs, R.id.ll_PIM, R.id.account_setting, R.id.common_setting, R.id.recommend})
+    @OnClick({R.id.aboutEasyList, R.id.ll_PIM, R.id.account_setting, R.id.common_setting, R.id.recommend})
     void click(View v) {
         switch (v.getId()) {
-            case R.id.aboutUs:
-                TT.showShort(getActivity(), "关于我们，正在开发...");
+            case R.id.aboutEasyList:
+                startActivity(new Intent(getActivity(), AboutEasyListActivity.class));
                 break;
             case R.id.ll_PIM:
                 if (SystemInfo.getInstance(getContext()).isLogin()) {

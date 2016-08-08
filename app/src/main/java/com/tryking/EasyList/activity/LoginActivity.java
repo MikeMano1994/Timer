@@ -172,7 +172,7 @@ public class LoginActivity extends BaseActivity {
             switch (share_media) {
                 case QQ:
                     //友盟统计账号来源
-                    MobclickAgent.onProfileSignIn("QQ", map.get("openid"));
+                    MobclickAgent.onProfileSignIn("QQ", map.get("screen_name"));
                     //这里先不要设置，防止用户没有经过服务器验证直接登录成功
 //                    SystemInfo.getInstance(getApplicationContext()).setQQ(map.get("openid"));
 //                    SystemInfo.getInstance(getApplicationContext()).setQQName(map.get("screen_name"));
@@ -190,7 +190,7 @@ public class LoginActivity extends BaseActivity {
                         sinaUserInfo = new JSONObject(result);
 
                         //友盟统计账号来源
-                        MobclickAgent.onProfileSignIn("SinaWeibo", String.valueOf(sinaUserInfo.get("idstr")));
+                        MobclickAgent.onProfileSignIn("SinaWeibo", String.valueOf(sinaUserInfo.get("screen_name")));
                         //这里先不要设置，防止用户没有经过服务器验证直接登录成功
 //                        SystemInfo.getInstance(getApplicationContext()).setSina((String) sinaUserInfo.get("idstr"));
 //                        SystemInfo.getInstance(getApplicationContext()).setMemberId((String) sinaUserInfo.get("idstr"));
@@ -293,6 +293,7 @@ public class LoginActivity extends BaseActivity {
                         SystemInfo.getInstance(getApplicationContext()).setSinaName(login.getUser().getSinaname());
                         SystemInfo.getInstance(getApplicationContext()).setSignature(login.getUser().getSignature());
                         SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(portraitUrl);
+                        SPUtils.put(getApplicationContext(), Constants.SP_TODAY_ONE_WORD, login.getDayEvent().getOneWord());
                     }
                     List<Event> eventList = login.getDayEvent().getEventList();
                     String startTimes = "";

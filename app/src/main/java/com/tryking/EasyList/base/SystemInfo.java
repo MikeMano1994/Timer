@@ -145,14 +145,15 @@ public class SystemInfo {
         //账户登出，要把本地的信息置为空。用户登录的时候从服务端拿到数据写入本地
         String startTimes = (String) SPUtils.get(mContext, "startTimes", "");
         String[] starts = CommonUtils.convertStrToArray(startTimes);
-        
+
         //把存储的事件的key删除
         for (int i = 0; i < starts.length; i++) {
             SPUtils.remove(mContext, starts[i]);
         }
 
-        SPUtils.put(mContext, "startTimes", "");
-        SPUtils.put(mContext, "endTimes", "");
-        SPUtils.put(mContext, "eventTypes", "");
+        SPUtils.put(mContext, ApplicationGlobal.START_TIMES, "");
+        SPUtils.put(mContext, ApplicationGlobal.END_TIMES, "");
+        SPUtils.put(mContext, ApplicationGlobal.EVENT_TYPES, "");
+        SPUtils.put(mContext, Constants.SP_TODAY_ONE_WORD, "");
     }
 }

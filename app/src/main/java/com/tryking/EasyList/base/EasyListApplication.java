@@ -68,6 +68,7 @@ public class EasyListApplication extends Application {
             SPUtils.put(getApplicationContext(), ApplicationGlobal.END_TIMES, "");
             SPUtils.put(getApplicationContext(), ApplicationGlobal.EVENT_TYPES, "");
             SPUtils.put(getApplicationContext(), ApplicationGlobal.CURRENT_DATE, currentDate);
+            SPUtils.put(getApplicationContext(), Constants.SP_TODAY_ONE_WORD, "");
         }
     }
 

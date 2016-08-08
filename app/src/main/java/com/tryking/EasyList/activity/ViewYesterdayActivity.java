@@ -84,6 +84,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     private HashMap<String, String> specificEvents;
     private DayEventAdapterWithHeader adapterWithHeader;
     private boolean isEdit = false;
+    private boolean isAllowAdd = false;
 
 
     @Override
@@ -157,14 +158,17 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_add:
-                        Intent intent = new Intent(ViewYesterdayActivity.this, AddActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString(ApplicationGlobal.START_TIMES, startTimes);
-                        bundle.putString(ApplicationGlobal.END_TIMES, endTimes);
-                        bundle.putString(ApplicationGlobal.EVENT_TYPES, eventTypes);
-                        intent.putExtra(Constants.ViewYesterday.INTENT_ARGUMENT, bundle);
-                        Logger.e("yes:" + bundle.toString());
-                        startActivityForResult(intent, Constants.ViewYesterday.REQUEST_ViewYesterday_To_Add);
+                        if (isAllowAdd) {
+                            Intent intent = new Intent(ViewYesterdayActivity.this, AddActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(ApplicationGlobal.START_TIMES, startTimes);
+                            bundle.putString(ApplicationGlobal.END_TIMES, endTimes);
+                            bundle.putString(ApplicationGlobal.EVENT_TYPES, eventTypes);
+                            intent.putExtra(Constants.ViewYesterday.INTENT_ARGUMENT, bundle);
+                            startActivityForResult(intent, Constants.ViewYesterday.REQUEST_ViewYesterday_To_Add);
+                        } else {
+                            TT.showShort(getApplicationContext(), "连接失败，不能修改昨日事件哟~");
+                        }
                         break;
                     default:
                         break;
@@ -201,7 +205,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
             public void onErrorResponse(VolleyError error) {
                 Logger.e(error.getMessage());
                 Message msg = new Message();
-                msg.what = Constants.requestException;
+                msg.what = Constants.ViewYesterday.GET_DATA_REQUEST_ERROR;
                 msg.obj = error.getMessage();
                 mHandler.sendMessage(msg);
             }
@@ -228,13 +232,21 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                         }
                         initView(eventList);
                     }
+                    //获取数据成功后，允许用户添加昨日事件
+                    isAllowAdd = true;
                     break;
                 case Constants.ViewYesterday.GET_YESTERDAY_DATA_FAILURE:
                     showView(showServerError);
                     String message = msg.obj.toString();
                     TT.showShort(getApplicationContext(), message);
                     break;
-                case Constants.requestException:
+                case Constants.ViewYesterday.CHANGE_DATA_SUCCESS:
+                    //改变昨日数据成功
+                    break;
+                case Constants.ViewYesterday.CHANGE_DATA_FAILURE:
+                    //改变昨日数据失败
+                    break;
+                case Constants.ViewYesterday.GET_DATA_REQUEST_ERROR:
                     if (msg.obj != null && msg.obj.toString().contains("java.net.ConnectException")) {
                         TT.showShort(getApplicationContext(), "网络异常");
                         showView(showNoNet);
@@ -242,6 +254,17 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                         TT.showShort(getApplicationContext(), "服务器开小差啦～");
                         showView(showServerError);
                     }
+                    break;
+                case Constants.ViewYesterday.CHANGE_DATA_REQUEST_ERROR:
+                    if (msg.obj != null && msg.obj.toString().contains("java.net.ConnectException")) {
+                        TT.showShort(getApplicationContext(), "网络异常，数据无法同步");
+                        showView(showNoNet);
+                    } else {
+                        TT.showShort(getApplicationContext(), "服务器开小差啦～数据可能无法同步");
+                        showView(showServerError);
+                    }
+                    break;
+                default:
                     break;
             }
         }
@@ -357,7 +380,6 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                 //这样加进去和上面的map顺序是不一样的。所以不能这样加，直接用上面新的就好
 //                specificEvents.clear();
 //                specificEvents.putAll(newMap);
-                Logger.e("后来的：" + newMap.toString());
                 refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
                 Set<String> keySet = newMap.keySet();
                 Iterator<String> iterator = keySet.iterator();
@@ -366,7 +388,6 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                     speEvents += newMap.get(iterator.next()) + Constants.SPLIT_SPECIFIC_EVENT_STRING;
                 }
                 speEvents = speEvents.substring(0, speEvents.length() - Constants.SPLIT_SPECIFIC_EVENT_STRING.length());
-                Logger.e("Spe:" + speEvents);
                 changeDataToServer();
             }
         }
@@ -425,7 +446,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
         params.put("endTimes", endTimes);
         params.put("eventTypes", eventTypes);
         params.put("specificEvents", speEvents);
-        Logger.e("开始改变数据" + params.toString());
+        Logger.e("开始改变昨日数据" + params.toString());
 
         String url = InterfaceURL.changeData;
         JsonBeanRequest<ChangeDataReturnBean> changeDataRequest = new JsonBeanRequest<>(url, params, ChangeDataReturnBean.class, new Response.Listener<ChangeDataReturnBean>() {
@@ -433,10 +454,10 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
             public void onResponse(ChangeDataReturnBean response) {
                 Message msg = new Message();
                 if (response.getResult().equals("1")) {
-                    msg.what = Constants.ChangeData.changeSuccess;
+                    msg.what = Constants.ViewYesterday.CHANGE_DATA_SUCCESS;
                     msg.obj = response;
                 } else {
-                    msg.what = Constants.ChangeData.changeFailure;
+                    msg.what = Constants.ViewYesterday.CHANGE_DATA_FAILURE;
                     msg.obj = response.getMsg();
                 }
                 mHandler.sendMessage(msg);
@@ -446,11 +467,9 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
             public void onErrorResponse(VolleyError error) {
                 Logger.e(error.getMessage());
                 Message msg = new Message();
-                msg.what = Constants.requestException;
+                msg.what = Constants.ViewYesterday.CHANGE_DATA_REQUEST_ERROR;
                 msg.obj = error.getMessage();
                 mHandler.sendMessage(msg);
-
-//                com.android.volley.TimeoutError
             }
         });
         addToRequestQueue(changeDataRequest);

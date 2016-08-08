@@ -15,4 +15,6 @@ public class InterfaceURL {
 
     public static final String addOneWord = ApplicationGlobal.appUrl + "addOneWord.html";
 
+    public static final String appVersion = ApplicationGlobal.appUrl + "appVersion.html";
+
 }

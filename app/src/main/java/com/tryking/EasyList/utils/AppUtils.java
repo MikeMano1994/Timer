@@ -1,6 +1,7 @@
 package com.tryking.EasyList.utils;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.view.Display;
 import android.view.WindowManager;
@@ -21,5 +22,20 @@ public class AppUtils {
         }
 
         return screenHeight;
+    }
+
+    /**
+     * 获取当前版本
+     * @param mContext
+     * @return
+     */
+    public static int getVersionCode(Context mContext) {
+        if (mContext != null) {
+            try {
+                return mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionCode;
+            } catch (PackageManager.NameNotFoundException ignored) {
+            }
+        }
+        return 0;
     }
 }

@@ -40,7 +40,8 @@ android {
             //debug标记
             manifestPlaceholders = [IS_DEBUG: "no"]
 
-            minifyEnabled true
+            //混淆
+            minifyEnabled false
             zipAlignEnabled true
             // 移除无用的resource文件
             shrinkResources true
@@ -52,8 +53,8 @@ android {
                 variant.outputs.each { output ->
                     def outputFile = output.outputFile
                     if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        // 输出apk名称为boohee_v1.0_2015-01-15_wandoujia.apk
-                        def fileName = "boohee_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                        // 输出apk名称为qingdaner_v1.0_2016-01-15_wandoujia.apk
+                        def fileName = "qingdaner_v${defaultConfig.versionName}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
                         output.outputFile = new File(outputFile.parent, fileName)
                     }
                 }
@@ -77,6 +78,7 @@ android {
         xiaomi {}
         tencent {}
         taobao {}
+        lianzhihong{}
     }
 
     productFlavors.all { flavor ->
