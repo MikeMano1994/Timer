@@ -17,4 +17,6 @@ public class InterfaceURL {
 
     public static final String appVersion = ApplicationGlobal.appUrl + "appVersion.html";
 
+    public static final String updateParam = ApplicationGlobal.appUrl + "updateParam.html";
+
 }

@@ -282,6 +282,7 @@ public class LoginActivity extends BaseActivity {
                         SystemInfo.getInstance(getApplicationContext()).setSina(login.getUser().getSina());
                         SystemInfo.getInstance(getApplicationContext()).setSinaName(login.getUser().getSinaname());
                         SystemInfo.getInstance(getApplicationContext()).setSignature(login.getUser().getSignature());
+                        SystemInfo.getInstance(getApplicationContext()).setGender(String.valueOf(login.getUser().getGender()));
                         SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(portraitUrl);
                         SPUtils.put(getApplicationContext(), Constants.SP_TODAY_ONE_WORD, login.getDayEvent().getOneWord());
                     } else {
@@ -292,6 +293,7 @@ public class LoginActivity extends BaseActivity {
                         SystemInfo.getInstance(getApplicationContext()).setSina(login.getUser().getSina());
                         SystemInfo.getInstance(getApplicationContext()).setSinaName(login.getUser().getSinaname());
                         SystemInfo.getInstance(getApplicationContext()).setSignature(login.getUser().getSignature());
+                        SystemInfo.getInstance(getApplicationContext()).setGender(String.valueOf(login.getUser().getGender()));
                         SystemInfo.getInstance(getApplicationContext()).setPortraitUrl(portraitUrl);
                         SPUtils.put(getApplicationContext(), Constants.SP_TODAY_ONE_WORD, login.getDayEvent().getOneWord());
                     }

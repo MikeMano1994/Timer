@@ -5,24 +5,40 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._bean.BaseBean;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
+import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.global.InterfaceURL;
+import com.tryking.EasyList.network.JsonBeanRequest;
+import com.tryking.EasyList.utils.SPUtils;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.utils.Log;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -59,8 +75,10 @@ public class PIMSActivity extends BaseActivity {
     @Bind(R.id.toolBarLayout)
     CollapsingToolbarLayout toolBarLayout;
 
+    TextInputEditText etSignature;
+    TextInputEditText etNickname;
 
-    @OnClick({R.id.bt_logout})
+    @OnClick({R.id.bt_logout, R.id.rl_gender, R.id.rl_signature, R.id.rl_nickName})
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_logout:
@@ -90,7 +108,174 @@ public class PIMSActivity extends BaseActivity {
                         })
                         .show();
                 break;
+            case R.id.rl_gender:
+                final CharSequence[] items = new CharSequence[]{"女", "男"};
+                boolean isMan = tvGender.getText().toString().equals("男");
+                new AlertDialog.Builder(this)
+                        .setTitle("性别")
+                        .setSingleChoiceItems(items, isMan ? 1 : 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        tvGender.setText(items[0]);
+                                        break;
+                                    case 1:
+                                        tvGender.setText(items[1]);
+                                        break;
+                                }
+                                changeGenderToServer(which);
+                                SystemInfo.getInstance(getApplicationContext()).setGender(String.valueOf(which));
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+                break;
+            case R.id.rl_signature:
+                View signature = LayoutInflater.from(PIMSActivity.this).inflate(R.layout.textview_change_signature, null);
+                etSignature = (TextInputEditText) signature.findViewById(R.id.et_signature);
+                AlertDialog.Builder builder = new AlertDialog.Builder(PIMSActivity.this)
+                        .setTitle("个性签名")
+                        .setView(signature);
+                setSignaturePosAndNegButton(builder);
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                etSignature.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    }
+                });
+                break;
+            case R.id.rl_nickName:
+                View nickName = LayoutInflater.from(PIMSActivity.this).inflate(R.layout.textview_change_nickname, null);
+                etNickname = (TextInputEditText) nickName.findViewById(R.id.et_nickname);
+                AlertDialog.Builder b = new AlertDialog.Builder(PIMSActivity.this)
+                        .setTitle("昵称")
+                        .setView(nickName);
+                setNickNamePosAndNegButton(b);
+                final AlertDialog nameDialog = b.create();
+                nameDialog.show();
+                etNickname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        nameDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    }
+                });
+            default:
+                break;
         }
+    }
+
+    private void setNickNamePosAndNegButton(AlertDialog.Builder builder) {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (!etNickname.getText().toString().equals("")) {
+                    tvNickName.setText(etNickname.getText().toString());
+                    changeNicknameToServer(etNickname.getText().toString());
+                    SystemInfo.getInstance(getApplicationContext()).setAccount(etNickname.getText().toString());
+                }
+            }
+        })
+                .setNegativeButton("取消", null);
+    }
+
+    private void changeNicknameToServer(String nickName) {
+        Logger.e("开始改昵称");
+        Map<String, String> params = new HashMap<>();
+        params.put("memberId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
+        params.put("type", Constants.ChangeInformation.TYPE_ACCOUNT);
+        params.put("param", nickName);
+        String url = InterfaceURL.updateParam;
+        JsonBeanRequest<BaseBean> signatureRequest = new JsonBeanRequest<>(url, params, BaseBean.class, new Response.Listener<BaseBean>() {
+            @Override
+            public void onResponse(BaseBean response) {
+                if (response.getResult().equals("1")) {
+                    //这里没必要做后续操作了
+                } else {
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e(error.toString());
+            }
+        });
+        addToRequestQueue(signatureRequest);
+    }
+
+    /*
+   给alert设置按钮
+    */
+    private void setSignaturePosAndNegButton(final AlertDialog.Builder builder) {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (!etSignature.getText().toString().equals("")) {
+                    tvSignature.setText(etSignature.getText().toString());
+                    changeSignatureToServer(etSignature.getText().toString());
+                    SystemInfo.getInstance(getApplicationContext()).setSignature(etSignature.getText().toString());
+                }
+            }
+        })
+                .setNegativeButton("取消", null);
+    }
+
+    private void changeSignatureToServer(String signature) {
+        Logger.e("开始改签名");
+        Map<String, String> params = new HashMap<>();
+        params.put("memberId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
+        params.put("type", Constants.ChangeInformation.TYPE_SIGNATURE);
+        params.put("param", signature);
+        String url = InterfaceURL.updateParam;
+        JsonBeanRequest<BaseBean> signatureRequest = new JsonBeanRequest<>(url, params, BaseBean.class, new Response.Listener<BaseBean>() {
+            @Override
+            public void onResponse(BaseBean response) {
+                if (response.getResult().equals("1")) {
+                    //这里没必要做后续操作了
+                } else {
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e(error.toString());
+            }
+        });
+        addToRequestQueue(signatureRequest);
+    }
+
+
+    /*
+     *改变性别：
+     */
+    private void changeGenderToServer(int gender) {
+        Logger.e("开始改性别");
+        Map<String, String> params = new HashMap<>();
+        params.put("memberId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
+        params.put("type", Constants.ChangeInformation.TYPE_GENDER);
+        params.put("param", String.valueOf(gender));
+//        Logger.e(params.toString());
+        String url = InterfaceURL.updateParam;
+        JsonBeanRequest<BaseBean> genderRequest = new JsonBeanRequest<>(url, params, BaseBean.class, new Response.Listener<BaseBean>() {
+            @Override
+            public void onResponse(BaseBean response) {
+                if (response.getResult().equals("1")) {
+                    //这里没必要做后续操作了
+                } else {
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e(error.toString());
+            }
+        });
+        addToRequestQueue(genderRequest);
     }
 
     @Override
@@ -117,11 +302,12 @@ public class PIMSActivity extends BaseActivity {
                 }
             });
         }
-        tvNickName.setText(SystemInfo.getInstance(getApplicationContext()).getAccount() == "" ? "试用账号" : SystemInfo.getInstance(getApplicationContext()).getAccount());
-        tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getQQName());
-        tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName() == "" ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getSinaName());
-        tvSignature.setText(SystemInfo.getInstance(getApplicationContext()).getSignature() == "" ? "未设置个性签名" : SystemInfo.getInstance(getApplicationContext()).getSignature());
-
+        tvNickName.setText(SystemInfo.getInstance(getApplicationContext()).getAccount().equals("") ? "试用账号" : SystemInfo.getInstance(getApplicationContext()).getAccount());
+        tvQQ.setText(SystemInfo.getInstance(getApplicationContext()).getQQName().equals("") ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getQQName());
+        tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName().equals("") ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getSinaName());
+        tvSignature.setText(SystemInfo.getInstance(getApplicationContext()).getSignature().equals("") ? "未设置个性签名" : SystemInfo.getInstance(getApplicationContext()).getSignature());
+        tvGender.setText(SystemInfo.getInstance(getApplicationContext()).getGender().equals("0") ? "女" : "男");
+        Logger.e("性别：" + SystemInfo.getInstance(getApplicationContext()).getGender());
     }
 
     /*

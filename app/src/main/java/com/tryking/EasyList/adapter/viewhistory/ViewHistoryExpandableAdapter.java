@@ -84,6 +84,7 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
             }
 
             //这里可能需要根据是否打开来设置背景
+            // TODO: 2016/8/8 这里因为小米有bug改成了下面的，不知道能解决不(本来改成setCardColor，但是没有颜色改变特效了，就把LinearLayout设置背景了，待测试)
             holder.mContainer.setBackgroundResource(mainBgResId);
 //            holder.mIndicator.setExpandedState(isExpanded, animateIndicator);
             holder.mIndicator.setBackgroundResource(arrowBgResId);
@@ -138,7 +139,7 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
         @Bind(R.id.group_one_word)
         TextView groupOneWord;
         @Bind(R.id.m_container)
-        CardView mContainer;
+        LinearLayout mContainer;
         @Bind(R.id.indicator)
         ImageView mIndicator;
 

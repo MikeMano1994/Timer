@@ -112,13 +112,13 @@ public class IcFragment extends Fragment {
                 }
             });
         }
-        if (SystemInfo.getInstance(getActivity()).isLogin()) {
-            icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
-            icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
-        } else {
-            icAccount.setText("未登陆");
-            icSignature.setText("点击登录");
-        }
+//        if (SystemInfo.getInstance(getActivity()).isLogin()) {
+//            icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
+//            icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
+//        } else {
+//            icAccount.setText("未登陆");
+//            icSignature.setText("点击登录");
+//        }
 
         List<String> info = new ArrayList<>();
         info.add("重复言说多半是一种时间上的损失。 \n—— 培根");
@@ -139,6 +139,15 @@ public class IcFragment extends Fragment {
     //友盟统计：由Activity和Fragment构成的页面需要这样写
     public void onResume() {
         super.onResume();
+        //这个放到这里是因为如果用户在PIMSActivity中修改了的话这里要变
+        if (SystemInfo.getInstance(getActivity()).isLogin()) {
+            icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
+            icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
+        } else {
+            icAccount.setText("未登陆");
+            icSignature.setText("点击登录");
+        }
+
         MobclickAgent.onPageStart(getString(R.string.main_ic));
     }
 

@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -93,7 +94,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
     private String currentDate;
     private TransferData transferData;
     private boolean isTryOutAccount;
-    private EditText etOneWord;
+    private TextInputEditText etOneWord;
     private boolean isShowNetDisable = false;
     private boolean isShowServerDisable = false;
 
@@ -113,7 +114,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
                 break;
             case R.id.add_one_word:
                 View oneWord = LayoutInflater.from(getContext()).inflate(R.layout.add_one_word, null);
-                etOneWord = (EditText) oneWord.findViewById(R.id.et_one_word);
+                etOneWord = (TextInputEditText) oneWord.findViewById(R.id.et_one_word);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                         .setTitle("一句话总结今日")
                         .setView(oneWord);

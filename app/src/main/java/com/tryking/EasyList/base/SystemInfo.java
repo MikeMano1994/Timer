@@ -118,7 +118,14 @@ public class SystemInfo {
         SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_SIGNATURE, signature);
     }
 
-    // TODO: 2016/6/27 先暂时用account来判断，后期换
+    public void setGender(String gender) {
+        SPUtils.put(mContext, ApplicationGlobal.SHARED_PREFERENCE_GENDER, gender);
+    }
+
+    public String getGender() {
+        return (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_GENDER, "");
+    }
+
     public boolean isLogin() {
         String memberId = (String) SPUtils.get(mContext, ApplicationGlobal.SHARED_PREFERENCE_MEMBER_ID, "");
         if (memberId == null || memberId.equals("") || memberId.equals(Constants.TRY_OUT_ACCOUNT)) {
@@ -142,6 +149,7 @@ public class SystemInfo {
         setSina("");
         setSinaName("");
         setSignature("");
+        setGender("");
         //账户登出，要把本地的信息置为空。用户登录的时候从服务端拿到数据写入本地
         String startTimes = (String) SPUtils.get(mContext, "startTimes", "");
         String[] starts = CommonUtils.convertStrToArray(startTimes);

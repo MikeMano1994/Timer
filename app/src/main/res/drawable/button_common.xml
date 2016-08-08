@@ -15,11 +15,4 @@
             <corners android:radius="5dp" />
         </shape>
     </item>
-    <item android:state_enabled="false">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/gray" />
-            <stroke android:width="1px" android:color="?attr/colorAccent" />
-            <corners android:radius="5dp" />
-        </shape>
-    </item>
 </selector>

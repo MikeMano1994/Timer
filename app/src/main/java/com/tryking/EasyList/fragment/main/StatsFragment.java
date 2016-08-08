@@ -97,7 +97,7 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
 
         initChart(getEventData(getEventStrings()));
         btViewYesterday.setText("查看昨日");
-        tvTitle.setText("今日");
+        tvTitle.setText("今日统计");
 
         IntentFilter exitFilter = new IntentFilter(String4Broad.RefershChartData);
         refreshChatDataReceiver = new RefreshChatDataReceiver();
@@ -138,8 +138,8 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
         String[] dataFromDatabase = getDataFromDatabase(previousDay);
         if (null != dataFromDatabase) {
             initChart(getEventData(dataFromDatabase));
-            showPieChart.setDescription("昨日事项统计");
-            showPieChart.setCenterText("昨日事项统计");
+            showPieChart.setDescription("昨日");
+            showPieChart.setCenterText("昨日");
             btViewYesterday.setText("查看今日");
             tvTitle.setText("昨日事项统计");
         }
@@ -347,7 +347,7 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
 
     @Override
     public void onNothingSelected() {
-        showPieChart.setCenterText("今日事项统计");
+        showPieChart.setCenterText("今日");
     }
 
     //友盟统计：由Activity和Fragment构成的页面需要这样写

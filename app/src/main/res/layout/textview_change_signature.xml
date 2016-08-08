@@ -11,13 +11,12 @@
         android:layout_marginBottom="5dp"
         android:layout_marginTop="15dp"
         app:counterEnabled="true"
-        app:counterMaxLength="25">
+        app:counterMaxLength="30">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/et_one_word"
+            android:id="@+id/et_signature"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:maxLength="25" />
+            android:gravity="center_vertical" />
     </android.support.design.widget.TextInputLayout>
 </LinearLayout>

@@ -79,6 +79,7 @@ android {
         tencent {}
         taobao {}
         lianzhihong{}
+        alibabaMianshi{}
     }
 
     productFlavors.all { flavor ->
