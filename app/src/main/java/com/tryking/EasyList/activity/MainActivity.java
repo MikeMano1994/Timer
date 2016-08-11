@@ -153,6 +153,13 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
     }
 
+    //哪个页面分享，哪个页面需要添加
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+    }
+
     //友盟统计：有Activity和Fragment构成的页面需要这样写
     public void onResume() {
         super.onResume();

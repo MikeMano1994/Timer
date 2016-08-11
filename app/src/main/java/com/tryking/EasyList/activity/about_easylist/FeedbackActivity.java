@@ -16,8 +16,8 @@ import butterknife.ButterKnife;
 
 public class FeedbackActivity extends AppCompatActivity {
 
-    @Bind(R.id.toolBar)
-    Toolbar toolBar;
+//    @Bind(R.id.toolBar)
+//    Toolbar toolBar;
     @Bind(R.id.main_content)
     FrameLayout mainContent;
     private FeedbackFragment mFeedbackFragment;
@@ -47,15 +47,15 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void initToolBar() {
-        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_24dp);
-        toolBar.setTitleTextColor(getResources().getColor(R.color.white));
-        toolBar.setTitle(R.string.feedback);
-        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FeedbackActivity.this.finish();
-            }
-        });
+//        toolBar.setNavigationIcon(R.drawable.ic_action_arrow_left_white_24dp);
+//        toolBar.setTitleTextColor(getResources().getColor(R.color.white));
+//        toolBar.setTitle(R.string.feedback);
+//        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FeedbackActivity.this.finish();
+//            }
+//        });
     }
 
     @Override

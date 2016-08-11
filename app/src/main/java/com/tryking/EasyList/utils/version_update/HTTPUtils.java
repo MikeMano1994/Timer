@@ -13,7 +13,7 @@ import java.net.URL;
 /**
  * Created by 26011 on 2016/8/8.
  */
-public class HttpUtils {
+public class HTTPUtils {
     public static String get(String urlStr) {
         HttpURLConnection uRLConnection = null;
         InputStream is = null;

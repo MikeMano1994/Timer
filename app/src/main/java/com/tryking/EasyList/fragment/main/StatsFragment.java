@@ -3,11 +3,13 @@ package com.tryking.EasyList.fragment.main;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +31,12 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.TodayEventData;
+import com.tryking.EasyList.activity.LoginActivity;
 import com.tryking.EasyList.activity.ViewHistoryActivity;
 import com.tryking.EasyList.activity.ViewYesterdayActivity;
 import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.String4Broad;
+import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
 import com.tryking.EasyList.db.table.EverydayEventSource;
 import com.tryking.EasyList.utils.CommonUtils;
@@ -68,7 +72,7 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
     TextView tvTitle;
     @Bind(R.id.mv_notice)
     MarqueeView mvNotice;
-    
+
     //    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     String[] mParties = new String[]{
             "未添加事件", "工作", "娱乐", "生活", "学习"
@@ -115,13 +119,21 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_viewHistory:
-                startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
+                if (SystemInfo.getInstance(getActivity()).isLogin()) {
+                    startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
+                } else {
+                    hintLogin();
+                }
                 break;
             case R.id.bt_viewYesterday:
                 if (btViewYesterday.getText().toString() == "查看昨日") {
+                    if (SystemInfo.getInstance(getActivity()).isLogin()) {
 //                    refreshYesterdayData();
-                    //上面的是从数据库获取昨日数据
-                    startActivity(new Intent(getActivity(), ViewYesterdayActivity.class));
+                        //上面的是从数据库获取昨日数据
+                        startActivity(new Intent(getActivity(), ViewYesterdayActivity.class));
+                    } else {
+                        hintLogin();
+                    }
                 } else {
                     initChart(getEventData(getEventStrings()));
                     btViewYesterday.setText("查看昨日");
@@ -133,6 +145,27 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
             default:
                 break;
         }
+    }
+
+    private void hintLogin() {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("去登陆")
+                .setMessage("该功能需要登陆才能使用，快去登陆吧")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                        dialog.dismiss();
+                        getActivity().finish();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     /*

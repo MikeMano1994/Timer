@@ -272,14 +272,6 @@ public class IcFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    //哪个页面分享，哪个页面需要添加
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(getActivity()).onActivityResult(requestCode, resultCode, data);
-    }
-
-
     //友盟统计：由Activity和Fragment构成的页面需要这样写
     public void onResume() {
         super.onResume();

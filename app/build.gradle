@@ -115,10 +115,6 @@ dependencies {
     //微信
     compile files('libs/SocialSDK_WeiXin_2.jar')
     compile files('libs/SocialSDK_WeiXin_1.jar')
-    //Evernote
-    compile files('libs/SocialSDK_evernote.jar')
-    //有道云笔记
-    compile files('libs/SocialSDK_ynote.jar')
     /** ***************************/
 
     compile 'com.android.support:appcompat-v7:23.3.0'

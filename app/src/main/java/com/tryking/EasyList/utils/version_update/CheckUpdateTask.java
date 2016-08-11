@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
+import com.tencent.open.utils.HttpUtils;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.AppUtils;
 import com.tryking.EasyList.widgets.UpdateDialog;
@@ -83,6 +84,6 @@ public class CheckUpdateTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... args) {
-        return HttpUtils.get(url);
+        return HTTPUtils.get(url);
     }
 }
