@@ -7,12 +7,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.orhanobut.logger.Logger;
+import com.tryking.EasyList.activity.about_easylist.FeedbackActivity;
 import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.StringUtil;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.fb.push.FeedbackPush;
 import com.umeng.socialize.PlatformConfig;
 
 import java.text.SimpleDateFormat;
@@ -89,6 +91,9 @@ public class EasyListApplication extends Application {
         //开启友盟异常捕获上传
         MobclickAgent.setCatchUncaughtExceptions(true);
         // TODO: 2016/8/6 http://dev.umeng.com/analytics/android-doc/integration 5友盟社交统计没有集成
+
+        //友盟反馈
+        FeedbackPush.getInstance(this).init(FeedbackActivity.class, true);
     }
 
     /*

@@ -85,6 +85,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     private DayEventAdapterWithHeader adapterWithHeader;
     private boolean isEdit = false;
     private boolean isAllowAdd = false;
+    private InputMethodManager imm;
 
 
     @Override
@@ -115,8 +116,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                     etOneWord.setEnabled(true);
                     etOneWord.setFocusable(true);
                     etOneWord.requestFocus();
-                    InputMethodManager imm = (InputMethodManager) etOneWord.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     isEdit = true;
                 }
                 break;
@@ -138,6 +138,8 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
         adapterWithHeader.setOnHaveEventItemLongClickListener(this);
         mainContent.setAdapter(adapterWithHeader);
         getYesterdayDataFromServer();
+
+        imm = (InputMethodManager) etOneWord.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     private void initToolBar() {
@@ -226,7 +228,6 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                     } else {
                         hideAbnormalViews();
                         List<Event> eventList = dayEventBean.getEventList();
-                        Logger.e("OneWord:" + dayEventBean.getOneWord());
                         if (dayEventBean.getOneWord() != null && !dayEventBean.getOneWord().equals("")) {
                             etOneWord.setText(dayEventBean.getOneWord());
                         }
@@ -362,7 +363,7 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Logger.e(requestCode + "::" + resultCode);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         if (requestCode == Constants.ViewYesterday.REQUEST_ViewYesterday_To_Add && resultCode == Constants.ViewYesterday.RESULT_Add_To_ViewYesterday) {
             if (data != null) {
                 Bundle extras = data.getExtras();
@@ -429,7 +430,6 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                 }
             }
         }
-        Logger.e("到这里了。。。");
         adapterWithHeader.refresh(mDatas);
         hideAbnormalViews();
     }

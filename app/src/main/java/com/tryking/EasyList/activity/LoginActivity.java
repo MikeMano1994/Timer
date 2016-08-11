@@ -237,7 +237,6 @@ public class LoginActivity extends BaseActivity {
         params.put("signature", signature);
 
         String url = InterfaceURL.login;
-        Logger.e("url:" + url);
         JsonBeanRequest<LoginReturnBean> loginRequest = new JsonBeanRequest<>(url, params, LoginReturnBean.class, new Response.Listener<LoginReturnBean>() {
             @Override
             public void onResponse(LoginReturnBean response) {
@@ -329,7 +328,7 @@ public class LoginActivity extends BaseActivity {
                     ChangeWidgetEnable(true);
                     break;
                 case Constants.requestException:
-                    TT.showShort(LoginActivity.this, "服务器开小差啦");
+                    TT.showShort(LoginActivity.this, "服务器开小差啦~");
                     ChangeWidgetEnable(true);
                     break;
                 default:

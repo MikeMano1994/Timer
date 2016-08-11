@@ -12,6 +12,10 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -33,9 +38,9 @@ import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.global.InterfaceURL;
 import com.tryking.EasyList.network.JsonBeanRequest;
-import com.tryking.EasyList.utils.SPUtils;
+import com.tryking.EasyList.utils.CommonUtils;
+import com.tryking.EasyList.utils.TT;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.socialize.utils.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,6 +82,25 @@ public class PIMSActivity extends BaseActivity {
 
     TextInputEditText etSignature;
     TextInputEditText etNickname;
+    /********************/
+    /*******NickName*****/
+    /********************/
+    //输入表情前的光标位置
+    private int nickNameCursorPos;
+    //输入表情前EditText中的文本
+    private String nickNameInputAfterText;
+    //是否重置了EditText的内容
+    private boolean nickNameResetText;
+    /********************/
+    /*******Signature*****/
+    /********************/
+    //输入表情前的光标位置
+    private int SignatureCursorPos;
+    //输入表情前EditText中的文本
+    private String SignatureInputAfterText;
+    //是否重置了EditText的内容
+    private boolean SignatureResetText;
+
 
     @OnClick({R.id.bt_logout, R.id.rl_gender, R.id.rl_signature, R.id.rl_nickName})
     void click(View v) {
@@ -146,6 +170,50 @@ public class PIMSActivity extends BaseActivity {
                         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                     }
                 });
+                SignatureCursorPos = etSignature.getSelectionEnd();
+                etSignature.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        if (!SignatureResetText) {
+                            SignatureCursorPos = etSignature.getSelectionEnd();
+                            //这里用s.toString()而不直接用s是因为如果用s，
+                            // 那么，inputAfterText和s在内存中指向的是同一个地址，s改变了，
+                            // inputAfterText也就改变了，那么表情过滤就失败了
+                            SignatureInputAfterText = s.toString();
+
+                        }
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (!SignatureResetText) {
+                            if (before != 0) {
+                                return;
+                            }
+                            if (count >= 2) {//表情符号的字符长度最小为2
+                                CharSequence input = s.subSequence(SignatureCursorPos, SignatureCursorPos + count);
+                                if (CommonUtils.containsEmoji(input.toString())) {
+                                    SignatureResetText = true;
+                                    TT.showShort(PIMSActivity.this, "不支持输入Emoji表情符号哦~");
+                                    //是表情符号就将文本还原为输入表情符号之前的内容
+                                    etSignature.setText(SignatureInputAfterText);
+                                    CharSequence text = etSignature.getText();
+                                    if (text instanceof Spannable) {
+                                        Spannable spanText = (Spannable) text;
+                                        Selection.setSelection(spanText, text.length());
+                                    }
+                                }
+                            }
+                        } else {
+                            SignatureResetText = false;
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
                 break;
             case R.id.rl_nickName:
                 View nickName = LayoutInflater.from(PIMSActivity.this).inflate(R.layout.textview_change_nickname, null);
@@ -162,6 +230,55 @@ public class PIMSActivity extends BaseActivity {
                         nameDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                     }
                 });
+
+                nickNameCursorPos = etNickname.getSelectionEnd();
+                etNickname.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        if (!nickNameResetText) {
+                            nickNameCursorPos = etNickname.getSelectionEnd();
+                            //这里用s.toString()而不直接用s是因为如果用s，
+                            // 那么，inputAfterText和s在内存中指向的是同一个地址，s改变了，
+                            // inputAfterText也就改变了，那么表情过滤就失败了
+                            nickNameInputAfterText = s.toString();
+
+                        }
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (!nickNameResetText) {
+
+                            if (before != 0) {
+
+                                return;
+
+                            }
+                            if (count >= 2) {//表情符号的字符长度最小为2
+                                CharSequence input = s.subSequence(nickNameCursorPos, nickNameCursorPos + count);
+                                if (CommonUtils.containsEmoji(input.toString())) {
+                                    nickNameResetText = true;
+                                    TT.showShort(PIMSActivity.this, "不支持输入Emoji表情符号哦~");
+                                    //是表情符号就将文本还原为输入表情符号之前的内容
+                                    etNickname.setText(nickNameInputAfterText);
+                                    CharSequence text = etNickname.getText();
+                                    if (text instanceof Spannable) {
+                                        Spannable spanText = (Spannable) text;
+                                        Selection.setSelection(spanText, text.length());
+                                    }
+                                }
+                            }
+                        } else {
+                            nickNameResetText = false;
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                break;
             default:
                 break;
         }
@@ -307,7 +424,6 @@ public class PIMSActivity extends BaseActivity {
         tvSina.setText(SystemInfo.getInstance(getApplicationContext()).getSinaName().equals("") ? "未绑定" : SystemInfo.getInstance(getApplicationContext()).getSinaName());
         tvSignature.setText(SystemInfo.getInstance(getApplicationContext()).getSignature().equals("") ? "未设置个性签名" : SystemInfo.getInstance(getApplicationContext()).getSignature());
         tvGender.setText(SystemInfo.getInstance(getApplicationContext()).getGender().equals("0") ? "女" : "男");
-        Logger.e("性别：" + SystemInfo.getInstance(getApplicationContext()).getGender());
     }
 
     /*

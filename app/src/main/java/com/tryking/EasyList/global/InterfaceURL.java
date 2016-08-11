@@ -19,4 +19,7 @@ public class InterfaceURL {
 
     public static final String updateParam = ApplicationGlobal.appUrl + "updateParam.html";
 
+    public static final String getShareUrl = ApplicationGlobal.appUrl + "getShareUrl.html";
+
+
 }

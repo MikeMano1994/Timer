@@ -1,6 +1,7 @@
 package com.tryking.EasyList.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,6 +33,7 @@ import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.DateChooseDialog;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.UMShareAPI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +62,8 @@ public class ViewHistoryActivity extends BaseActivity {
     RelativeLayout showNoData;
     @Bind(R.id.show_no_content)
     RelativeLayout showNoContent;
+    @Bind(R.id.re_load)
+    Button reLoad;
 
     private String curMonth;
     private ViewHistoryFragment viewHistoryFragment;
@@ -74,7 +79,7 @@ public class ViewHistoryActivity extends BaseActivity {
         init();
     }
 
-    @OnClick({R.id.chose_month})
+    @OnClick({R.id.chose_month,R.id.re_load})
     void click(View v) {
         switch (v.getId()) {
             case R.id.chose_month:
@@ -88,6 +93,8 @@ public class ViewHistoryActivity extends BaseActivity {
                     }
                 });
                 break;
+            case R.id.re_load:
+                getMonthDataFromServer(curMonth);
             default:
                 break;
         }
@@ -99,7 +106,7 @@ public class ViewHistoryActivity extends BaseActivity {
         String curDate = (String) SPUtils.get(getApplicationContext(), ApplicationGlobal.CURRENT_DATE, "");
         curMonth = CommonUtils.getMonthFromDate(curDate);
         getMonthDataFromServer(curMonth);
-
+        showView(showNoContent);
     }
 
     /*
@@ -127,8 +134,13 @@ public class ViewHistoryActivity extends BaseActivity {
                     String choseMonth = data.getString(Constants.HANDLER_CHOSE_MONTH);
                     String choseYear = data.getString(Constants.HANDLER_CHOSE_YEAR);
 //                    TT.showShort(getApplicationContext(), "Y:" + choseYear + "|||M:" + choseMonth);
-                    topDate.setText(CommonUtils.addNianYueToDate(choseYear + CommonUtils.add0toOneChar(choseMonth)));
-                    getMonthDataFromServer(choseYear + CommonUtils.add0toOneChar(choseMonth));
+                    if (topDate.getText().equals(CommonUtils.addNianYueToDate(choseYear + CommonUtils.add0toOneChar(choseMonth)))) {
+                        //如果用户选的还是当前的月份，不重新加载了。
+                        return;
+                    } else {
+                        topDate.setText(CommonUtils.addNianYueToDate(choseYear + CommonUtils.add0toOneChar(choseMonth)));
+                        getMonthDataFromServer(choseYear + CommonUtils.add0toOneChar(choseMonth));
+                    }
                     break;
                 case Constants.ViewHistory.GET_DATA_FOR_MONTH_SUCCESS:
                     ViewMonthReturnBean viewMonthReturnBean = (ViewMonthReturnBean) msg.obj;
@@ -147,11 +159,11 @@ public class ViewHistoryActivity extends BaseActivity {
                     showView(showServerError);
                     break;
                 case Constants.requestException:
-                    if (msg.obj != null && msg.obj.toString().contains("java.net.ConnectException")) {
+                    if (msg.obj != null && msg.obj.toString().contains("ConnectException")) {
                         TT.showShort(getApplicationContext(), "网络异常");
                         showView(showNoNet);
                     } else {
-                        TT.showShort(getApplicationContext(), "服务器开小差啦～");
+                        TT.showShort(getApplicationContext(), "服务器开小差啦~");
                         showView(showServerError);
                     }
                     break;
@@ -168,6 +180,7 @@ public class ViewHistoryActivity extends BaseActivity {
         showNoData.setVisibility(View.GONE);
         showNoNet.setVisibility(View.GONE);
         showServerError.setVisibility(View.GONE);
+        showNoContent.setVisibility(View.GONE);
     }
 
     /*
@@ -250,5 +263,12 @@ public class ViewHistoryActivity extends BaseActivity {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    //哪个activity分享哪个activity需要添加这个
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 }

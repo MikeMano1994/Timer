@@ -12,12 +12,18 @@
     <string name="login">登陆</string>
     <string name="about_easylist">关于轻单儿</string>
     <string name="easylist_born">轻单儿诞生</string>
+    <string name="common_setting">通用设置</string>
+    <string name="feedback">用户反馈</string>
+
     <string name="launcher">Launcher启动</string>
     <string name="main_today">首页_1_今日</string>
     <string name="main_stats">首页_2_统计</string>
     <string name="main_ic">首页_3_个人</string>
     <string name="add_event_today">新增事件_今日</string>
     <string name="add_event_yesterday">新增事件_昨日</string>
+
+    <string name="share_title">一起来用轻单儿</string>
+    <string name="share_text">我正在使用轻单儿记录时间清单，加入轻单儿一起和时间做朋友吧！</string>
     <string name="easylist_born_word_1">
         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
         所有的人，连亚历山大·亚历山德罗维奇·柳比歇夫亲近的人在内，

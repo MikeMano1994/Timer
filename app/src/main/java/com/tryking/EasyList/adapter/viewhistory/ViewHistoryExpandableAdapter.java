@@ -1,9 +1,12 @@
 package com.tryking.EasyList.adapter.viewhistory;
 
-import android.support.v7.widget.CardView;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,12 +15,15 @@ import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableItemConsta
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractExpandableItemViewHolder;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._bean.ViewHistoryHandlerData;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryChildData;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryGroupData;
+import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.CommonUtils;
-import com.tryking.EasyList.widgets.ExpandIndicator.ExpandableItemIndicator;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,16 +36,20 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
 
     private List<ViewHistoryGroupData> mGroupDatas;
     private List<List<ViewHistoryChildData>> mChildDatas;
+    private Context mContext;
+    private Handler mHandler;
 
 
     // NOTE: Make accessible with short name
     private interface Expandable extends ExpandableItemConstants {
     }
 
-    public ViewHistoryExpandableAdapter(List<ViewHistoryGroupData> groupDatas, List<List<ViewHistoryChildData>> childDatas) {
+    public ViewHistoryExpandableAdapter(Context context, Handler handler, List<ViewHistoryGroupData> groupDatas, List<List<ViewHistoryChildData>> childDatas) {
         mGroupDatas = groupDatas;
         mChildDatas = childDatas;
         setHasStableIds(true);
+        mContext = context;
+        mHandler = handler;
     }
 
     @Override
@@ -62,9 +72,21 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
     }
 
     @Override
-    public void onBindGroupViewHolder(MyGroupViewHolder holder, int groupPosition, int viewType) {
+    public void onBindGroupViewHolder(MyGroupViewHolder holder, final int groupPosition, int viewType) {
         holder.groupDate.setText(mGroupDatas.get(groupPosition).getDate());
         holder.groupOneWord.setText(mGroupDatas.get(groupPosition).getOneWord().equals("") ? "和时间做朋友" : mGroupDatas.get(groupPosition).getOneWord());
+        holder.llShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Message msg = new Message();
+                ViewHistoryHandlerData viewHistoryHandlerData = new ViewHistoryHandlerData();
+                viewHistoryHandlerData.setGroupData(mGroupDatas.get(groupPosition));
+                viewHistoryHandlerData.setChildData(mChildDatas.get(groupPosition));
+                msg.obj = viewHistoryHandlerData;
+                msg.what = Constants.ViewHistory.SHARE_HANDLER_DATA;
+                mHandler.sendMessage(msg);
+            }
+        });
 
         final int expandStateFlags = holder.getExpandStateFlags();
         if ((expandStateFlags & ExpandableItemConstants.STATE_FLAG_IS_UPDATED) != 0) {
@@ -75,16 +97,18 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
 
             if ((expandStateFlags & Expandable.STATE_FLAG_IS_EXPANDED) != -0) {
                 mainBgResId = R.drawable.bg_group_item_expanded_state;
-                arrowBgResId = R.drawable.ic_expand_more_to_expand_less;
+//                arrowBgResId = R.drawable.ic_expand_more_to_expand_less;
+                //不用上面的原因是因为有小米bug
+                arrowBgResId = R.drawable.ic_keyboard_arrow_up_grey_500_18dp;
                 isExpanded = false;
             } else {
                 mainBgResId = R.drawable.bg_group_item_normal_state;
-                arrowBgResId = R.drawable.ic_expand_more;
+//                arrowBgResId = R.drawable.ic_expand_more;
+                arrowBgResId = R.drawable.ic_keyboard_arrow_down_grey_500_18dp;
                 isExpanded = false;
             }
 
             //这里可能需要根据是否打开来设置背景
-            // TODO: 2016/8/8 这里因为小米有bug改成了下面的，不知道能解决不(本来改成setCardColor，但是没有颜色改变特效了，就把LinearLayout设置背景了，待测试)
             holder.mContainer.setBackgroundResource(mainBgResId);
 //            holder.mIndicator.setExpandedState(isExpanded, animateIndicator);
             holder.mIndicator.setBackgroundResource(arrowBgResId);
@@ -120,11 +144,11 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
 
         ViewGroup.LayoutParams layoutParams = holder.llParent.getLayoutParams();
         if (durationMinutes <= 60) {
-            layoutParams.height = 150;
+            layoutParams.height = 170;
         } else if (durationMinutes <= 360) {
-            layoutParams.height = 150 + (durationMinutes - 60) * 250 / 300;
+            layoutParams.height = 170 + (durationMinutes - 60) * 250 / 300;
         } else {
-            layoutParams.height = 400;
+            layoutParams.height = 420;
         }
     }
 
@@ -142,6 +166,8 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
         LinearLayout mContainer;
         @Bind(R.id.indicator)
         ImageView mIndicator;
+        @Bind(R.id.ll_share)
+        LinearLayout llShare;
 
         public MyGroupViewHolder(View itemView) {
             super(itemView);

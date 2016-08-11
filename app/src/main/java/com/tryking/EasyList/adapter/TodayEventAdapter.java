@@ -127,11 +127,11 @@ public class TodayEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             });
             ViewGroup.LayoutParams layoutParams = ((HaveEventViewHolder) holder).llParent.getLayoutParams();
             if (durationMinutes <= 60) {
-                layoutParams.height = 150;
+                layoutParams.height = 170;
             } else if (durationMinutes <= 360) {
-                layoutParams.height = 150 + (durationMinutes - 60) * 250 / 300;
+                layoutParams.height = 170 + (durationMinutes - 60) * 250 / 300;
             } else {
-                layoutParams.height = 400;
+                layoutParams.height = 420;
             }
 
             ((HaveEventViewHolder) holder).llParent.setLayoutParams(layoutParams);

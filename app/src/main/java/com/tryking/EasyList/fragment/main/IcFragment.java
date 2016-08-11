@@ -1,11 +1,13 @@
 package com.tryking.EasyList.fragment.main;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.view.LayoutInflater;
@@ -15,19 +17,39 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._bean.AppVersionReturnBean;
+import com.tryking.EasyList._bean.ShareUrlRetrunBean;
+import com.tryking.EasyList.activity.CommonSettingActivity;
 import com.tryking.EasyList.activity.LoginActivity;
 import com.tryking.EasyList.activity.PIMSActivity;
 import com.tryking.EasyList.activity.about_easylist.AboutEasyListActivity;
+import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.SystemInfo;
+import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.global.InterfaceURL;
+import com.tryking.EasyList.network.JsonBeanRequest;
+import com.tryking.EasyList.utils.AppUtils;
+import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
+import com.tryking.EasyList.widgets.UpdateDialog;
 import com.tryking.EasyList.widgets.marqueeView.MarqueeView;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,7 +58,7 @@ import butterknife.OnClick;
 /**
  * Created by Tryking on 2016/5/13.
  */
-public class IcFragment extends Fragment {
+public class IcFragment extends BaseFragment {
 
     @Bind(R.id.head_portrait)
     ImageView headPortrait;
@@ -56,6 +78,17 @@ public class IcFragment extends Fragment {
     LinearLayout commonSetting;
     @Bind(R.id.recommend)
     LinearLayout recommend;
+    @Bind(R.id.update_new)
+    TextView updateNew;
+
+
+    private String shareUrl;
+
+    final SHARE_MEDIA[] displaylist = new SHARE_MEDIA[]
+            {
+                    SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.SINA,
+                    SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
+            };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,7 +97,7 @@ public class IcFragment extends Fragment {
         return inflate;
     }
 
-    @OnClick({R.id.aboutEasyList, R.id.ll_PIM, R.id.account_setting, R.id.common_setting, R.id.recommend})
+    @OnClick({R.id.aboutEasyList, R.id.ll_PIM, R.id.common_setting, R.id.recommend})
     void click(View v) {
         switch (v.getId()) {
             case R.id.aboutEasyList:
@@ -78,19 +111,42 @@ public class IcFragment extends Fragment {
                     getActivity().finish();
                 }
                 break;
-            case R.id.account_setting:
-                TT.showShort(getActivity(), "账号设置，正在开发...");
-                break;
             case R.id.common_setting:
-                TT.showShort(getActivity(), "通用设置，正在开发...");
+                startActivity(new Intent(getActivity(), CommonSettingActivity.class));
                 break;
             case R.id.recommend:
-                TT.showShort(getActivity(), "推荐给好友，正在开发...");
+                shareUrl = (String) SPUtils.get(getActivity(), Constants.SP_SHARE_URL, "");
+                if (shareUrl == null || shareUrl.equals("")) {
+                    shareUrl = Constants.default_share_url;
+                }
+                new ShareAction(getActivity()).setDisplayList(displaylist)
+                        .withTitle(getString(R.string.share_title))
+                        .withText(getString(R.string.share_text))
+                        .withMedia(new UMImage(getActivity(), R.mipmap.ic_launcher))
+                        .withTargetUrl(shareUrl)
+                        .open();
                 break;
             default:
                 break;
         }
     }
+
+    private UMShareListener listener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            TT.showShort(getActivity(), platform + " 分享成功啦");
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable throwable) {
+            TT.showShort(getActivity(), platform + " 分享失败啦");
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            TT.showShort(getActivity(), platform + " 分享取消啦");
+        }
+    };
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -128,13 +184,101 @@ public class IcFragment extends Fragment {
         info.add("节省时间；也就是使一个人的有限生命，更加有效而也即等于延长了人的生命。 \n—— 鲁迅");
         info.add("忍耐和时间，往往比力量和愤怒更有效。 \n—— 拉封丹");
         mvNotice.startWithList(info);
+        if (SystemInfo.getInstance(getActivity()).isLogin()) {
+            getShareUrlFromServer();
+        }
+
+        checkNewVersion();
     }
+
+    private void checkNewVersion() {
+        Logger.e("开始获取版本信息");
+        Map<String, String> params = new HashMap<>();
+        params.put("deviceType", "android");
+        params.put("appName", getString(R.string.app_name_english));
+        String url = InterfaceURL.appVersion;
+        JsonBeanRequest<AppVersionReturnBean> appVersionRequest = new JsonBeanRequest<>(url, params, AppVersionReturnBean.class,
+                new Response.Listener<AppVersionReturnBean>() {
+                    @Override
+                    public void onResponse(AppVersionReturnBean response) {
+                        Message msg = new Message();
+                        if (response.getResult().equals("1")) {
+                            msg.what = Constants.AboutEasyList.GET_APP_VERSION_SUCCESS;
+                            msg.obj = response;
+                        }
+                        mHandler.sendMessage(msg);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Logger.e(error.getMessage());
+            }
+        });
+        addToRequestQueue(appVersionRequest);
+    }
+
+    private void getShareUrlFromServer() {
+        Map<String, String> params = new HashMap<>();
+        params.put("memberId", SystemInfo.getInstance(getActivity()).getMemberId());
+        String url = InterfaceURL.getShareUrl;
+        JsonBeanRequest<ShareUrlRetrunBean> shareRequest = new JsonBeanRequest<>(url, params, ShareUrlRetrunBean.class, new Response.Listener<ShareUrlRetrunBean>() {
+            @Override
+            public void onResponse(ShareUrlRetrunBean response) {
+                if (response.getResult().equals("1")) {
+                    Message msg = new Message();
+                    msg.what = Constants.Share.GET_SHARE_URL_SUCCESS;
+                    msg.obj = response;
+                    mHandler.sendMessage(msg);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        addToRequestQueue(shareRequest);
+    }
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case Constants.Share.GET_SHARE_URL_SUCCESS:
+                    ShareUrlRetrunBean shareBean = (ShareUrlRetrunBean) msg.obj;
+                    if (shareBean.getIsChange().equals("1")) {
+                        SPUtils.put(getActivity(), Constants.SP_SHARE_URL, shareBean.getShareUrl());
+                    }
+                    break;
+                case Constants.AboutEasyList.GET_APP_VERSION_SUCCESS:
+                    AppVersionReturnBean appVersionReturnBean = (AppVersionReturnBean) msg.obj;
+                    int appVersionNum = Integer.parseInt(appVersionReturnBean.getAppVersionNum());
+                    if (appVersionNum > AppUtils.getVersionCode(getActivity())) {
+                        //更新
+                        updateNew.setVisibility(View.VISIBLE);
+                        SPUtils.put(getActivity(), Constants.SP_HAS_NEW_VERSION, true);
+                    } else {
+                        updateNew.setVisibility(View.GONE);
+                        SPUtils.put(getActivity(), Constants.SP_HAS_NEW_VERSION, false);
+                    }
+            }
+        }
+    };
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
+    //哪个页面分享，哪个页面需要添加
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(getActivity()).onActivityResult(requestCode, resultCode, data);
+    }
+
 
     //友盟统计：由Activity和Fragment构成的页面需要这样写
     public void onResume() {

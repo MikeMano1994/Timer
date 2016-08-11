@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -19,8 +20,10 @@ import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.global.InterfaceURL;
 import com.tryking.EasyList.network.JsonBeanRequest;
 import com.tryking.EasyList.utils.AppUtils;
+import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.UpdateDialog;
+import com.umeng.fb.FeedbackAgent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +42,8 @@ public class AboutEasyListActivity extends BaseActivity {
     RelativeLayout opinionFeedback;
     @Bind(R.id.check_new_version)
     RelativeLayout checkNewVersion;
+    @Bind(R.id.update_new)
+    TextView updateNew;
 
     private ProgressDialog mDialog;
 
@@ -58,6 +63,9 @@ public class AboutEasyListActivity extends BaseActivity {
                 startActivity(new Intent(AboutEasyListActivity.this, EasyListBornActivity.class));
                 break;
             case R.id.opinion_feedback:
+//                FeedbackAgent agent = new FeedbackAgent(this);
+//                agent.startFeedbackActivity();
+                startActivity(new Intent(AboutEasyListActivity.this, FeedbackActivity.class));
                 break;
             case R.id.check_new_version:
 //                new CheckUpdateTask(AboutEasyListActivity.this, true).execute();
@@ -106,6 +114,12 @@ public class AboutEasyListActivity extends BaseActivity {
 
     private void init() {
         initToolBar();
+        boolean hasNewVersion = (boolean) SPUtils.get(getApplicationContext(), Constants.SP_HAS_NEW_VERSION, false);
+        if (hasNewVersion) {
+            updateNew.setVisibility(View.VISIBLE);
+        } else {
+            updateNew.setVisibility(View.GONE);
+        }
     }
 
     private void initToolBar() {

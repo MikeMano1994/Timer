@@ -216,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:text="请输入事件" />
 
-                <EditText
+                <com.tryking.EasyList.widgets.FilterEmojiEditText
                     android:id="@+id/et_print"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

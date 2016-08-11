@@ -19,9 +19,9 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <LinearLayout
@@ -92,7 +92,8 @@
                 android:background="@drawable/common_background_layout"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="0dp"
@@ -113,6 +114,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
+                android:layout_marginLeft="15dp"
                 android:background="@color/thin_gray" />
 
             <LinearLayout
@@ -128,6 +130,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_settings_color_accent_18dp"
+                    android:drawablePadding="12dp"
                     android:text="通用设置"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -143,6 +147,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
+                android:layout_marginLeft="15dp"
                 android:background="@color/thin_gray" />
 
             <LinearLayout
@@ -158,6 +163,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_share_black_18dp"
+                    android:drawablePadding="12dp"
                     android:text="推荐给好友"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -173,6 +180,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
+                android:layout_marginLeft="15dp"
                 android:background="@color/thin_gray" />
 
             <LinearLayout
@@ -188,9 +196,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_import_color_accenet_18dp"
+                    android:drawablePadding="12dp"
                     android:text="关于轻单儿"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/update_new"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/update_new_background"
+                    android:padding="3dp"
+                    android:text="NEW"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -203,19 +223,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.1dp"
+                android:layout_marginLeft="15dp"
                 android:background="@color/thin_gray" />
-
-            <!--<Button-->
-            <!--android:id="@+id/bt_logout"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:layout_marginLeft="45dp"-->
-            <!--android:layout_marginRight="45dp"-->
-            <!--android:layout_marginTop="45dp"-->
-            <!--android:background="@drawable/background_button_logout"-->
-            <!--android:text="退出登陆"-->
-            <!--android:textColor="@color/gray"-->
-            <!--android:textSize="14sp" />-->
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

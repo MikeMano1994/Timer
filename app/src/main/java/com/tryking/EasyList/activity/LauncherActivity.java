@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.WindowManager;
 
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
@@ -11,6 +12,7 @@ import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.SPUtils;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.fb.FeedbackAgent;
 
 public class LauncherActivity extends BaseActivity {
 
@@ -18,6 +20,8 @@ public class LauncherActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
+
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
 
         //为了测试方便，穿进去memberId，不用登陆
 //        SystemInfo.getInstance(getApplicationContext()).setMemberId("6E49327D182AA31306D297B794B59EDE");
@@ -30,6 +34,10 @@ public class LauncherActivity extends BaseActivity {
         /** 设置是否对日志信息进行加密, 默认false(不加密). */
         //友盟官方文档让放在入口Activity
         MobclickAgent.enableEncrypt(true);//6.0.0版本及以后
+
+        //友盟反馈提醒用户（默认控制栏  可自定义 无自定义）
+        FeedbackAgent agent = new FeedbackAgent(this);
+        agent.sync();
     }
 
     Handler mHandler = new Handler() {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tryking.EasyList">
-    <!-- 友盟统计相关（友盟三方登陆分享有的已经删除） -->
-    <uses-sdk android:minSdkVersion="4" />
+    <!-- 友盟统计相关（友盟三方登陆分享有的已经删除）（友盟反馈minSdk为9，统计为4.写9） -->
+    <uses-sdk android:minSdkVersion="9" />
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
@@ -85,6 +85,15 @@
             android:label="@string/easylist_born"
             android:theme="@style/AppTheme.Float" />
         <activity
+            android:name=".activity.CommonSettingActivity"
+            android:label="@string/common_setting"
+            android:theme="@style/AppTheme.Float" />
+
+        <activity
+            android:name=".activity.about_easylist.FeedbackActivity"
+            android:label="@string/feedback"
+            android:theme="@style/AppTheme.Float" />
+        <activity
             android:name=".z_disuse.LoginAndRegisterActivity"
             android:label="@string/login_and_register"
             android:windowSoftInputMode="adjustResize|stateHidden" />
@@ -92,7 +101,7 @@
         <service
             android:name=".utils.version_update.DownloadService"
             android:exported="true" />
-        
+
         <activity android:name=".umeng.ShareActivity" />
         /************************************友盟相关****开始*********************************/
         <activity
@@ -110,16 +119,6 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name=".WBShareActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
             android:configChanges="keyboardHidden|orientation"
@@ -147,7 +146,22 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!-- 这个是按要求自己写的Activity -->
+        <activity android:name=".WBShareActivity" />
+
+        <service
+            android:name="com.sina.weibo.sdk.net.DownloadService"
+            android:exported="false" />
+
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         /************************************友盟相关****结束*********************************/
+        /*****************友盟反馈******************/
+        <activity android:name="com.umeng.fb.ConversationActivity" />
         //暂时不集成短信
         <!-- /************************************Mob短信验证****开始*********************************/ -->
         <!-- <activity -->

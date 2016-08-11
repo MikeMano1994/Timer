@@ -7,9 +7,24 @@
     app:cardCornerRadius="5dp">
 
     <LinearLayout
+        android:id="@+id/ll_share"
+        android:layout_width="30dp"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/ic_share_black_18dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
         android:id="@+id/m_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="45dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -17,7 +32,9 @@
             android:id="@+id/group_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="35dp"
             android:layout_marginTop="5dp"
+            android:textSize="20sp"
             android:gravity="center"
             android:text="2016年5月20日"
             android:textColor="@color/black" />
@@ -27,7 +44,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
+            android:layout_marginRight="35dp"
             android:layout_marginTop="20dp"
+            android:textSize="16sp"
             android:gravity="center"
             android:text="一句话总结今日"
             android:textColor="@color/black" />
@@ -35,8 +54,8 @@
 
     <ImageView
         android:id="@+id/indicator"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_gravity="right|center_vertical"
         android:layout_marginRight="16dp" />
     <!--<com.tryking.EasyList.widgets.ExpandIndicator.ExpandableItemIndicator-->

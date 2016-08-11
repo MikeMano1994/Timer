@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".activity.ViewYesterdayActivity">
 
@@ -200,7 +201,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="淫家正在努力加载呢" />
+                    android:text="淫家正在玩儿命加载呢" />
             </LinearLayout>
         </RelativeLayout>
     </FrameLayout>

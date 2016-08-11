@@ -16,6 +16,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.Spannable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -97,6 +101,17 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
     private TextInputEditText etOneWord;
     private boolean isShowNetDisable = false;
     private boolean isShowServerDisable = false;
+    private boolean isAdd = false;
+
+    /********************/
+    /*******etOneWord*****/
+    /********************/
+    //输入表情前的光标位置
+    private int oneWordCursorPos;
+    //输入表情前EditText中的文本
+    private String oneWordInputAfterText;
+    //是否重置了EditText的内容
+    private boolean oneWordResetText;
 
     @OnClick({R.id.actionButton, R.id.add_one_word})
     void click(View view) {
@@ -131,6 +146,52 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
 //                etOneWord.setFocusable(true);
 //                etOneWord.setFocusableInTouchMode(true);
 //                etOneWord.requestFocus();
+
+                oneWordCursorPos = etOneWord.getSelectionEnd();
+                etOneWord.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        if (!oneWordResetText) {
+                            oneWordCursorPos = etOneWord.getSelectionEnd();
+                            //这里用s.toString()而不直接用s是因为如果用s，
+                            // 那么，inputAfterText和s在内存中指向的是同一个地址，s改变了，
+                            // inputAfterText也就改变了，那么表情过滤就失败了
+                            oneWordInputAfterText = s.toString();
+
+                        }
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (!oneWordResetText) {
+                            if (before != 0) {
+                                return;
+                            }
+                            if (count >= 2) {//表情符号的字符长度最小为2
+                                CharSequence input = s.subSequence(oneWordCursorPos, oneWordCursorPos + count);
+                                if (CommonUtils.containsEmoji(input.toString())) {
+                                    oneWordResetText = true;
+                                    TT.showShort(getActivity(), "不支持输入Emoji表情符号哦~");
+                                    //是表情符号就将文本还原为输入表情符号之前的内容
+                                    etOneWord.setText(oneWordInputAfterText);
+                                    CharSequence text = etOneWord.getText();
+                                    if (text instanceof Spannable) {
+                                        Spannable spanText = (Spannable) text;
+                                        Selection.setSelection(spanText, text.length());
+                                    }
+                                }
+                            }
+                        } else {
+                            oneWordResetText = false;
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+
                 break;
         }
     }
@@ -407,6 +468,8 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
     }
 
     private void initViews() {
+        // TODO: 2016/8/9 这里小米机器按钮有一半被遮住，这样看下行不行 （待测试）
+        actionButton.bringToFront();
         mQueue = Volley.newRequestQueue(getActivity());
         todayEventAdapter = new TodayEventAdapter(new WeakReference<Context>(getActivity()), getActivity(), todayEventDatas);
         todayEventAdapter.setOnHaveEventItemLongClickListener(this);
@@ -574,17 +637,18 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
                     break;
                 case Constants.ChangeData.addOneWordSuccess:
                     ChangeDataReturnBean chaBean = (ChangeDataReturnBean) msg.obj;
+//                    这里不要给用户提醒了  太多不友好
                     if (chaBean.isAmendSuccess()) {
-                        TT.showShort(getContext(), "同步成功");
+//                        TT.showShort(getContext(), "同步成功");
                     } else {
                         TT.showShort(getContext(), "同步失败");
                     }
                     break;
                 case Constants.ChangeData.addOneWordFailure:
-                    TT.showShort(getContext(), msg.obj.toString());
+//                    TT.showShort(getContext(), msg.obj.toString());
                     break;
                 case Constants.requestException:
-                    if (msg.obj != null && msg.obj.toString().contains("java.net.ConnectException")) {
+                    if (msg.obj != null && msg.obj.toString().contains("ConnectException")) {
                         if (!isShowNetDisable) {
                             //这种错误只在用户启动的时候显示一遍
                             TT.showShort(getContext(), "检测到网络异常，数据无法同步");

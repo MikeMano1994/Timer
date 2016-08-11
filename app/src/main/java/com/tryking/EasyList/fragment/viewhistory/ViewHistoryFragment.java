@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,12 +22,16 @@ import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
+import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
+import com.tryking.EasyList._bean.ViewHistoryHandlerData;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryChildData;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryGroupData;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewMonthReturnBean;
 import com.tryking.EasyList.adapter.viewhistory.ViewHistoryExpandableAdapter;
+import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.CommonUtils;
+import com.tryking.EasyList.widgets.ShareDialog;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -89,7 +95,7 @@ public class ViewHistoryFragment extends Fragment implements RecyclerViewExpanda
         mRecyclerViewExpandableItemManager.setOnGroupExpandListener(this);
 
         getData();
-        final ViewHistoryExpandableAdapter myItemAdapter = new ViewHistoryExpandableAdapter(mGroupDatas, mChildDatas);
+        final ViewHistoryExpandableAdapter myItemAdapter = new ViewHistoryExpandableAdapter(getActivity(), mHandler, mGroupDatas, mChildDatas);
         mWrapperAdapter = mRecyclerViewExpandableItemManager.createWrappedAdapter(myItemAdapter);
         final GeneralItemAnimator animator = new RefactoredDefaultItemAnimator();
 
@@ -203,4 +209,19 @@ public class ViewHistoryFragment extends Fragment implements RecyclerViewExpanda
         super.onPause();
         MobclickAgent.onPageEnd(getString(R.string.view_history));
     }
+
+    Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case Constants.ViewHistory.SHARE_HANDLER_DATA:
+                    ViewHistoryHandlerData data = (ViewHistoryHandlerData) msg.obj;
+                    Logger.e(data.toString());
+                    ShareDialog shareDialog = new ShareDialog(getActivity(), data);
+                    shareDialog.show();
+                    break;
+            }
+        }
+    };
 }

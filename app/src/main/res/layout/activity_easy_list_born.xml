@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context="com.tryking.EasyList.activity.about_easylist.EasyListBornActivity">
 
     <android.support.v7.widget.Toolbar

@@ -21,6 +21,7 @@ import com.tryking.EasyList.fragment.main.IcFragment;
 import com.tryking.EasyList.fragment.main.TodayFragment;
 import com.tryking.EasyList.fragment.main.StatsFragment;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.UMShareAPI;
 
 import java.util.ArrayList;
 import java.util.List;

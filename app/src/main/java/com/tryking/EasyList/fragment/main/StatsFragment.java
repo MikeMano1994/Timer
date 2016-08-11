@@ -1,5 +1,6 @@
 package com.tryking.EasyList.fragment.main;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -25,9 +28,9 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
-import com.tryking.EasyList.activity.ViewYesterdayActivity;
-import com.tryking.EasyList.activity.ViewHistoryActivity;
 import com.tryking.EasyList._bean.TodayEventData;
+import com.tryking.EasyList.activity.ViewHistoryActivity;
+import com.tryking.EasyList.activity.ViewYesterdayActivity;
 import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
@@ -37,6 +40,9 @@ import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.marqueeView.MarqueeView;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -62,12 +68,13 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
     TextView tvTitle;
     @Bind(R.id.mv_notice)
     MarqueeView mvNotice;
-
-
+    
     //    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     String[] mParties = new String[]{
             "未添加事件", "工作", "娱乐", "生活", "学习"
     };
+    @Bind(R.id.main_content)
+    FrameLayout mainContent;
     private RefreshChatDataReceiver refreshChatDataReceiver;
 
     @Override
@@ -108,7 +115,6 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_viewHistory:
-                //上面的弃用，改为下面这个
                 startActivity(new Intent(getActivity(), ViewHistoryActivity.class));
                 break;
             case R.id.bt_viewYesterday:
@@ -251,6 +257,7 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
         showPieChart.setTransparentCircleRadius(61f);
 
         showPieChart.setDrawCenterText(true);
+        showPieChart.setCenterText("今日");
 
         showPieChart.setRotationAngle(0);
         // enable rotation of the chart by touch
@@ -347,7 +354,7 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
 
     @Override
     public void onNothingSelected() {
-        showPieChart.setCenterText("今日");
+
     }
 
     //友盟统计：由Activity和Fragment构成的页面需要这样写

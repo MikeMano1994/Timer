@@ -78,8 +78,8 @@ android {
         xiaomi {}
         tencent {}
         taobao {}
-        lianzhihong{}
-        alibabaMianshi{}
+        lianzhihong {}
+        alibabaMianshi {}
     }
 
     productFlavors.all { flavor ->
@@ -93,6 +93,10 @@ android {
         }
 
         mavenCentral()//Glide
+
+        //友盟反馈
+        jcenter()
+        maven { url "https://raw.githubusercontent.com/umeng/mvn-repo-umeng/master/repository" }
     }
 }
 
@@ -103,7 +107,7 @@ dependencies {
     compile files('libs/umeng_social_sdk.jar')
     //QQ
     compile files('libs/mta-sdk-1.6.2.jar')
-    compile files('libs/open_sdk_r5509.jar')
+    compile files('libs/open_sdk_r5756.jar')
     compile files('libs/SocialSDK_QQZone_3.jar')
     //新浪微博
     compile files('libs/SocialSDK_Sina.jar')
@@ -111,6 +115,10 @@ dependencies {
     //微信
     compile files('libs/SocialSDK_WeiXin_2.jar')
     compile files('libs/SocialSDK_WeiXin_1.jar')
+    //Evernote
+    compile files('libs/SocialSDK_evernote.jar')
+    //有道云笔记
+    compile files('libs/SocialSDK_ynote.jar')
     /** ***************************/
 
     compile 'com.android.support:appcompat-v7:23.3.0'
@@ -136,4 +144,6 @@ dependencies {
     }
     /* U盟统计 */
     compile 'com.umeng.analytics:analytics:latest.integration'
+    /* 友盟反馈 */
+    compile 'com.umeng:fb:5.4.0'
 }

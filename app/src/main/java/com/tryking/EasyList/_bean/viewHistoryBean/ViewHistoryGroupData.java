@@ -38,4 +38,13 @@ public class ViewHistoryGroupData {
     public void setOneWord(String oneWord) {
         this.oneWord = oneWord;
     }
+
+    @Override
+    public String toString() {
+        return "ViewHistoryGroupData{" +
+                "date='" + date + '\'' +
+                ", oneWord='" + oneWord + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }
