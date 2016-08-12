@@ -120,6 +120,7 @@ public class IcFragment extends BaseFragment {
                     shareUrl = Constants.default_share_url;
                 }
                 new ShareAction(getActivity()).setDisplayList(displaylist)
+                        .setListenerList(listener)//这个貌似和callback一样
                         .withTitle(getString(R.string.share_title))
                         .withText(getString(R.string.share_text))
                         .withMedia(new UMImage(getActivity(), R.mipmap.ic_launcher))
@@ -134,11 +135,33 @@ public class IcFragment extends BaseFragment {
     private UMShareListener listener = new UMShareListener() {
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            TT.showShort(getActivity(), platform + " 分享成功啦");
+            //QQ的就是QQ
+            String sharePlatform = platform.name();
+            if (platform == SHARE_MEDIA.WEIXIN) {//enum类型用==可以判断
+                sharePlatform = "微信";
+            } else if (platform.equals(SHARE_MEDIA.WEIXIN_CIRCLE)) {//.equals也能判断
+                sharePlatform = "朋友圈";
+            } else if (platform.equals(SHARE_MEDIA.QZONE)) {
+                sharePlatform = "QQ空间";
+            } else if (platform.equals(SHARE_MEDIA.SINA)) {
+                sharePlatform = "新浪微博";
+            }
+            TT.showShort(getActivity(), sharePlatform + "分享成功啦");
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable throwable) {
+            String sharePlatform = platform.name();
+            if (platform == SHARE_MEDIA.WEIXIN) {//enum类型用==可以判断
+                sharePlatform = "微信";
+            } else if (platform.equals(SHARE_MEDIA.WEIXIN_CIRCLE)) {//.equals也能判断
+                sharePlatform = "朋友圈";
+            } else if (platform.equals(SHARE_MEDIA.QZONE)) {
+                sharePlatform = "QQ空间";
+            } else if (platform.equals(SHARE_MEDIA.SINA)) {
+                sharePlatform = "新浪微博";
+            }
+            TT.showShort(getActivity(), sharePlatform + "分享是啊啦");
             TT.showShort(getActivity(), platform + " 分享失败啦");
         }
 
@@ -168,13 +191,6 @@ public class IcFragment extends BaseFragment {
                 }
             });
         }
-//        if (SystemInfo.getInstance(getActivity()).isLogin()) {
-//            icAccount.setText(SystemInfo.getInstance(getActivity()).getAccount());
-//            icSignature.setText(SystemInfo.getInstance(getActivity()).getSignature());
-//        } else {
-//            icAccount.setText("未登陆");
-//            icSignature.setText("点击登录");
-//        }
 
         List<String> info = new ArrayList<>();
         info.add("重复言说多半是一种时间上的损失。 \n—— 培根");

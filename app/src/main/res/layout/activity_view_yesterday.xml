@@ -43,7 +43,7 @@
                     android:drawablePadding="15dp"
                     android:enabled="false"
                     android:gravity="center"
-                    android:hint="一句话总结昨日"
+                    android:hint="一句话谈谈昨日"
                     android:maxLength="25" />
 
                 <ImageView
@@ -85,14 +85,16 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:gravity="center"
-                    android:text="喵~网络偷懒啦~" />
+                    android:text="喵~网络偷懒啦~"
+                    android:textSize="13sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="再试一次，伦家已经在飞来的路上了" />
+                    android:text="再试一次，伦家已经在飞来的路上了"
+                    android:textSize="13sp" />
 
                 <Button
                     android:id="@+id/bt_reLoad"
@@ -126,14 +128,16 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:gravity="center"
-                    android:text="喵~服务器开小差了~" />
+                    android:text="喵~服务器开小差了~"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="换个姿势试试吧" />
+                    android:text="换个姿势试试吧"
+                    android:textSize="13sp" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -160,14 +164,16 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:gravity="center"
-                    android:text="喵~昨日还未添加事件~" />
+                    android:text="喵~昨日还未添加事件~"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="点击右上角添加昨日事件吧" />
+                    android:text="点击右上角添加昨日事件吧"
+                    android:textSize="13sp" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -194,14 +200,16 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:gravity="center"
-                    android:text="喵~这里空空如也~" />
+                    android:text="喵~这里空空如也~"
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:gravity="center"
-                    android:text="淫家正在玩儿命加载呢" />
+                    android:text="淫家正在玩儿命加载呢"
+                    android:textSize="13sp" />
             </LinearLayout>
         </RelativeLayout>
     </FrameLayout>

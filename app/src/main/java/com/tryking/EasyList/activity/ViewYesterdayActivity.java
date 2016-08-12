@@ -492,7 +492,11 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                             if (i != -1) {
                                 newTypes = eventTypes.substring(0, i) + eventTypes.substring(i + 5);
                             }
-                        } else {
+
+                            startTimes = newStarts;
+                            endTimes = newEnds;
+                            eventTypes = newTypes;
+                        } else {//到了这里说明已经没有事件了，要把页面切换一下。
                             newStarts = CommonUtils.deleteStr(startTimes, startTime);
                             newEnds = CommonUtils.deleteStr(endTimes, endTime);
                             int i = startTimes.indexOf(startTime);
@@ -504,10 +508,19 @@ public class ViewYesterdayActivity extends BaseActivity implements DayEventAdapt
                                 newEnds = newEnds.replaceFirst(",", "");
                                 newTypes = newTypes.replaceFirst(",", "");
                             }
+                            specificEvents.remove(startTime);
+                            startTimes = newStarts;
+                            endTimes = newEnds;
+                            eventTypes = newTypes;
+                            speEvents = "";//因为这里已经没有事件了，所以这里直接就是空
+
+                            changeDataToServer();
+                            //切换页面，完了直接返回
+                            showView(showNoData);
+                            commonDialog.dismiss();
+                            return;
                         }
-                        startTimes = newStarts;
-                        endTimes = newEnds;
-                        eventTypes = newTypes;
+
                         Logger.e(specificEvents.toString());
                         specificEvents.remove(startTime);
                         Logger.e(specificEvents.toString());

@@ -151,7 +151,7 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
         new AlertDialog.Builder(getActivity())
                 .setTitle("去登陆")
                 .setMessage("该功能需要登陆才能使用，快去登陆吧")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setPositiveButton("去登陆", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -159,7 +159,7 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
                         getActivity().finish();
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton("再看看", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

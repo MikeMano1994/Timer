@@ -100,7 +100,7 @@ public class EasyListApplication extends Application {
     初始化友盟社会化分享
      */
     private void initUMeng() {
-        PlatformConfig.setWeixin("wx967daebe835fbeac", "5bb696d9ccd75a38c8a0bfe0675559b3");
+        PlatformConfig.setWeixin(Constants.THIRD_WEIXIN_APP_ID, Constants.THIRD_WEIXIN_APP_SECRET);
         //微信 appid appsecret
         PlatformConfig.setSinaWeibo(Constants.THIRD_SINA_APP_KEY, Constants.THIRD_SINA_APP_SECRET);
         //新浪微博 appkey appsecret

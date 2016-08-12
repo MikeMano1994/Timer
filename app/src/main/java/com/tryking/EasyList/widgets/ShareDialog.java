@@ -116,16 +116,18 @@ public class ShareDialog extends Dialog {
         switch (v.getId()) {
             case R.id.qq_share:
                 new ShareAction((Activity) mContext)
+                        //qq也是只分享图片
                         .setPlatform(SHARE_MEDIA.QQ)
                         .setCallback(listener)
-                        .withText(mContext.getString(R.string.share_text))
-                        .withTitle(mContext.getString(R.string.share_title))
-//                        .withMedia(umImage)
-                        .withMedia(new UMImage(mContext, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher)))
-                        .withTargetUrl(shareUrl)
+//                        .withText(mContext.getString(R.string.share_text))
+//                        .withTitle(mContext.getString(R.string.share_title))
+                        .withMedia(umImage)
+//                        .withMedia(new UMImage(mContext, BitmapFactory.decodeResource(mContext.getResources(), R.mipmap.ic_launcher)))
+//                        .withTargetUrl(shareUrl)
                         .share();
                 break;
             case R.id.sina_share:
+                //新浪可以分享一堆
                 new ShareAction((Activity) mContext)
                         .setPlatform(SHARE_MEDIA.SINA)
                         .setCallback(listener)
@@ -137,22 +139,24 @@ public class ShareDialog extends Dialog {
                 break;
             case R.id.wechat_share:
                 new ShareAction((Activity) mContext)
+                        //微信也是只分享图片
                         .setPlatform(SHARE_MEDIA.WEIXIN)
                         .setCallback(listener)
-                        .withText(mContext.getString(R.string.share_text))
-                        .withTitle(mContext.getString(R.string.share_title))
+//                        .withText(mContext.getString(R.string.share_text))
+//                        .withTitle(mContext.getString(R.string.share_title))
                         .withMedia(umImage)
-                        .withTargetUrl(shareUrl)
+//                        .withTargetUrl(shareUrl)
                         .share();
                 break;
             case R.id.weCircle_share:
+                //朋友圈只分享图片，这样才有意义（如果带字的话是小图）
                 new ShareAction((Activity) mContext)
                         .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
                         .setCallback(listener)
-                        .withText(mContext.getString(R.string.share_text))
-                        .withTitle(mContext.getString(R.string.share_title))
-                        .withTitle(mContext.getString(R.string.app_name))
-                        .withTargetUrl(shareUrl)
+//                        .withText(mContext.getString(R.string.share_text))
+//                        .withTitle(mContext.getString(R.string.share_title))
+                        .withMedia(umImage)
+//                        .withTargetUrl(shareUrl)
                         .share();
                 break;
             case R.id.qZone_share:
@@ -171,21 +175,53 @@ public class ShareDialog extends Dialog {
     }
 
     UMShareListener listener = new UMShareListener() {
+        //现在只有新浪的不能正常回调（不知道原因）
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            TT.showShort(mContext, platform + " 分享成功啦");
+            //QQ的就是QQ
+            String sharePlatform = platform.name();
+            if (platform == SHARE_MEDIA.WEIXIN) {//enum类型用==可以判断
+                sharePlatform = "微信";
+            } else if (platform.equals(SHARE_MEDIA.WEIXIN_CIRCLE)) {//.equals也能判断
+                sharePlatform = "朋友圈";
+            } else if (platform.equals(SHARE_MEDIA.QZONE)) {
+                sharePlatform = "QQ空间";
+            } else if (platform.equals(SHARE_MEDIA.SINA)) {
+                sharePlatform = "新浪微博";
+            }
+            TT.showShort(mContext, sharePlatform + "分享成功啦");
             dismiss();
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            TT.showShort(mContext, platform + " 分享失败啦");
+            String sharePlatform = platform.name();
+            if (platform == SHARE_MEDIA.WEIXIN) {//enum类型用==可以判断
+                sharePlatform = "微信";
+            } else if (platform.equals(SHARE_MEDIA.WEIXIN_CIRCLE)) {//.equals也能判断
+                sharePlatform = "朋友圈";
+            } else if (platform.equals(SHARE_MEDIA.QZONE)) {
+                sharePlatform = "QQ空间";
+            } else if (platform.equals(SHARE_MEDIA.SINA)) {
+                sharePlatform = "新浪微博";
+            }
+            TT.showShort(mContext, sharePlatform + "分享失败啦");
             dismiss();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            TT.showShort(mContext, platform + " 分享取消了");
+            String sharePlatform = platform.name();
+            if (platform == SHARE_MEDIA.WEIXIN) {//enum类型用==可以判断
+                sharePlatform = "微信";
+            } else if (platform.equals(SHARE_MEDIA.WEIXIN_CIRCLE)) {//.equals也能判断
+                sharePlatform = "朋友圈";
+            } else if (platform.equals(SHARE_MEDIA.QZONE)) {
+                sharePlatform = "QQ空间";
+            } else if (platform.equals(SHARE_MEDIA.SINA)) {
+                sharePlatform = "新浪微博";
+            }
+            TT.showShort(mContext, sharePlatform + "分享取消了");
             dismiss();
         }
     };

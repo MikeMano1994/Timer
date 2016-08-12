@@ -12,6 +12,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,6 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -89,6 +89,8 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
     ImageView addOneWord;
     @Bind(R.id.ll_one_word)
     LinearLayout llOneWord;
+    @Bind(R.id.refresh_layout)
+    SwipeRefreshLayout refreshLayout;
 
 
     private TodayEventAdapter todayEventAdapter;
@@ -102,6 +104,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
     private boolean isShowNetDisable = false;
     private boolean isShowServerDisable = false;
     private boolean isAdd = false;
+    private boolean isRefreshLayout = false;
 
     /********************/
     /*******etOneWord*****/
@@ -131,7 +134,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
                 View oneWord = LayoutInflater.from(getContext()).inflate(R.layout.add_one_word, null);
                 etOneWord = (TextInputEditText) oneWord.findViewById(R.id.et_one_word);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                        .setTitle("一句话总结今日")
+                        .setTitle("一句话谈谈今日")
                         .setView(oneWord);
                 setPosAndNegButton(builder);
                 final AlertDialog alertDialog = builder.create();
@@ -226,15 +229,15 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
         JsonBeanRequest<ChangeDataReturnBean> changeDataRequest = new JsonBeanRequest<>(url, params, ChangeDataReturnBean.class, new Response.Listener<ChangeDataReturnBean>() {
             @Override
             public void onResponse(ChangeDataReturnBean response) {
-                Message msg = new Message();
-                if (response.getResult().equals("1")) {
-                    msg.what = Constants.ChangeData.addOneWordSuccess;
-                    msg.obj = response;
-                } else {
-                    msg.what = Constants.ChangeData.addOneWordFailure;
-                    msg.obj = response.getMsg();
-                }
-                mHandler.sendMessage(msg);
+//                Message msg = new Message();
+//                if (response.getResult().equals("1")) {
+//                    msg.what = Constants.ChangeData.addOneWordSuccess;
+//                    msg.obj = response;
+//                } else {
+//                    msg.what = Constants.ChangeData.addOneWordFailure;
+//                    msg.obj = response.getMsg();
+//                }
+//                mHandler.sendMessage(msg);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -293,6 +296,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
                 }
             }
         }
+        isAdd = true;
         refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
         if (!isTryOutAccount)
             changeDataToServer();
@@ -468,7 +472,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
     }
 
     private void initViews() {
-        // TODO: 2016/8/9 这里小米机器按钮有一半被遮住，这样看下行不行 （待测试）
+        // 解决有的机型按钮不在最上层
         actionButton.bringToFront();
         mQueue = Volley.newRequestQueue(getActivity());
         todayEventAdapter = new TodayEventAdapter(new WeakReference<Context>(getActivity()), getActivity(), todayEventDatas);
@@ -478,6 +482,29 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
         eventContent.setHasFixedSize(true);
         eventContent.setItemAnimator(new DefaultItemAnimator());
         eventContent.setAdapter(todayEventAdapter);
+
+        initSwipeRefresh();
+    }
+
+    //初始化下拉刷新
+    private void initSwipeRefresh() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (SystemInfo.getInstance(getActivity()).isLogin()) {
+                    refreshLayout.setRefreshing(true);
+                    isRefreshLayout = true;
+                    changeDataToServer();
+                    if (tvOneWord.getText() != null && !tvOneWord.getText().toString().equals(""))
+                        addOneWordToServer(tvOneWord.getText().toString());
+                } else {
+                    TT.showShort(getContext(), "未登陆，无法使用同步功能");
+                    refreshLayout.setRefreshing(false);
+                }
+            }
+        });
+//        refreshLayout.setColorSchemeColors(R.color.colorAccent);
+        refreshLayout.setColorSchemeResources(R.color.colorAccent);
     }
 
     @Override
@@ -568,6 +595,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
                         //把存储的事件的key删除
                         SPUtils.remove(getActivity(), startTime);
                         deleteFromDataBase(startTime);
+                        isAdd = false;
                         refreshRecyclerViewDataByString(newStarts, newEnds, newTypes);
                         commonDialog.dismiss();
                     }
@@ -627,35 +655,40 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
                 case Constants.ChangeData.changeSuccess:
                     ChangeDataReturnBean changeBean = (ChangeDataReturnBean) msg.obj;
                     if (changeBean.isAmendSuccess()) {
-                        TT.showShort(getContext(), "同步成功");
+                        if (isAdd || isRefreshLayout)//只有添加事件的时候才显示同步成功,或者下拉刷新
+                        {
+                            TT.showShort(getContext(), "同步成功");
+                        }
                     } else {
                         TT.showShort(getContext(), "同步失败");
                     }
+
                     break;
                 case Constants.ChangeData.changeFailure:
                     TT.showShort(getContext(), msg.obj.toString());
                     break;
-                case Constants.ChangeData.addOneWordSuccess:
-                    ChangeDataReturnBean chaBean = (ChangeDataReturnBean) msg.obj;
-//                    这里不要给用户提醒了  太多不友好
-                    if (chaBean.isAmendSuccess()) {
-//                        TT.showShort(getContext(), "同步成功");
-                    } else {
-                        TT.showShort(getContext(), "同步失败");
-                    }
-                    break;
-                case Constants.ChangeData.addOneWordFailure:
-//                    TT.showShort(getContext(), msg.obj.toString());
-                    break;
+                //一句话添加成功与否都不给用户提示（因为下拉刷新的时候，只要传事件的那个网络请求提示就行了）
+//                case Constants.ChangeData.addOneWordSuccess:
+//                    ChangeDataReturnBean chaBean = (ChangeDataReturnBean) msg.obj;
+////                    这里不要给用户提醒了  太多不友好
+//                    if (chaBean.isAmendSuccess()) {
+////                        TT.showShort(getContext(), "同步成功");
+//                    } else {
+//                        TT.showShort(getContext(), "同步失败");
+//                    }
+//                    break;
+//                case Constants.ChangeData.addOneWordFailure:
+////                    TT.showShort(getContext(), msg.obj.toString());
+//                    break;
                 case Constants.requestException:
                     if (msg.obj != null && msg.obj.toString().contains("ConnectException")) {
-                        if (!isShowNetDisable) {
+                        if (!isShowNetDisable || isRefreshLayout) {
                             //这种错误只在用户启动的时候显示一遍
                             TT.showShort(getContext(), "检测到网络异常，数据无法同步");
                             isShowNetDisable = true;
                         }
                     } else {
-                        if (!isShowServerDisable) {
+                        if (!isShowServerDisable || isRefreshLayout) {
                             //这种错误只在用户启动的时候显示一遍
                             TT.showShort(getContext(), "服务器开小差啦~");
                             isShowServerDisable = true;
@@ -663,6 +696,8 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
                     }
                     break;
             }
+            isRefreshLayout = false;
+            refreshLayout.setRefreshing(false);
         }
 
     };
