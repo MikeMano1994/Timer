@@ -90,7 +90,6 @@ public class EasyListApplication extends Application {
         MobclickAgent.openActivityDurationTrack(false);
         //开启友盟异常捕获上传
         MobclickAgent.setCatchUncaughtExceptions(true);
-        // TODO: 2016/8/6 http://dev.umeng.com/analytics/android-doc/integration 5友盟社交统计没有集成
 
         //友盟反馈
         FeedbackPush.getInstance(this).init(FeedbackActivity.class, true);

@@ -86,7 +86,7 @@
                     android:layout_centerVertical="true"
                     android:gravity="center"
                     android:text="喵~网络偷懒啦~"
-                    android:textSize="13sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"

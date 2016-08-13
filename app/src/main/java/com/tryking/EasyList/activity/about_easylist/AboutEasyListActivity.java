@@ -23,6 +23,7 @@ import com.tryking.EasyList.utils.AppUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.UpdateDialog;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.FeedbackAgent;
 
 import java.util.HashMap;
@@ -63,9 +64,10 @@ public class AboutEasyListActivity extends BaseActivity {
                 startActivity(new Intent(AboutEasyListActivity.this, EasyListBornActivity.class));
                 break;
             case R.id.opinion_feedback:
-//                FeedbackAgent agent = new FeedbackAgent(this);
-//                agent.startFeedbackActivity();
-                startActivity(new Intent(AboutEasyListActivity.this, FeedbackActivity.class));
+                FeedbackAgent agent = new FeedbackAgent(this);
+                agent.startFeedbackActivity();
+                //先用友盟自待的反馈吧  自己的集成不进去
+//                startActivity(new Intent(AboutEasyListActivity.this, FeedbackActivity.class));
                 break;
             case R.id.check_new_version:
 //                new CheckUpdateTask(AboutEasyListActivity.this, true).execute();
@@ -165,4 +167,19 @@ public class AboutEasyListActivity extends BaseActivity {
             }
         }
     };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //友盟统计：Activity自己实现的页面需要这样写(不包含Fragment)
+        MobclickAgent.onPageStart(getString(R.string.about_easylist));//统计页面
+        MobclickAgent.onResume(this);//统计时长
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.about_easylist));//统计页面
+        MobclickAgent.onPause(this);//统计时长
+    }
 }

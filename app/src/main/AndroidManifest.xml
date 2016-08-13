@@ -52,10 +52,6 @@
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity android:name=".z_test.TestActivity" />
         <activity
-            android:name=".z_disuse.ViewHistoryActivity"
-            android:label="@string/view_history"
-            android:theme="@style/AppTheme.Float" />
-        <activity
             android:name=".activity.ViewHistoryActivity"
             android:label="@string/view_history"
             android:theme="@style/AppTheme.Float" />

@@ -15,19 +15,19 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.orhanobut.logger.Logger;
+//import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.TodayEventData;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
-import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
+//import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
 import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.widgets.NumberPickerPopupWindow;
 import com.tryking.EasyList.base.BaseActivity;
-import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
-import com.tryking.EasyList.db.table.EverydayEventSource;
-import com.tryking.EasyList.db.table.SpecificEventSource;
+//import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
+//import com.tryking.EasyList.db.table.EverydayEventSource;
+//import com.tryking.EasyList.db.table.SpecificEventSource;
 import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
@@ -261,8 +261,8 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                     SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
                     SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
 //                Logger.e("在这儿");
-                    saveToDataBase(startTimes, endTimes, eventTypes);
-                    saveToDataBase(CommonUtils.intToStr(start), specificEvent);
+//                    saveToDataBase(startTimes, endTimes, eventTypes);
+//                    saveToDataBase(CommonUtils.intToStr(start), specificEvent);
                     refreshChart();
                     setResult(RESULT_OK);
 //                ActivityCompat.finishAfterTransition(AddActivity.this);
@@ -298,11 +298,11 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                                     SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
                                     SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
                                     SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
-                                    saveToDataBase(startTimes, endTimes, eventTypes);
+//                                    saveToDataBase(startTimes, endTimes, eventTypes);
 
                                     //以开始时间作为名字存储事件
                                     SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
-                                    saveToDataBase(CommonUtils.intToStr(start), specificEvent);
+//                                    saveToDataBase(CommonUtils.intToStr(start), specificEvent);
 
                                     refreshChart();
                                     setResult(RESULT_OK);
@@ -335,13 +335,13 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                                     SPUtils.put(AddActivity.this, ApplicationGlobal.START_TIMES, startTimes);
                                     SPUtils.put(AddActivity.this, ApplicationGlobal.END_TIMES, endTimes);
                                     SPUtils.put(AddActivity.this, ApplicationGlobal.EVENT_TYPES, eventTypes);
-                                    saveToDataBase(startTimes, endTimes, eventTypes);
+//                                    saveToDataBase(startTimes, endTimes, eventTypes);
 
 //                                Logger.e(String.valueOf(start) + "qqqqqqqqqq");
 
                                     //以开始时间作为名字存储事件
                                     SPUtils.put(AddActivity.this, CommonUtils.intToStr(start), specificEvent);
-                                    saveToDataBase(CommonUtils.intToStr(start), specificEvent);
+//                                    saveToDataBase(CommonUtils.intToStr(start), specificEvent);
 
                                     refreshChart();
                                     setResult(RESULT_OK);
@@ -374,72 +374,72 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
         sendBroadcast(intent_refreshChart);
     }
 
-    /*
-    保存具体的事项到数据库
-     */
-    private void saveToDataBase(String startTime, String specificEvent) {
-//        Logger.e("保存具体事项");
-        SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(AddActivity.this);
-        try {
-            Map<String, Object> map = new HashMap<>();
-            map.put("userId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
-            String currentDate = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.CURRENT_DATE, "");
-            map.put("eventDate", currentDate);
-            map.put("startTime", startTime);
-            ArrayList<SpecificEventSource> specificEventList = (ArrayList<SpecificEventSource>) specificEventDao.query(map);
-            if (specificEventList == null || specificEventList.size() <= 0) {
-                //本时段未添加过事项
-                specificEventDao.save(new SpecificEventSource(SystemInfo.getInstance(getApplicationContext()).getMemberId(), currentDate, startTime, specificEvent));
-            } else {
-                specificEventList.get(0).setSpecificEvent(specificEvent);
-                specificEventDao.update(specificEventList.get(0));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//    /*
+//    保存具体的事项到数据库
+//     */
+//    private void saveToDataBase(String startTime, String specificEvent) {
+////        Logger.e("保存具体事项");
+//        SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(AddActivity.this);
 //        try {
-//            ArrayList<SpecificEventSource> specificEventSources = (ArrayList<SpecificEventSource>) specificEventDao.queryAll();
-//            for (int i = 0; i < specificEventSources.size(); i++) {
-//                Logger.e("Add保存后的数据" + specificEventSources.get(i).toString());
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("userId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
+//            String currentDate = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.CURRENT_DATE, "");
+//            map.put("eventDate", currentDate);
+//            map.put("startTime", startTime);
+//            ArrayList<SpecificEventSource> specificEventList = (ArrayList<SpecificEventSource>) specificEventDao.query(map);
+//            if (specificEventList == null || specificEventList.size() <= 0) {
+//                //本时段未添加过事项
+//                specificEventDao.save(new SpecificEventSource(SystemInfo.getInstance(getApplicationContext()).getMemberId(), currentDate, startTime, specificEvent));
+//            } else {
+//                specificEventList.get(0).setSpecificEvent(specificEvent);
+//                specificEventDao.update(specificEventList.get(0));
 //            }
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-    }
-
-    /*
-    将每日事件保存到数据库
-     */
-    private void saveToDataBase(String startTimes, String endTimes, String eventTypes) {
-//        Logger.e("保存每日事件");
-        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(AddActivity.this);
-        try {
-            Map<String, Object> map = new HashMap<>();
-            map.put("userId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
-            String currentDate = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.CURRENT_DATE, "");
-            map.put("eventDate", currentDate);
-            ArrayList<EverydayEventSource> todayEventList = (ArrayList<EverydayEventSource>) everydayEventDao.query(map);
-            if (todayEventList == null || todayEventList.size() <= 0) {
-                //今日未添加过事项
-                everydayEventDao.save(new EverydayEventSource(SystemInfo.getInstance(getApplicationContext()).getMemberId(), currentDate, startTimes, endTimes, eventTypes));
-            } else {
-                todayEventList.get(0).setStartTimes(startTimes);
-                todayEventList.get(0).setEndTimes(endTimes);
-                todayEventList.get(0).setEventTypes(eventTypes);
-                everydayEventDao.update(todayEventList.get(0));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+////        try {
+////            ArrayList<SpecificEventSource> specificEventSources = (ArrayList<SpecificEventSource>) specificEventDao.queryAll();
+////            for (int i = 0; i < specificEventSources.size(); i++) {
+////                Logger.e("Add保存后的数据" + specificEventSources.get(i).toString());
+////            }
+////        } catch (SQLException e) {
+////            e.printStackTrace();
+////        }
+//    }
+//
+//    /*
+//    将每日事件保存到数据库
+//     */
+//    private void saveToDataBase(String startTimes, String endTimes, String eventTypes) {
+////        Logger.e("保存每日事件");
+//        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(AddActivity.this);
 //        try {
-//            ArrayList<EverydayEventSource> specificEventSources = (ArrayList<EverydayEventSource>) everydayEventDao.queryAll();
-//            for (int i = 0; i < specificEventSources.size(); i++) {
-//                Logger.e("Add保存后的数据" + specificEventSources.get(i).toString());
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("userId", SystemInfo.getInstance(getApplicationContext()).getMemberId());
+//            String currentDate = (String) SPUtils.get(AddActivity.this, ApplicationGlobal.CURRENT_DATE, "");
+//            map.put("eventDate", currentDate);
+//            ArrayList<EverydayEventSource> todayEventList = (ArrayList<EverydayEventSource>) everydayEventDao.query(map);
+//            if (todayEventList == null || todayEventList.size() <= 0) {
+//                //今日未添加过事项
+//                everydayEventDao.save(new EverydayEventSource(SystemInfo.getInstance(getApplicationContext()).getMemberId(), currentDate, startTimes, endTimes, eventTypes));
+//            } else {
+//                todayEventList.get(0).setStartTimes(startTimes);
+//                todayEventList.get(0).setEndTimes(endTimes);
+//                todayEventList.get(0).setEventTypes(eventTypes);
+//                everydayEventDao.update(todayEventList.get(0));
 //            }
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-    }
+////        try {
+////            ArrayList<EverydayEventSource> specificEventSources = (ArrayList<EverydayEventSource>) everydayEventDao.queryAll();
+////            for (int i = 0; i < specificEventSources.size(); i++) {
+////                Logger.e("Add保存后的数据" + specificEventSources.get(i).toString());
+////            }
+////        } catch (SQLException e) {
+////            e.printStackTrace();
+////        }
+//    }
 
     /*
     将事件类型添加到SharedPreference

@@ -35,6 +35,8 @@ import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.analytics.social.UMPlatformData;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -180,16 +182,42 @@ public class ShareDialog extends Dialog {
         public void onResult(SHARE_MEDIA platform) {
             //QQ的就是QQ
             String sharePlatform = platform.name();
+
+            //社交统计
+            UMPlatformData pform = null;
+            String userId = "";
+            if (SystemInfo.getInstance(getContext()).getAccount() == null || SystemInfo.getInstance(getContext()).getAccount().equals("")) {
+                userId = Constants.TRY_OUT_ACCOUNT;
+            } else {
+                userId = SystemInfo.getInstance(getContext()).getAccount();
+            }
             if (platform == SHARE_MEDIA.WEIXIN) {//enum类型用==可以判断
                 sharePlatform = "微信";
+                pform = new UMPlatformData(UMPlatformData.UMedia.WEIXIN_FRIENDS, userId);
             } else if (platform.equals(SHARE_MEDIA.WEIXIN_CIRCLE)) {//.equals也能判断
                 sharePlatform = "朋友圈";
+                pform = new UMPlatformData(UMPlatformData.UMedia.WEIXIN_CIRCLE, userId);
             } else if (platform.equals(SHARE_MEDIA.QZONE)) {
                 sharePlatform = "QQ空间";
+                pform = new UMPlatformData(UMPlatformData.UMedia.TENCENT_QZONE, userId);
             } else if (platform.equals(SHARE_MEDIA.SINA)) {
                 sharePlatform = "新浪微博";
+                pform = new UMPlatformData(UMPlatformData.UMedia.SINA_WEIBO, userId);
+            } else if (platform.equals(SHARE_MEDIA.QQ)) {
+                sharePlatform = "QQ";
+                pform = new UMPlatformData(UMPlatformData.UMedia.TENCENT_QQ, userId);
             }
             TT.showShort(mContext, sharePlatform + "分享成功啦");
+            if (SystemInfo.getInstance(getContext()).getGender() != null) {
+                if (SystemInfo.getInstance(getContext()).getGender().equals("0")) {
+                    pform.setGender(UMPlatformData.GENDER.FEMALE); //optional
+                } else {
+                    pform.setGender(UMPlatformData.GENDER.MALE);
+                }
+            }
+            //社交统计
+            MobclickAgent.onSocialEvent(mContext, pform);
+
             dismiss();
         }
 

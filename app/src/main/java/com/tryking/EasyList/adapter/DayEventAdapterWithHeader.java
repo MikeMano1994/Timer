@@ -24,8 +24,10 @@ import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList._bean.TodayEventData;
+import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.AppUtils;
 import com.tryking.EasyList.utils.CommonUtils;
+import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.widgets.NumberPickerPopupWindow;
 
 import java.lang.ref.WeakReference;
@@ -48,6 +50,7 @@ public class DayEventAdapterWithHeader extends RecyclerView.Adapter<RecyclerView
     private int amuseTime;
     private int lifeTime;
     private int studyTime;
+    private boolean isColorFull;
 
     String[] mParties = new String[]{
             "工作", "娱乐", "生活", "学习"
@@ -66,6 +69,11 @@ public class DayEventAdapterWithHeader extends RecyclerView.Adapter<RecyclerView
         mCtx = ctx;
         isNeedAnim = needAnim;
         handleData(data);
+        if ((boolean) SPUtils.get(ctx, Constants.Setting.SP_SET_COLOR_FULL, true)) {
+            isColorFull = true;
+        } else {
+            isColorFull = false;
+        }
     }
 
     private void handleData(List<TodayEventData> datas) {
@@ -179,21 +187,48 @@ public class DayEventAdapterWithHeader extends RecyclerView.Adapter<RecyclerView
             runEnterAnimation(holder.itemView, position);
         }
         if (holder instanceof HaveEventViewHolder) {
-            switch (mData.get(position).getDataType()) {
-                case TodayEventData.TYPE_WORK:
-                    ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_work);
-                    break;
-                case TodayEventData.TYPE_AMUSE:
-                    ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_amuse);
-                    break;
-                case TodayEventData.TYPE_LIFE:
-                    ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_life);
-                    break;
-                case TodayEventData.TYPE_STUDY:
-                    ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_study);
-                    break;
-                default:
-                    break;
+            if (isColorFull) {
+                switch (mData.get(position).getDataType()) {
+                    case TodayEventData.TYPE_WORK:
+                        ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_work);
+                        break;
+                    case TodayEventData.TYPE_AMUSE:
+                        ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_amuse);
+                        break;
+                    case TodayEventData.TYPE_LIFE:
+                        ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_life);
+                        break;
+                    case TodayEventData.TYPE_STUDY:
+                        ((HaveEventViewHolder) holder).llParent.setBackgroundResource(R.drawable.pressed_study);
+                        break;
+                    default:
+                        break;
+                }
+                ((HaveEventViewHolder) holder).startTime.setTextColor(mCtx.getResources().getColor(R.color.white));
+                ((HaveEventViewHolder) holder).endTime.setTextColor(mCtx.getResources().getColor(R.color.white));
+                ((HaveEventViewHolder) holder).specificEvent.setTextColor(mCtx.getResources().getColor(R.color.white));
+            } else {
+                //主背景设置成白色
+                ((HaveEventViewHolder) holder).llParent.setBackgroundColor(mCtx.getResources().getColor(R.color.white));
+                switch (mData.get(position).getDataType()) {
+                    case TodayEventData.TYPE_WORK:
+                        ((HaveEventViewHolder) holder).durationTime.setBackgroundResource(R.drawable.pressed_work);
+                        break;
+                    case TodayEventData.TYPE_AMUSE:
+                        ((HaveEventViewHolder) holder).durationTime.setBackgroundResource(R.drawable.pressed_amuse);
+                        break;
+                    case TodayEventData.TYPE_LIFE:
+                        ((HaveEventViewHolder) holder).durationTime.setBackgroundResource(R.drawable.pressed_life);
+                        break;
+                    case TodayEventData.TYPE_STUDY:
+                        ((HaveEventViewHolder) holder).durationTime.setBackgroundResource(R.drawable.pressed_study);
+                        break;
+                    default:
+                        break;
+                }
+                ((HaveEventViewHolder) holder).startTime.setTextColor(mCtx.getResources().getColor(R.color.black));
+                ((HaveEventViewHolder) holder).endTime.setTextColor(mCtx.getResources().getColor(R.color.black));
+                ((HaveEventViewHolder) holder).specificEvent.setTextColor(mCtx.getResources().getColor(R.color.black));
             }
             String durationTime = CommonUtils.durationTime(mData.get(position).getStartTime(), mData.get(position).getEndTime());
             int durationMinutes = CommonUtils.durationMinutes(mData.get(position).getStartTime(), mData.get(position).getEndTime());

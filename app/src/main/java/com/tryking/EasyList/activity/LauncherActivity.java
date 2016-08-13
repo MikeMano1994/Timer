@@ -37,6 +37,8 @@ public class LauncherActivity extends BaseActivity {
 
         //友盟反馈提醒用户（默认控制栏  可自定义 无自定义）
         FeedbackAgent agent = new FeedbackAgent(this);
+        //显示的欢迎语
+        agent.setWelcomeInfo("你的想法正闪闪发光，快告诉我们吧~");
         agent.sync();
     }
 

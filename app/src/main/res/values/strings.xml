@@ -14,6 +14,8 @@
     <string name="easylist_born">轻单儿诞生</string>
     <string name="common_setting">通用设置</string>
     <string name="feedback">用户反馈</string>
+    <!--  @对应的Unicode字符集  -->
+    <string name="sinaName">\u0040轻单儿</string>
 
     <string name="launcher">Launcher启动</string>
     <string name="main_today">首页_1_今日</string>

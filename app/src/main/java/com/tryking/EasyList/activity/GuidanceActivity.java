@@ -93,6 +93,18 @@ public class GuidanceActivity extends BaseActivity {
         mainContent.setAdapter(mPagerAdapter);
         indicator.setViewPager(mainContent);
         mainContent.setOnPageChangeListener(new MyOnPageChangeListener());
+
+        initConfig();
+    }
+
+    /**
+     * 因为这里只会运行一次，所以设置中的初始设置可以在这里配置
+     */
+    private void initConfig() {
+        //首页饼状图随手指转动
+        SPUtils.put(getApplicationContext(), Constants.Setting.SP_SET_CHART_ANIM, true);
+        //首页显示“轻单儿”
+        SPUtils.put(getApplicationContext(), Constants.Setting.SP_SET_SHOW_APPNAME, true);
     }
 
     private class MyOnPageChangeListener implements ViewPager.OnPageChangeListener {

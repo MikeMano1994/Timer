@@ -17,16 +17,21 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="50dp"
-        android:background="@drawable/common_color_accent_frame"
+        android:background="@drawable/common_accent_frame_transparent"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/show_app_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/common_color_accent_frame_top"
             android:padding="8dp">
 
             <TextView
@@ -34,20 +39,81 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:text="轻单儿诞生" />
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:text="首页顶部展现  清单儿" />
 
-            <ImageView
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/name_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/right_arrow" />
+                android:background="@null"
+                android:clickable="false" />
         </RelativeLayout>
 
-        <View
+        <RelativeLayout
+            android:id="@+id/chart_anim"
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/colorAccent" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@color/white"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:text="首页饼状图允许随手指旋转" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/chart_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:clickable="false" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/full_color"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/common_color_accent_frame_bottom"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:text="事件列表颜色全填充" />
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/color_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:clickable="false" />
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

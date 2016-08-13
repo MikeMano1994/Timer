@@ -2,9 +2,11 @@ package com.tryking.EasyList.fragment.main;
 
 import android.animation.Animator;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,9 +47,9 @@ import com.tryking.EasyList.adapter.TodayEventAdapter;
 import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
-import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
-import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
-import com.tryking.EasyList.db.table.EverydayEventSource;
+//import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
+//import com.tryking.EasyList.db.dao.SpecificEventSourceDao;
+//import com.tryking.EasyList.db.table.EverydayEventSource;
 import com.tryking.EasyList.global.ApplicationGlobal;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.global.InterfaceURL;
@@ -115,6 +117,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
     private String oneWordInputAfterText;
     //是否重置了EditText的内容
     private boolean oneWordResetText;
+    private AdapterReceiver adapterReceiver;
 
     @OnClick({R.id.actionButton, R.id.add_one_word})
     void click(View view) {
@@ -347,6 +350,10 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
         if (oneWord != null && !oneWord.equals("")) {
             tvOneWord.setText(oneWord);
         }
+
+        IntentFilter changeAdapterFilter = new IntentFilter(String4Broad.ChangeAdapter);
+        adapterReceiver = new AdapterReceiver();
+        getActivity().registerReceiver(adapterReceiver, changeAdapterFilter);
     }
 
     /*
@@ -567,7 +574,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
                         SPUtils.put(getActivity(), ApplicationGlobal.START_TIMES, newStarts);
                         SPUtils.put(getActivity(), ApplicationGlobal.END_TIMES, newEnds);
                         SPUtils.put(getActivity(), ApplicationGlobal.EVENT_TYPES, newTypes);
-                        saveToDataBase(newStarts, newEnds, newTypes);
+//                        saveToDataBase(newStarts, newEnds, newTypes);
 
                         transferData = new TransferData();
                         transferData.setStartTimes(newStarts);
@@ -594,7 +601,7 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
 
                         //把存储的事件的key删除
                         SPUtils.remove(getActivity(), startTime);
-                        deleteFromDataBase(startTime);
+//                        deleteFromDataBase(startTime);
                         isAdd = false;
                         refreshRecyclerViewDataByString(newStarts, newEnds, newTypes);
                         commonDialog.dismiss();
@@ -603,49 +610,49 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
         commonDialog.show();
     }
 
-    /*
-    将删除的事件从数据库中删除
-     */
-    private void deleteFromDataBase(String startTime) {
-        SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(getActivity());
-        try {
-            Map<String, Object> map = new HashMap<>();
-            map.put("userId", SystemInfo.getInstance(getActivity()).getMemberId());
-            String currentDate = (String) SPUtils.get(getActivity(), ApplicationGlobal.CURRENT_DATE, "");
-            map.put("eventDate", currentDate);
-            map.put("startTime", startTime);
-            specificEventDao.delete(specificEventDao.query(map));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /*
-    将每日事件保存到数据库
-     */
-    private void saveToDataBase(String startTimes, String endTimes, String eventTypes) {
-        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(getActivity());
-        try {
-            Map<String, Object> map = new HashMap<>();
-            map.put("userId", SystemInfo.getInstance(getActivity()).getMemberId());
-            String currentDate = (String) SPUtils.get(getActivity(), ApplicationGlobal.CURRENT_DATE, "");
-            map.put("eventDate", currentDate);
-            ArrayList<EverydayEventSource> todayEventList = (ArrayList<EverydayEventSource>) everydayEventDao.query(map);
-            if (todayEventList == null || todayEventList.size() <= 0) {
-                //今日未添加过事项
-                everydayEventDao.save(new EverydayEventSource(SystemInfo.getInstance(getActivity()).getMemberId(), currentDate, startTimes, endTimes, eventTypes));
-            } else {
-                todayEventList.get(0).setStartTimes(startTimes);
-                todayEventList.get(0).setEndTimes(endTimes);
-                todayEventList.get(0).setEventTypes(eventTypes);
-                everydayEventDao.update(todayEventList.get(0));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    /*
+//    将删除的事件从数据库中删除
+//     */
+//    private void deleteFromDataBase(String startTime) {
+//        SpecificEventSourceDao specificEventDao = new SpecificEventSourceDao(getActivity());
+//        try {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("userId", SystemInfo.getInstance(getActivity()).getMemberId());
+//            String currentDate = (String) SPUtils.get(getActivity(), ApplicationGlobal.CURRENT_DATE, "");
+//            map.put("eventDate", currentDate);
+//            map.put("startTime", startTime);
+//            specificEventDao.delete(specificEventDao.query(map));
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
+//    /*
+//    将每日事件保存到数据库
+//     */
+//    private void saveToDataBase(String startTimes, String endTimes, String eventTypes) {
+//        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(getActivity());
+//        try {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("userId", SystemInfo.getInstance(getActivity()).getMemberId());
+//            String currentDate = (String) SPUtils.get(getActivity(), ApplicationGlobal.CURRENT_DATE, "");
+//            map.put("eventDate", currentDate);
+//            ArrayList<EverydayEventSource> todayEventList = (ArrayList<EverydayEventSource>) everydayEventDao.query(map);
+//            if (todayEventList == null || todayEventList.size() <= 0) {
+//                //今日未添加过事项
+//                everydayEventDao.save(new EverydayEventSource(SystemInfo.getInstance(getActivity()).getMemberId(), currentDate, startTimes, endTimes, eventTypes));
+//            } else {
+//                todayEventList.get(0).setStartTimes(startTimes);
+//                todayEventList.get(0).setEndTimes(endTimes);
+//                todayEventList.get(0).setEventTypes(eventTypes);
+//                everydayEventDao.update(todayEventList.get(0));
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     Handler mHandler = new Handler() {
         @Override
@@ -701,6 +708,21 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
         }
 
     };
+
+    class AdapterReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            todayEventAdapter.refreshAndChangeColorMode(todayEventDatas);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (adapterReceiver != null) {
+            getActivity().unregisterReceiver(adapterReceiver);
+        }
+    }
 
     //友盟统计：由Activity和Fragment构成的页面需要这样写
     public void onResume() {

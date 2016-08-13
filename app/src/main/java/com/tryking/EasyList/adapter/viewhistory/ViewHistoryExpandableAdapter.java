@@ -20,6 +20,7 @@ import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryChildData;
 import com.tryking.EasyList._bean.viewHistoryBean.ViewHistoryGroupData;
 import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.CommonUtils;
+import com.tryking.EasyList.utils.SPUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,7 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
     private List<List<ViewHistoryChildData>> mChildDatas;
     private Context mContext;
     private Handler mHandler;
+    private boolean isColorFull;
 
 
     // NOTE: Make accessible with short name
@@ -50,6 +52,12 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
         setHasStableIds(true);
         mContext = context;
         mHandler = handler;
+
+        if ((boolean) SPUtils.get(context, Constants.Setting.SP_SET_COLOR_FULL, true)) {
+            isColorFull = true;
+        } else {
+            isColorFull = false;
+        }
     }
 
     @Override
@@ -118,21 +126,47 @@ public class ViewHistoryExpandableAdapter extends AbstractExpandableItemAdapter<
 
     @Override
     public void onBindChildViewHolder(MyChildViewHolder holder, int groupPosition, int childPosition, int viewType) {
-        switch (mChildDatas.get(groupPosition).get(childPosition).getDataType()) {
-            case ViewHistoryChildData.TYPE_AMUSE:
-                holder.llParent.setBackgroundResource(R.drawable.pressed_amuse);
-                break;
-            case ViewHistoryChildData.TYPE_LIFE:
-                holder.llParent.setBackgroundResource(R.drawable.pressed_life);
-                break;
-            case ViewHistoryChildData.TYPE_STUDY:
-                holder.llParent.setBackgroundResource(R.drawable.pressed_study);
-                break;
-            case ViewHistoryChildData.TYPE_WORK:
-                holder.llParent.setBackgroundResource(R.drawable.pressed_work);
-                break;
-            default:
-                break;
+        if (isColorFull) {
+            switch (mChildDatas.get(groupPosition).get(childPosition).getDataType()) {
+                case ViewHistoryChildData.TYPE_AMUSE:
+                    holder.llParent.setBackgroundResource(R.drawable.pressed_amuse);
+                    break;
+                case ViewHistoryChildData.TYPE_LIFE:
+                    holder.llParent.setBackgroundResource(R.drawable.pressed_life);
+                    break;
+                case ViewHistoryChildData.TYPE_STUDY:
+                    holder.llParent.setBackgroundResource(R.drawable.pressed_study);
+                    break;
+                case ViewHistoryChildData.TYPE_WORK:
+                    holder.llParent.setBackgroundResource(R.drawable.pressed_work);
+                    break;
+                default:
+                    break;
+            }
+            holder.startTime.setTextColor(mContext.getResources().getColor(R.color.white));
+            holder.endTime.setTextColor(mContext.getResources().getColor(R.color.white));
+            holder.specificEvent.setTextColor(mContext.getResources().getColor(R.color.white));
+        } else {
+            holder.llParent.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            switch (mChildDatas.get(groupPosition).get(childPosition).getDataType()) {
+                case ViewHistoryChildData.TYPE_AMUSE:
+                    holder.tvDuration.setBackgroundResource(R.drawable.pressed_amuse);
+                    break;
+                case ViewHistoryChildData.TYPE_LIFE:
+                    holder.tvDuration.setBackgroundResource(R.drawable.pressed_life);
+                    break;
+                case ViewHistoryChildData.TYPE_STUDY:
+                    holder.tvDuration.setBackgroundResource(R.drawable.pressed_study);
+                    break;
+                case ViewHistoryChildData.TYPE_WORK:
+                    holder.tvDuration.setBackgroundResource(R.drawable.pressed_work);
+                    break;
+                default:
+                    break;
+            }
+            holder.startTime.setTextColor(mContext.getResources().getColor(R.color.black));
+            holder.endTime.setTextColor(mContext.getResources().getColor(R.color.black));
+            holder.specificEvent.setTextColor(mContext.getResources().getColor(R.color.black));
         }
 
         String durationTime = CommonUtils.durationTime(mChildDatas.get(groupPosition).get(childPosition).getStartTime(), mChildDatas.get(groupPosition).get(childPosition).getEndTime());

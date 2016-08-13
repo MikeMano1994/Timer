@@ -37,8 +37,8 @@ android {
             //debug标记
             manifestPlaceholders = [IS_DEBUG: "no"]
 
-            //混淆
-            minifyEnabled false
+            //混淆(混淆8000多错误但是能运行)
+            minifyEnabled true
             zipAlignEnabled true
             // 移除无用的resource文件（必须混淆才有效)
             shrinkResources true
@@ -121,12 +121,13 @@ dependencies {
     compile 'com.orhanobut:logger:1.11'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.android.support:support-v4:23.3.0'
-    compile 'com.j256.ormlite:ormlite-android:4.48'
+    //数据库，暂时用不到
+//    compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.mcxiaoke.volley:library:1.0.19'
     //Fresco用不到，jar包太大，换Glide
 //    compile 'com.facebook.fresco:fresco:0.11.0'
-    /* 日历选择器 */
-    compile 'com.prolificinteractive:material-calendarview:1.4.0'
+    /* 日历选择器(暂时用不到) */
+//    compile 'com.prolificinteractive:material-calendarview:1.4.0'
     /*  图表  */
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.0-beta1'
     compile 'com.github.bumptech.glide:glide:3.7.0'

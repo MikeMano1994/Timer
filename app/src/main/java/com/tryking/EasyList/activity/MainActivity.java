@@ -12,7 +12,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
+import com.orhanobut.logger.Logger;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.adapter.MainContentPagerAdapter;
 import com.tryking.EasyList.base.BaseActivity;
@@ -20,6 +22,8 @@ import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.fragment.main.IcFragment;
 import com.tryking.EasyList.fragment.main.TodayFragment;
 import com.tryking.EasyList.fragment.main.StatsFragment;
+import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.utils.SPUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
@@ -43,6 +47,7 @@ public class MainActivity extends BaseActivity {
     private FragmentTransaction transaction;
     private int currentIndex;
     private MainActivity.exitMainActivityReceiver exitMainActivityReceiver;
+    private ShowAppNameReceiver showAppNameReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,11 @@ public class MainActivity extends BaseActivity {
         IntentFilter exitFilter = new IntentFilter(String4Broad.ExitMainActivity);
         exitMainActivityReceiver = new exitMainActivityReceiver();
         registerReceiver(exitMainActivityReceiver, exitFilter);
+
+        //展示首页的ToolBar
+        IntentFilter showAppNameFilter = new IntentFilter(String4Broad.ShowAppName);
+        showAppNameReceiver = new ShowAppNameReceiver();
+        registerReceiver(showAppNameReceiver, showAppNameFilter);
     }
 
     private void initDatas() {
@@ -86,6 +96,11 @@ public class MainActivity extends BaseActivity {
     private void initToolBar() {
         toolBar.setTitleTextColor(getResources().getColor(R.color.white));
         toolBar.setTitle(R.string.app_name);
+        if ((boolean) SPUtils.get(getApplicationContext(), Constants.Setting.SP_SET_SHOW_APPNAME, true)) {
+            toolBar.setVisibility(View.VISIBLE);
+        } else {
+            toolBar.setVisibility(View.GONE);
+        }
     }
 
 
@@ -145,10 +160,27 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    class ShowAppNameReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO: 2016/8/13 这里如果用户在进入设置页之前Toolbar就在上面隐藏着，会出现三个导航找不见的情况。
+            if (toolBar.getVisibility() == View.VISIBLE) {
+                toolBar.setVisibility(View.GONE);
+            } else {
+                toolBar.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     @Override
     protected void onDestroy() {
         if (exitMainActivityReceiver != null) {
             unregisterReceiver(exitMainActivityReceiver);
+        }
+
+        if (showAppNameReceiver != null) {
+            unregisterReceiver(showAppNameReceiver);
         }
         super.onDestroy();
     }

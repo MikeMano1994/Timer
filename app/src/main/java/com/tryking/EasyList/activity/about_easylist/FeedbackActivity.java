@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.tryking.EasyList.R;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.FeedbackAgent;
 import com.umeng.fb.fragment.FeedbackFragment;
 
@@ -63,5 +64,20 @@ public class FeedbackActivity extends AppCompatActivity {
 //        super.onNewIntent(intent);
         //复写
         mFeedbackFragment.refresh();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //友盟统计：Activity自己实现的页面需要这样写(不包含Fragment)
+        MobclickAgent.onPageStart(getString(R.string.feedback));//统计页面
+        MobclickAgent.onResume(this);//统计时长
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getString(R.string.feedback));//统计页面
+        MobclickAgent.onPause(this);//统计时长
     }
 }

@@ -37,8 +37,9 @@ import com.tryking.EasyList.activity.ViewYesterdayActivity;
 import com.tryking.EasyList.base.BaseFragment;
 import com.tryking.EasyList.base.String4Broad;
 import com.tryking.EasyList.base.SystemInfo;
-import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
-import com.tryking.EasyList.db.table.EverydayEventSource;
+//import com.tryking.EasyList.db.dao.EverydayEventSourceDao;
+//import com.tryking.EasyList.db.table.EverydayEventSource;
+import com.tryking.EasyList.global.Constants;
 import com.tryking.EasyList.utils.CommonUtils;
 import com.tryking.EasyList.utils.SPUtils;
 import com.tryking.EasyList.utils.TT;
@@ -72,14 +73,16 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
     TextView tvTitle;
     @Bind(R.id.mv_notice)
     MarqueeView mvNotice;
+    @Bind(R.id.main_content)
+    FrameLayout mainContent;
 
+    private RefreshChatDataReceiver refreshChatDataReceiver;
     //    private static final DateFormat FORMATTER = SimpleDateFormat.getDateInstance();
     String[] mParties = new String[]{
             "未添加事件", "工作", "娱乐", "生活", "学习"
     };
-    @Bind(R.id.main_content)
-    FrameLayout mainContent;
-    private RefreshChatDataReceiver refreshChatDataReceiver;
+    private ChartAnimReceiver chartAnim;
+    private ChartDisAnimReceiver chartDisAnim;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,9 +113,21 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
         btViewYesterday.setText("查看昨日");
         tvTitle.setText("今日统计");
 
-        IntentFilter exitFilter = new IntentFilter(String4Broad.RefershChartData);
+        initReceiver();
+    }
+
+    private void initReceiver() {
+        IntentFilter refreshFilter = new IntentFilter(String4Broad.RefershChartData);
         refreshChatDataReceiver = new RefreshChatDataReceiver();
-        getActivity().registerReceiver(refreshChatDataReceiver, exitFilter);
+        getActivity().registerReceiver(refreshChatDataReceiver, refreshFilter);
+
+        IntentFilter animFilter = new IntentFilter(String4Broad.ChartAnim);
+        chartAnim = new ChartAnimReceiver();
+        getActivity().registerReceiver(chartAnim, animFilter);
+
+        IntentFilter animDisFilter = new IntentFilter(String4Broad.ChartDisAnim);
+        chartDisAnim = new ChartDisAnimReceiver();
+        getActivity().registerReceiver(chartDisAnim, animDisFilter);
     }
 
     @OnClick({R.id.bt_viewHistory, R.id.bt_viewYesterday})
@@ -168,21 +183,21 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
                 .show();
     }
 
-    /*
-    数据更新为昨日的数据
-     */
-    private void refreshYesterdayData() {
-        String currentDate = (String) SPUtils.get(getActivity(), "currentDate", "");
-        String previousDay = CommonUtils.getPreviousDay(currentDate, -1);
-        String[] dataFromDatabase = getDataFromDatabase(previousDay);
-        if (null != dataFromDatabase) {
-            initChart(getEventData(dataFromDatabase));
-            showPieChart.setDescription("昨日");
-            showPieChart.setCenterText("昨日");
-            btViewYesterday.setText("查看今日");
-            tvTitle.setText("昨日事项统计");
-        }
-    }
+//    /*
+//    数据更新为昨日的数据
+//     */
+//    private void refreshYesterdayData() {
+//        String currentDate = (String) SPUtils.get(getActivity(), "currentDate", "");
+//        String previousDay = CommonUtils.getPreviousDay(currentDate, -1);
+//        String[] dataFromDatabase = getDataFromDatabase(previousDay);
+//        if (null != dataFromDatabase) {
+//            initChart(getEventData(dataFromDatabase));
+//            showPieChart.setDescription("昨日");
+//            showPieChart.setCenterText("昨日");
+//            btViewYesterday.setText("查看今日");
+//            tvTitle.setText("昨日事项统计");
+//        }
+//    }
 
     private String[] getEventStrings() {
         String startTimes = (String) SPUtils.get(getActivity(), "startTimes", "");
@@ -243,36 +258,36 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
         return new float[]{noEvent / (24 * 60) * 100, work / (24 * 60) * 100, amuse / (24 * 60) * 100, life / (24 * 60) * 100, study / (24 * 60) * 100};
     }
 
-    /*
-    从数据库中获取数据
-     */
-    private String[] getDataFromDatabase(String date) {
-        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(getActivity());
-        try {
-            Map<String, Object> map = new HashMap<>();
-            map.put("userId", "");
-            map.put("eventDate", date);
-            List<EverydayEventSource> eventList = everydayEventDao.query(map);
-
-            if (eventList == null || eventList.size() <= 0) {
-                TT.showShort(getActivity(), "昨日未添加数据");
-            } else {
-//                Logger.e("有事件");
-                for (int i = 0; i < eventList.size(); i++) {
-                    Logger.e(eventList.get(i).toString());
-                    String startTimes = eventList.get(i).getStartTimes();
-                    String endTimes = eventList.get(i).getEndTimes();
-                    String eventTypes = eventList.get(i).getEventTypes();
-                    Logger.e(startTimes + "::" + endTimes);
-//                    refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
-                    return new String[]{startTimes, endTimes, eventTypes};
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    /*
+//    从数据库中获取数据
+//     */
+//    private String[] getDataFromDatabase(String date) {
+//        EverydayEventSourceDao everydayEventDao = new EverydayEventSourceDao(getActivity());
+//        try {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("userId", "");
+//            map.put("eventDate", date);
+//            List<EverydayEventSource> eventList = everydayEventDao.query(map);
+//
+//            if (eventList == null || eventList.size() <= 0) {
+//                TT.showShort(getActivity(), "昨日未添加数据");
+//            } else {
+////                Logger.e("有事件");
+//                for (int i = 0; i < eventList.size(); i++) {
+//                    Logger.e(eventList.get(i).toString());
+//                    String startTimes = eventList.get(i).getStartTimes();
+//                    String endTimes = eventList.get(i).getEndTimes();
+//                    String eventTypes = eventList.get(i).getEventTypes();
+//                    Logger.e(startTimes + "::" + endTimes);
+////                    refreshRecyclerViewDataByString(startTimes, endTimes, eventTypes);
+//                    return new String[]{startTimes, endTimes, eventTypes};
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     private void initChart(float[] eventData) {
         showPieChart.setUsePercentValues(true);
@@ -294,7 +309,12 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
 
         showPieChart.setRotationAngle(0);
         // enable rotation of the chart by touch
-        showPieChart.setRotationEnabled(true);
+        if ((boolean) SPUtils.get(getActivity(), Constants.Setting.SP_SET_CHART_ANIM, false)) {
+            showPieChart.setRotationEnabled(true);
+        } else {
+            showPieChart.setRotationEnabled(false);
+        }
+
         showPieChart.setHighlightPerTapEnabled(true);
 
         // showPieChart.setUnit(" €");
@@ -378,6 +398,13 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
         if (refreshChatDataReceiver != null) {
             getActivity().unregisterReceiver(refreshChatDataReceiver);
         }
+        if (chartAnim != null) {
+            getActivity().unregisterReceiver(chartAnim);
+        }
+
+        if (chartDisAnim != null) {
+            getActivity().unregisterReceiver(chartDisAnim);
+        }
     }
 
     @Override
@@ -388,6 +415,24 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
     @Override
     public void onNothingSelected() {
 
+    }
+
+    class ChartAnimReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showPieChart.setRotationEnabled(true);
+            showPieChart.notifyDataSetChanged();
+        }
+    }
+
+    class ChartDisAnimReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            showPieChart.setRotationEnabled(false);
+            showPieChart.notifyDataSetChanged();
+        }
     }
 
     //友盟统计：由Activity和Fragment构成的页面需要这样写
