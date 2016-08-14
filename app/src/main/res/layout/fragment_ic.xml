@@ -11,6 +11,7 @@
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         app:mvGravity="center"
+        app:mvInterval="4000"
         app:mvTextColor="@color/colorAccent" />
 
     <android.support.v4.widget.NestedScrollView
@@ -66,7 +67,8 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="末日没有进行曲"
-                        android:textSize="17sp" />
+                        android:textColor="@color/white"
+                        android:textSize="19sp" />
 
                     <TextView
                         android:id="@+id/ic_signature"
@@ -75,8 +77,8 @@
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="个性没签名"
-                        android:textColor="@color/gray"
-                        android:textSize="14dp" />
+                        android:textColor="@color/work_dark"
+                        android:textSize="15dp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -212,8 +214,8 @@
                     android:paddingRight="6dp"
                     android:paddingTop="3dp"
                     android:text="NEW"
-                    android:textSize="10sp"
                     android:textColor="@color/white"
+                    android:textSize="10sp"
                     android:visibility="gone" />
 
                 <ImageView

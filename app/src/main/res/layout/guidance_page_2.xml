@@ -9,6 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="相信我，\n\n养成任何一个哪怕很小的习惯，\n\n都是要挣扎的。"
+        android:text="@string/guide_2"
         android:textColor="@color/white" />
 </RelativeLayout>

@@ -1,12 +1,19 @@
 package com.tryking.EasyList.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -48,10 +55,15 @@ public class LoginActivity extends BaseActivity {
     ImageView btSinaLogin;
     @Bind(R.id.bt_no_login)
     Button btNoLogin;
+    @Bind(R.id.no_login)
+    TextView noLogin;
+    @Bind(R.id.huawei)
+    TextView huawei;
 
     private UMShareAPI mShareAPI;//友盟三方登陆授权
     private SHARE_MEDIA platform;//分享平台
     private String portraitUrl;
+    private TextInputEditText etPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +78,7 @@ public class LoginActivity extends BaseActivity {
         mShareAPI = UMShareAPI.get(this);
     }
 
-    @OnClick({R.id.bt_qq_login, R.id.bt_wechat_login, R.id.bt_sina_login, R.id.bt_no_login})
+    @OnClick({R.id.bt_qq_login, R.id.bt_wechat_login, R.id.bt_sina_login, R.id.bt_no_login, R.id.no_login, R.id.huawei})
     void click(View v) {
         switch (v.getId()) {
             case R.id.bt_qq_login:
@@ -86,9 +98,61 @@ public class LoginActivity extends BaseActivity {
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
                 break;
+            case R.id.no_login:
+                SystemInfo.getInstance(getApplicationContext()).setMemberId(Constants.TRY_OUT_ACCOUNT);
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
+                break;
+            case R.id.huawei:
+                View password = LayoutInflater.from(this).inflate(R.layout.textview_change_nickname, null);
+                etPassword = (TextInputEditText) password.findViewById(R.id.et_nickname);
+                etPassword.setHint("请输入密码（PPT里有密码提供）");
+                etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                        .setTitle("华为内测登陆")
+                        .setView(password);
+                setPosAndNegButton(builder);
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                etPassword.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                    }
+                });
+                break;
             default:
                 break;
         }
+    }
+
+    private void setPosAndNegButton(AlertDialog.Builder builder) {
+        builder.setPositiveButton("登陆", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (etPassword.getText().toString().trim().equals("hwcxb72")) {
+                    SystemInfo.getInstance(getApplicationContext()).setMemberId("HuaWeiNeiCeZhangHao");
+                    SystemInfo.getInstance(getApplicationContext()).setAccount("华为“创想杯”内测专用");
+                    SystemInfo.getInstance(getApplicationContext()).setQQ("");
+                    SystemInfo.getInstance(getApplicationContext()).setQQName("");
+                    SystemInfo.getInstance(getApplicationContext()).setSina("");
+                    SystemInfo.getInstance(getApplicationContext()).setSinaName("");
+                    SystemInfo.getInstance(getApplicationContext()).setSignature("末日没有进行曲");
+                    SystemInfo.getInstance(getApplicationContext()).setGender("0");
+                    SystemInfo.getInstance(getApplicationContext()).setPortraitUrl("http://7xogui.com1.z0.glb.clouddn.com/goddess.jpg");
+                    SPUtils.put(getApplicationContext(), Constants.SP_TODAY_ONE_WORD, "");
+
+                    TT.showShort(getApplicationContext(), "登陆成功");
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    dialog.dismiss();
+                    MobclickAgent.onProfileSignIn("HuaWeiNeiCe", "HuaWeiNeiCe");
+                    finish();
+                } else {
+                    TT.showShort(getApplicationContext(), "密码错误");
+                }
+            }
+        });
+        builder.setNegativeButton("取消", null);
     }
 
     /*

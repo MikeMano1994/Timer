@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.orhanobut.logger.Logger;
@@ -23,7 +24,9 @@ import com.tryking.EasyList.fragment.main.IcFragment;
 import com.tryking.EasyList.fragment.main.TodayFragment;
 import com.tryking.EasyList.fragment.main.StatsFragment;
 import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.utils.ActivityUtils;
 import com.tryking.EasyList.utils.SPUtils;
+import com.tryking.EasyList.utils.TT;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMShareAPI;
 
@@ -48,6 +51,8 @@ public class MainActivity extends BaseActivity {
     private int currentIndex;
     private MainActivity.exitMainActivityReceiver exitMainActivityReceiver;
     private ShowAppNameReceiver showAppNameReceiver;
+
+    private long exitTime = 0;    //点击两次退出，记录点击时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,5 +206,22 @@ public class MainActivity extends BaseActivity {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                TT.showShort(getApplicationContext(), getResources().getString(R.string.again_back));
+                exitTime = System.currentTimeMillis();
+            } else {
+                MobclickAgent.onKillProcess(this);
+                ActivityUtils.getInstance().killAllActivities();
+            }
+            return true;
+        } else {
+            return true;
+        }
     }
 }

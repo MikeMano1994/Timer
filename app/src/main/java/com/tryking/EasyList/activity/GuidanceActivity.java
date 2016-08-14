@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import android.widget.Button;
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.utils.ActivityUtils;
 import com.tryking.EasyList.utils.SPUtils;
+import com.tryking.EasyList.utils.TT;
 import com.tryking.EasyList.widgets.BackgroundScrollViewPager;
 import com.tryking.EasyList.widgets.circleIndicator.CircleIndicator;
 import com.umeng.analytics.MobclickAgent;
@@ -140,5 +143,10 @@ public class GuidanceActivity extends BaseActivity {
         super.onPause();
         MobclickAgent.onPageEnd(getString(R.string.guide));//统计页面
         MobclickAgent.onPause(this);//统计时长
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return true;
     }
 }

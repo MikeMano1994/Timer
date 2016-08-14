@@ -240,10 +240,10 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
         int start = Integer.parseInt(startTime);
         int end = Integer.parseInt(endTime);
         if (start >= end) {
-            TT.showShort(AddActivity.this, "您选择的似乎不合理哦～");
+            TT.showShort(AddActivity.this, "您选择的时间似乎不合理哦~");
         } else {
             int dataType = getDataType();
-            String specificEvent = etPrint.getText().toString();
+            String specificEvent = etPrint.getText().toString().trim();
             if (haveThingStartInts.size() == 0) {
                 haveThingStartInts.add(start);
                 haveThingEndInts.add(end);
@@ -364,7 +364,7 @@ public class AddActivity extends BaseActivity implements NumberPickerPopupWindow
                         }
                     }
                 }
-                TT.showShort(AddActivity.this, "您选择的似乎不合理哦！");
+                TT.showShort(AddActivity.this, "您选择的时间似乎不合理哦~");
             }
         }
     }

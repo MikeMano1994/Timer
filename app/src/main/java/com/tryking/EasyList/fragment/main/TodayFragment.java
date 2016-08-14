@@ -209,10 +209,10 @@ public class TodayFragment extends BaseFragment implements TodayEventAdapter.onH
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (!etOneWord.getText().toString().equals("")) {
-                    tvOneWord.setText(etOneWord.getText().toString());
-                    addOneWordToServer(etOneWord.getText().toString());
-                    SPUtils.put(getActivity(), Constants.SP_TODAY_ONE_WORD, etOneWord.getText().toString());
+                if (!etOneWord.getText().toString().trim().equals("")) {
+                    tvOneWord.setText(etOneWord.getText().toString().trim());
+                    addOneWordToServer(etOneWord.getText().toString().trim());
+                    SPUtils.put(getActivity(), Constants.SP_TODAY_ONE_WORD, etOneWord.getText().toString().trim());
                 }
             }
         })

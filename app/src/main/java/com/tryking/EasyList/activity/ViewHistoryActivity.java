@@ -79,7 +79,7 @@ public class ViewHistoryActivity extends BaseActivity {
         init();
     }
 
-    @OnClick({R.id.chose_month,R.id.re_load})
+    @OnClick({R.id.chose_month, R.id.re_load})
     void click(View v) {
         switch (v.getId()) {
             case R.id.chose_month:
@@ -145,7 +145,9 @@ public class ViewHistoryActivity extends BaseActivity {
                 case Constants.ViewHistory.GET_DATA_FOR_MONTH_SUCCESS:
                     ViewMonthReturnBean viewMonthReturnBean = (ViewMonthReturnBean) msg.obj;
                     if (viewMonthReturnBean.getMonthEvents() == null || viewMonthReturnBean.getMonthEvents().equals("")) {
-                        manager.beginTransaction().hide(viewHistoryFragment).commit();
+                        if (viewHistoryFragment != null) {
+                            manager.beginTransaction().hide(viewHistoryFragment).commit();
+                        }
                         showView(showNoData);
                     } else {
                         hideAbnormalViews();

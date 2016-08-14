@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import com.tryking.EasyList.R;
 import com.tryking.EasyList.base.BaseActivity;
 import com.tryking.EasyList.base.SystemInfo;
 import com.tryking.EasyList.global.Constants;
+import com.tryking.EasyList.utils.ActivityUtils;
 import com.tryking.EasyList.utils.SPUtils;
+import com.tryking.EasyList.utils.TT;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.fb.FeedbackAgent;
 
@@ -78,5 +81,10 @@ public class LauncherActivity extends BaseActivity {
         super.onPause();
         MobclickAgent.onPageEnd(getString(R.string.launcher));//统计页面
         MobclickAgent.onPause(this);//统计时长
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return true;
     }
 }

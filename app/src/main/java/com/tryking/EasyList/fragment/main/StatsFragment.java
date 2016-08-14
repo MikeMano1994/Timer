@@ -106,6 +106,12 @@ public class StatsFragment extends BaseFragment implements OnChartValueSelectedL
         info.add("时间是真理的挚友。 \n—— 科尔顿");
         info.add("时间像奔腾澎湃的急湍，它一去无还，毫不留恋。 \n—— 塞万提斯");
         info.add("睡眠和休息丧失了时间，却取得了明天工作的精力。 \n—— 毛泽东");
+        info.add("重复言说多半是一种时间上的损失。 \n—— 培根");
+        info.add("最聪明的人是最不愿浪费时间的人。 \n—— 但丁");
+        info.add("对时间的慷慨，就等于慢性自杀。 \n—— 奥斯特洛夫斯基");
+        info.add("在无限的时间的河流里，人生仅仅是微小又微小的波浪。 \n—— 郭小川");
+        info.add("节省时间；也就是使一个人的有限生命，更加有效而也即等于延长了人的生命。 \n—— 鲁迅");
+        info.add("忍耐和时间，往往比力量和愤怒更有效。 \n—— 拉封丹");
         mvNotice.startWithList(info);
 
 

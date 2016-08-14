@@ -9,6 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="生活不只有苟且，\n\n还有诗和远方..."
+        android:text="@string/guide_1"
         android:textColor="@color/white" />
 </RelativeLayout>

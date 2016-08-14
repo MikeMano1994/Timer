@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:fitsSystemWindows="true"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".activity.GuidanceActivity">
 
@@ -15,17 +15,6 @@
         android:layout_height="match_parent"
         app:scrollBackground="@drawable/viewpager_background" />
 
-    <!--<TextView-->
-    <!--android:id="@+id/hint"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="我是向导页" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/jump"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="点击进入Main" />-->
     <com.tryking.EasyList.widgets.circleIndicator.CircleIndicator
         android:id="@+id/indicator"
         android:layout_width="match_parent"

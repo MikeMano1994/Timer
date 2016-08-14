@@ -182,3 +182,12 @@
  -keep class com.linkedin.** { *; }
  -keepattributes Signature
 #########友盟三方登陆分享需要添加####结束###############
+################Glide#####开始##############
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+#下面这个加上会打不了包（虽然它是Glide官方让加的）
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+################Glide#####结束##############

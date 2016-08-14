@@ -288,10 +288,10 @@ public class PIMSActivity extends BaseActivity {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (!etNickname.getText().toString().equals("")) {
-                    tvNickName.setText(etNickname.getText().toString());
-                    changeNicknameToServer(etNickname.getText().toString());
-                    SystemInfo.getInstance(getApplicationContext()).setAccount(etNickname.getText().toString());
+                if (!etNickname.getText().toString().trim().equals("")) {
+                    tvNickName.setText(etNickname.getText().toString().trim());
+                    changeNicknameToServer(etNickname.getText().toString().trim());
+                    SystemInfo.getInstance(getApplicationContext()).setAccount(etNickname.getText().toString().trim());
                 }
             }
         })
@@ -330,11 +330,11 @@ public class PIMSActivity extends BaseActivity {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (!etSignature.getText().toString().equals("")) {
-                    tvSignature.setText(etSignature.getText().toString());
-                    changeSignatureToServer(etSignature.getText().toString());
-                    SystemInfo.getInstance(getApplicationContext()).setSignature(etSignature.getText().toString());
-                }
+//                if (!etSignature.getText().toString().trim().equals("")) {//个性签名可以设为空
+                    tvSignature.setText(etSignature.getText().toString().trim());
+                    changeSignatureToServer(etSignature.getText().toString().trim());
+                    SystemInfo.getInstance(getApplicationContext()).setSignature(etSignature.getText().toString().trim());
+//                }
             }
         })
                 .setNegativeButton("取消", null);

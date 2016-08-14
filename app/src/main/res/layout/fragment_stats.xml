@@ -12,7 +12,9 @@
         android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_gravity="top"
+        app:mvAnimDuration="1500"
         app:mvGravity="center"
+        app:mvInterval="4000"
         app:mvSingleLine="false"
         app:mvTextColor="@color/colorAccent" />
 

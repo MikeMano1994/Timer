@@ -16,6 +16,7 @@
     <string name="feedback">用户反馈</string>
     <!--  @对应的Unicode字符集  -->
     <string name="sinaName">\u0040轻单儿</string>
+    <string name="again_back">再按一次，离开轻单儿</string>
 
     <string name="launcher">Launcher启动</string>
     <string name="main_today">首页_1_今日</string>
@@ -26,6 +27,19 @@
 
     <string name="share_title">一起来用轻单儿</string>
     <string name="share_text">我正在使用轻单儿记录时间清单，加入轻单儿一起和时间做朋友吧！</string>
+
+    <string name="guide_1">
+        随着年龄的增大\n\n你是不是感觉时间过得越来越快\n\n
+        你会不会由此变得非常焦虑\n\n你是不是有拖延症
+    </string>
+    <string name="guide_2">
+        拖延的人并非不做事\n\n他们做事\n\n甚至做很多事\n\n
+        拖延的人并非不努力\n\n他们会花很长时间去做事\n\n但做的都是简单的事
+    </string>
+    <string name="guide_3">
+        你的时间花在哪里\n\n是看得见的\n\n
+        让我们\n\n一起利用\n\n时间轻（清）单儿\n\n和时间做朋友吧
+    </string>
     <string name="easylist_born_word_1">
         &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;
         所有的人，连亚历山大·亚历山德罗维奇·柳比歇夫亲近的人在内，

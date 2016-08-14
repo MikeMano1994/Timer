@@ -14,8 +14,8 @@
         android:gravity="center">
 
         <ImageView
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"
             android:src="@mipmap/ic_launcher" />
@@ -29,6 +29,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:background="@color/gray" />
 
@@ -41,6 +42,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:background="@color/gray" />
     </LinearLayout>
@@ -95,7 +97,33 @@
             android:background="@drawable/button_common"
             android:text="不登录试用"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="invisible" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/no_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="35dp"
+                android:text="不登录试用"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/huawei"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="35dp"
+                android:text="华为内测"
+                android:textColor="@color/colorAccent"
+                android:textSize="16sp" />
+        </RelativeLayout>
     </LinearLayout>
 
 </LinearLayout>

@@ -230,12 +230,12 @@ public class IcFragment extends BaseFragment {
         }
 
         List<String> info = new ArrayList<>();
-        info.add("重复言说多半是一种时间上的损失。 \n—— 培根");
-        info.add("最聪明的人是最不愿浪费时间的人。 \n—— 但丁");
-        info.add("对时间的慷慨，就等于慢性自杀。 \n—— 奥斯特洛夫斯基");
-        info.add("在无限的时间的河流里，人生仅仅是微小又微小的波浪。 \n—— 郭小川");
-        info.add("节省时间；也就是使一个人的有限生命，更加有效而也即等于延长了人的生命。 \n—— 鲁迅");
-        info.add("忍耐和时间，往往比力量和愤怒更有效。 \n—— 拉封丹");
+        info.add("在查看更多页面可以把自己的日常分享给朋友噢，\n赶快试试吧。");
+        info.add("Tip:如果昨日忘了记录，\n还可以在查看昨日页面里面添加呢。");
+        info.add("Tip:选中一个条目，\n长按就可以选择删除啦~");
+        info.add("不喜欢花花绿绿的界面？\n设置里面可以不让颜色全填充哦~");
+        info.add("Tip:左右切换不流畅？\n试试把设置里面的饼状图旋转关了吧。");
+        info.add("有更好的想法？\n欢迎在意见反馈里面告诉我们~");
         mvNotice.startWithList(info);
         if (SystemInfo.getInstance(getActivity()).isLogin()) {
             getShareUrlFromServer();

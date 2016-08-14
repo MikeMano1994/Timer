@@ -89,10 +89,6 @@
             android:name=".activity.about_easylist.FeedbackActivity"
             android:label="@string/feedback"
             android:theme="@style/AppTheme.Float" />
-        <activity
-            android:name=".z_disuse.LoginAndRegisterActivity"
-            android:label="@string/login_and_register"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
 
         <service
             android:name=".utils.version_update.DownloadService"
