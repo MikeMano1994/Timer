@@ -12,11 +12,11 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:layout_gravity="center"
-            android:gravity="center"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/ic_share_black_18dp" />
+            android:layout_gravity="center"
+            android:background="@drawable/ic_share_black_18dp"
+            android:gravity="center" />
     </LinearLayout>
 
 
@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="45dp"
+        android:paddingRight="35dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -32,24 +33,22 @@
             android:id="@+id/group_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="35dp"
             android:layout_marginTop="5dp"
-            android:textSize="20sp"
             android:gravity="center"
             android:text="2016年5月20日"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/group_one_word"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:layout_marginRight="35dp"
             android:layout_marginTop="20dp"
-            android:textSize="16sp"
             android:gravity="center"
             android:text="一句话总结今日"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <ImageView

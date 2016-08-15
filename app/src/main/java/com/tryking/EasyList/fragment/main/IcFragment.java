@@ -124,7 +124,7 @@ public class IcFragment extends BaseFragment {
                         .setListenerList(listener)//这个貌似和callback一样
                         .withTitle(getString(R.string.share_title))
                         .withText(getString(R.string.share_text))
-                        .withMedia(new UMImage(getActivity(), R.mipmap.ic_launcher))
+                        .withMedia(new UMImage(getActivity(), R.drawable.share))
                         .withTargetUrl(shareUrl)
                         .open();
                 break;

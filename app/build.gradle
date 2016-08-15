@@ -75,6 +75,7 @@ android {
         xiaomi {}
         tencent {}
         taobao {}
+        huawei {}
         lianzhihong {}
         alibabaMianshi {}
     }

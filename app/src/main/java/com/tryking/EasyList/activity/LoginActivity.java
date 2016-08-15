@@ -107,7 +107,7 @@ public class LoginActivity extends BaseActivity {
                 View password = LayoutInflater.from(this).inflate(R.layout.textview_change_nickname, null);
                 etPassword = (TextInputEditText) password.findViewById(R.id.et_nickname);
                 etPassword.setHint("请输入密码（PPT里有密码提供）");
-                etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 AlertDialog.Builder builder = new AlertDialog.Builder(this)
                         .setTitle("华为内测登陆")
                         .setView(password);

@@ -37,7 +37,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.LauncherActivity">
+        <activity
+            android:name=".activity.LauncherActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,46 +50,59 @@
         <activity
             android:name=".activity.AddActivity"
             android:label="@string/add_event"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Float"
             android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".z_test.TestActivity" />
+        <activity
+            android:name=".z_test.TestActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ViewHistoryActivity"
             android:label="@string/view_history"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Float" />
         <activity
             android:name=".activity.ViewYesterdayActivity"
             android:label="@string/view_yesterday"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Float" />
         <activity
             android:name=".activity.MainActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.GuidanceActivity"
-            android:label="@string/guide" />
+            android:label="@string/guide"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.PIMSActivity"
             android:label="@string/individual_center"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Float" />
         <activity
             android:name=".activity.LoginActivity"
-            android:label="@string/login" />
+            android:label="@string/login"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.about_easylist.AboutEasyListActivity"
             android:label="@string/about_easylist"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Float" />
         <activity
             android:name=".activity.about_easylist.EasyListBornActivity"
             android:label="@string/easylist_born"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Float" />
         <activity
             android:name=".activity.CommonSettingActivity"
             android:label="@string/common_setting"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Float" />
 
         <activity
             android:name=".activity.about_easylist.FeedbackActivity"
             android:label="@string/feedback"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Float" />
 
         <service

@@ -15,6 +15,7 @@
     <color name="gray_">#707070</color>
     <color name="thin_gray">#CCCCCC</color>
     <color name="green">#11CD6E</color>
+    <color name="press">#FF4081</color>
 
     <!--四个事件类型-->
     <color name="work">#99CCFF</color>

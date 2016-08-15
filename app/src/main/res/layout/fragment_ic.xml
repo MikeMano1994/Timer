@@ -30,7 +30,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:background="@drawable/ic_background"
-                android:padding="10dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp">
 
                 <!--<com.facebook.drawee.view.SimpleDraweeView-->
                 <!--android:id="@+id/head_portrait"-->
@@ -62,9 +64,9 @@
 
                     <TextView
                         android:id="@+id/ic_account"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="3"
                         android:gravity="center_vertical"
                         android:text="末日没有进行曲"
                         android:textColor="@color/white"
@@ -72,9 +74,9 @@
 
                     <TextView
                         android:id="@+id/ic_signature"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:gravity="center_vertical"
                         android:text="个性没签名"
                         android:textColor="@color/work_dark"
